@@ -1,8 +1,9 @@
 namespace ABS_xTest
 {
 
-    using Xunit;
     using System;
+
+    using Xunit;
     using Models;
 
     public class SeatTest

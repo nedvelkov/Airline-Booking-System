@@ -3,7 +3,7 @@
     using Facade;
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             var manager = new SystemManager();
         }

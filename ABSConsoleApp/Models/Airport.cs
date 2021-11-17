@@ -14,7 +14,7 @@
             get { return this.name; }
             init
             {
-                if (value.Length != 3)
+                if (string.IsNullOrEmpty(value) || value.Length != 3)
                 {
                     throw new ArgumentException("Airport name must be 3 characters in length");
                 }

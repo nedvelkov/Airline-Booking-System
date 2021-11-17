@@ -6,6 +6,7 @@
     using System.Collections.Generic;
 
     using Enums;
+
     public class Flight
     {
         private string id;
@@ -14,12 +15,13 @@
         private Airport destination;
         private List<FlightSection> flightSections;
 
-        public Flight(Airport org,Airport dest,DateTime date,string id)
+        public Flight(Airport org, Airport dest, DateTime date, string id)
         {
             this.Origin = org;
             this.Destination = dest;
             this.Date = date;
             this.Id = id;
+            this.flightSections = new List<FlightSection>();
         }
         public string Id
         {
@@ -30,7 +32,15 @@
         public DateTime Date
         {
             get { return this.date; }
-            init { this.date = value; }
+            set
+            {
+                var today = DateTime.UtcNow.Date;
+                if (DateTime.Compare(value.Date, today) < 0)
+                {
+                    throw new ArgumentException("Date is not valid.");
+                }
+                this.date = value;
+            }
         }
 
         public Airport Origin
@@ -42,23 +52,27 @@
         public Airport Destination
         {
             get { return this.destination; }
-            set { this.destination = value; }
+            set
+            {
+                if (this.origin.Equals(value))
+                {
+                    throw new ArgumentException("Destionation must be different from origin.");
+                }
+                this.destination = value;
+            }
         }
 
         public IReadOnlyCollection<FlightSection> FlightSections => this.flightSections;
 
         public void AddFlightSection(SeatClass seatClass, int rows, int colmns)
         {
-            var flightSection = new FlightSection(seatClass, rows, colmns);
             var getSection = this.flightSections.FirstOrDefault(x => x.SeatClass == seatClass);
-            if ( getSection== null)
-            {
-                this.flightSections.Add(flightSection);
-            }
-            else
+            if (getSection != null)
             {
                 throw new ArgumentException($"Flight already have a {seatClass} section");
             }
+            var flightSection = new FlightSection(seatClass, rows, colmns);
+            this.flightSections.Add(flightSection);
         }
 
         public override string ToString()

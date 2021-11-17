@@ -19,7 +19,7 @@
             get { return this.name; }
             init
             {
-                if (value.Length >= 6 || value.Length==0)
+                if (string.IsNullOrEmpty(value) || value.Length >= 6)
                 {
                     throw new ArgumentException("Name of airline must be between 1 and 5 characters");
                 }
