@@ -34,17 +34,13 @@
 
         public IReadOnlyList<Seat> Seats => this.seats;
 
-        private void AddSeat(int row, int colmn)
+        private void AddSeats(int rows, int colms)
         {
-            var colmAsChar = (char)(colmn + 64);
-            var seat = new Seat(row, colmAsChar);
-            this.seats.Add(seat);
-        }
-        public void AddSeats(int rows, int colmns)
-        {
+            ValidateValues(rows, "Rows", 1, 100);
+            ValidateValues(colms, "Columns", 1, 10);
             for (int row = 1; row <= rows; row++)
             {
-                for (int colmn = 1; colmn <= colmns; colmn++)
+                for (int colmn = 1; colmn <= colms; colmn++)
                 {
                     this.AddSeat(row, colmn);
                 }
@@ -70,6 +66,21 @@
             this.seats.ForEach(x => sb.AppendLine(x.ToString()));
 
             return sb.ToString().TrimEnd();
+        }
+
+        private void AddSeat(int row, int colmn)
+        {
+            var colmAsChar = (char)(colmn + 64);
+            var seat = new Seat(row, colmAsChar);
+            this.seats.Add(seat);
+        }
+
+        private void ValidateValues(int value,string @type,int min,int max)
+        {
+            if (value<min || value > max)
+            {
+                throw new ArgumentOutOfRangeException($"{type} of seat must be between {min} and {max}");
+            }
         }
     }
 }

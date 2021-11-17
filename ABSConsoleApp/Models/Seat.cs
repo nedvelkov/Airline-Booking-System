@@ -18,7 +18,7 @@
             get { return this.row; }
            private set
             {
-                if (value < 0 || value > 100)
+                if (value <= 0 || value > 100)
                 {
                     throw new IndexOutOfRangeException("Invalid seat row");
                 }
