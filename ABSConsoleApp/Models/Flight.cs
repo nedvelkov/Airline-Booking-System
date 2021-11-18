@@ -6,14 +6,16 @@
     using System.Collections.Generic;
 
     using Enums;
+    using ABSComon;
+    using Models.Contracts;
 
-    public class Flight
+    public class Flight:IFlight
     {
         private string id;
         private DateTime date;
         private Airport origin;
         private Airport destination;
-        private List<FlightSection> flightSections;
+        private ICollection<FlightSection> flightSections;
 
         public Flight(Airport org, Airport dest, DateTime date, string id)
         {
@@ -62,7 +64,7 @@
             }
         }
 
-        public IReadOnlyCollection<FlightSection> FlightSections => this.flightSections;
+        public IReadOnlyCollection<FlightSection> FlightSections => this.flightSections.AsReadOnly();
 
         public void AddFlightSection(SeatClass seatClass, int rows, int colmns)
         {
@@ -80,7 +82,7 @@
             var sb = new StringBuilder();
             sb.AppendLine($"Flight #{this.Id} from ${this.Origin} to ${this.Destination}");
             sb.AppendLine($"The flight has {this.flightSections.Count} section:");
-            this.flightSections.ForEach(x => sb.AppendLine(x.ToString()));
+            this.flightSections.ToList().ForEach(x => sb.AppendLine(x.ToString()));
 
             return sb.ToString().TrimEnd();
         }

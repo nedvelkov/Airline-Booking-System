@@ -6,10 +6,13 @@
     using System.Collections.Generic;
 
     using Enums;
-    public class FlightSection
+    using ABSComon;
+    using Models.Contracts;
+
+    public class FlightSection:IFlightSection
     {
         private SeatClass seatClass;
-        private List<Seat> seats;
+        private ICollection<Seat> seats;
 
         public FlightSection(SeatClass seatClass, int rows, int colmns)
         {
@@ -32,7 +35,7 @@
             }
         }
 
-        public IReadOnlyList<Seat> Seats => this.seats;
+        public IReadOnlyCollection<Seat> Seats => this.seats.AsReadOnly();
 
         private void AddSeats(int rows, int colms)
         {
@@ -63,7 +66,7 @@
         {
             var sb = new StringBuilder();
             sb.AppendLine($"Flight section {this.seatClass} class with {this.seats.Count} seats");
-            this.seats.ForEach(x => sb.AppendLine(x.ToString()));
+            this.seats.ToList().ForEach(x => sb.AppendLine(x.ToString()));
 
             return sb.ToString().TrimEnd();
         }

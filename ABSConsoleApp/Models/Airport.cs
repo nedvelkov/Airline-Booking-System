@@ -1,7 +1,8 @@
 ﻿namespace Models
 {
+    using Models.Contracts;
     using System;
-    public class Airport
+    public class Airport:IAirport
     {
         private string name;
 

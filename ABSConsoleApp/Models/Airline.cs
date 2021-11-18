@@ -3,11 +3,13 @@
     using System;
     using System.Linq;
     using System.Collections.Generic;
+    using ABSComon;
+    using Models.Contracts;
 
-    public class Airline
+    public class Airline:IAirline
     {
         private string name;
-        private List<Flight> flights;
+        private ICollection<Flight> flights;
 
         public Airline(string name)
         {
@@ -27,7 +29,7 @@
             }
         }
 
-        public IReadOnlyList<Flight> Flights => this.flights;
+        public IReadOnlyCollection<Flight> Flights => this.flights.AsReadOnly();
 
         public void AddFlight(Flight flight)
         {

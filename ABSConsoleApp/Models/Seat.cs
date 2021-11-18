@@ -1,8 +1,9 @@
 ﻿namespace Models
 {
+    using Models.Contracts;
     using System;
 
-    public class Seat
+    public class Seat:ISeat
     {
         private int row;
         private char colmn;
