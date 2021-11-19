@@ -7,8 +7,15 @@
 
     using Xunit;
     using Models;
+
+    using static Mocks.MockABS;
+    using Models.Contracts;
+
     public class AirlineTest
     {
+        const string flightId = "testFlight";
+        IFlight flight = FlightMock(flightId);
+
         [Theory]
         [InlineData("BGAir")]
         [InlineData("TRAir")]
@@ -59,45 +66,29 @@
             Assert.Equal(expected, result);
         }
 
-        [Theory]
-        [InlineData("SF108")]
-        [InlineData("RA854")]
-        [InlineData("TT749")]
-        [InlineData("TT049")]
-        public void CreateAirlineWithFlights(string id)
+        [Fact]
+        public void CreateAirlineWithFlights()
         {
             //Arrange
             var airline = new Airline("test");
-            var orig = new Airport("SFA");
-            var dest = new Airport("VRN");
-            var date = DateTime.UtcNow.Date;
-            var flight = new Flight(orig, dest, date, id);
             //Act
-            airline.AddFlight(flight);
+            airline.AddFlight(this.flight);
             var result = airline.Flights.First().Id;
             //Asert
-            Assert.Equal(id, result);
+            Assert.Equal(flightId, result);
         }
 
-        [Theory]
-        [InlineData("SF108")]
-        [InlineData("RA854")]
-        [InlineData("TT749")]
-        [InlineData("TT049")]
-        public void TestAddFlightsToAirlineWithSameId(string id)
+        [Fact]
+        public void TestAddFlightsToAirlineWithSameId()
         {
             //Arrange
             var airline = new Airline("test");
-            var orig = new Airport("SFA");
-            var dest = new Airport("VRN");
-            var date = DateTime.UtcNow.Date;
-            var flight = new Flight(orig, dest, date, id);
-            var expected = $"Flight with id:{id} already exist";
+            var expected = $"Flight with id:{flightId} already exist";
             //Act
-            airline.AddFlight(flight);
+            airline.AddFlight(this.flight);
             try
             {
-                airline.AddFlight(flight);
+                airline.AddFlight(this.flight);
             }
             catch (Exception a)
             {

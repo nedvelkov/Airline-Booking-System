@@ -13,17 +13,17 @@
     {
         private string id;
         private DateTime date;
-        private Airport origin;
-        private Airport destination;
-        private ICollection<FlightSection> flightSections;
+        private IAirport origin;
+        private IAirport destination;
+        private ICollection<IFlightSection> flightSections;
 
-        public Flight(Airport org, Airport dest, DateTime date, string id)
+        public Flight(IAirport org, IAirport dest, DateTime date, string id)
         {
             this.Origin = org;
             this.Destination = dest;
             this.Date = date;
             this.Id = id;
-            this.flightSections = new List<FlightSection>();
+            this.flightSections = new List<IFlightSection>();
         }
         public string Id
         {
@@ -45,13 +45,13 @@
             }
         }
 
-        public Airport Origin
+        public IAirport Origin
         {
             get { return this.origin; }
             set { this.origin = value; }
         }
 
-        public Airport Destination
+        public IAirport Destination
         {
             get { return this.destination; }
             set
@@ -64,7 +64,7 @@
             }
         }
 
-        public IReadOnlyCollection<FlightSection> FlightSections => this.flightSections.AsReadOnly();
+        public IReadOnlyCollection<IFlightSection> FlightSections => this.flightSections.AsReadOnly();
 
         public void AddFlightSection(SeatClass seatClass, int rows, int colmns)
         {

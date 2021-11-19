@@ -2,5 +2,6 @@
 {
     public interface IAirport
     {
+        public string Name { get; }
     }
 }

@@ -2,11 +2,12 @@
 {
     using System;
     using System.Linq;
+    using System.Text;
     using System.Collections.Generic;
 
     using Models;
     using Models.Enums;
-    using System.Text;
+    using Models.Contracts;
 
     public class SystemManager:ISystemManager
     {
@@ -30,12 +31,10 @@
             HasItem(this.airlines, x => x.Name == name);
             var airline = new Airline(name);
             this.airlines.Add(airline);
-
         }
 
         public void CreateFlight(string airlineName, string origin, string destination, int year, int month, int day, string id)
         {
-            //TODO: validate Date -> throw error if date is not valid
             var airline = GetItem(this.airlines, x => x.Name == airlineName);
             var originAirport = GetItem(this.airports, x => x.Name == origin);
             var destinationAirport = GetItem(this.airports, x => x.Name == destination);
@@ -62,7 +61,7 @@
             foreach (var airline in this.airlines)
             {
                 var tmp = airline.Flights.ToList().Where(x => x.Origin.Equals(originAirport) && x.Destination.Equals(destinationAirport));
-                flights.AddRange(tmp);
+                flights.AddRange(tmp.Select(x=>(Flight)x));
             }
 
             var sb = new StringBuilder();
@@ -81,9 +80,20 @@
             flightSections.BookSeat(row, colmn);
         }
 
-        public void DisplaySystemDetails()
+        public string DisplaySystemDetails()
         {
-            throw new NotImplementedException();
+            var sb = new StringBuilder();
+            sb.AppendLine($"Airort aviable {this.airports.Count}");
+            if (this.airports.Count>0)
+            {
+            this.airports.ForEach(x => sb.AppendLine(x.ToString()));
+            }
+            sb.AppendLine($"Airline aviable {this.airlines.Count}");
+            if (this.airlines.Count > 0)
+            {
+                this.airlines.ForEach(x => sb.AppendLine(x.ToString()));
+            }
+            return sb.ToString().Trim();
         }
 
         private T GetItem<T>(List<T> list, Func<T, bool> func,bool flag=true)

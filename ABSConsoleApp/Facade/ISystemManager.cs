@@ -15,6 +15,6 @@
 
         public void BookSeat(string airlineName, string flightId, SeatClass seatClass, int row, char colmn);
 
-        public void DisplaySystemDetails();
+        public string DisplaySystemDetails();
     }
 }

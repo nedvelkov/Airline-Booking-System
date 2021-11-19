@@ -37,7 +37,6 @@
             catch (Exception a)
             {
                 result = a.Message;
-                ;
             }
             //Asert
             Assert.Equal(expected, result);

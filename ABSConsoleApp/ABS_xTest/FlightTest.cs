@@ -6,34 +6,38 @@
     using Xunit;
     using Models;
     using Models.Enums;
+    using Moq;
+    using Models.Contracts;
+
+    using static Mocks.MockABS;
+
     public class FlightTest
     {
+        IAirport origin = AirportMock();
+        IAirport destination = AirportMock();
+
         [Theory]
-        [InlineData("SFA", "VRN", 5,"SAI159")]
-        [InlineData("SFA", "PLD", 28541, "SAI270")]
-        [InlineData("SFA", "PRG", 0, "SAI311")]
-        public void CreateValidFlight(string org,string dest,double days, string id)
+        [InlineData(5, "SAI159")]
+        [InlineData(28541, "SAI270")]
+        [InlineData(0, "SAI311")]
+        public void CreateValidFlight(double days, string id)
         {
             //Arrange
-            var origin = new Airport(org);
-            var destination = new Airport(dest);
             var today = DateTime.UtcNow.Date;
             var date = today.AddDays(days);
             //Act
-            var flight = new Flight(origin,destination,date,id);
+            var flight = new Flight(this.origin, this.destination, date, id);
             //Asert
             Assert.IsType<Flight>(flight);
 
         }
         [Theory]
-        [InlineData("SFA", "VRN",-5, "SAI159")]
-        [InlineData("VRN", "PLD",-8, "SAI270")]
-        [InlineData("PRS", "PRG",-105, "SAI311")]
-        public void CreateInvalidFlightWithWrongDate(string org, string dest,double days, string id)
+        [InlineData(-5, "SAI159")]
+        [InlineData(-8, "SAI270")]
+        [InlineData(-105, "SAI311")]
+        public void CreateInvalidFlightWithWrongDate(double days, string id)
         {
             //Arrange
-            var origin = new Airport(org);
-            var destination = new Airport(dest);
             var today = DateTime.UtcNow.Date;
             var date = today.AddDays(days);
             var expected = "Date is not valid.";
@@ -41,7 +45,7 @@
             string result = null;
             try
             {
-             var flight = new Flight(origin, destination, date, id);
+                var flight = new Flight(this.origin, this.destination, date, id);
             }
             catch (Exception a)
             {
@@ -58,6 +62,7 @@
         public void CreateInvalidFlightWithWrongDestination(string org, string dest, double days, string id)
         {
             //Arrange
+            //TODO : Moq Airline.Equal(Airline obj)
             var origin = new Airport(org);
             var destination = new Airport(dest);
             var today = DateTime.UtcNow.Date;
@@ -82,12 +87,10 @@
         public void TestFlightSeactionInNewFlight()
         {
             //Arrange
-            var origin = new Airport("SFA");
-            var destination = new Airport("VRN");
             var today = DateTime.UtcNow.Date;
             var date = today.AddDays(8);
             var id = "SAI311";
-            var flight = new Flight(origin, destination, date, id);
+            var flight = new Flight(this.origin, this.destination, date, id);
             var expected = 0;
             //Act
             var result = flight.FlightSections.Count;
@@ -103,14 +106,12 @@
         public void AddFlightSeactionInFlight(int seatClass)
         {
             //Arrange
-            var origin = new Airport("SFA");
-            var destination = new Airport("VRN");
             var today = DateTime.UtcNow.Date;
             var date = today.AddDays(8);
             var id = "SAI311";
-            var flight = new Flight(origin, destination, date, id);
+            var flight = new Flight(this.origin, this.destination, date, id);
             var expectedSeatClassCount = 1;
-            var expectedSeatCount = 5*8;
+            var expectedSeatCount = 5 * 8;
             //Act
             flight.AddFlightSection((SeatClass)seatClass, 5, 8);
             var seatClassCount = flight.FlightSections.Count;

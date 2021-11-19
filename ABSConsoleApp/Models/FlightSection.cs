@@ -9,15 +9,15 @@
     using ABSComon;
     using Models.Contracts;
 
-    public class FlightSection:IFlightSection
+    public class FlightSection : IFlightSection
     {
         private SeatClass seatClass;
-        private ICollection<Seat> seats;
+        private ICollection<ISeat> seats;
 
         public FlightSection(SeatClass seatClass, int rows, int colmns)
         {
             this.SeatClass = seatClass;
-            this.seats = new List<Seat>();
+            this.seats = new List<ISeat>();
             this.AddSeats(rows, colmns);
         }
         public SeatClass SeatClass
@@ -27,7 +27,7 @@
             {
                 var flag = Enum.IsDefined(typeof(SeatClass), value);
 
-                if (flag==false)
+                if (flag == false)
                 {
                     throw new InvalidCastException("Seat class is not valid.");
                 }
@@ -35,20 +35,8 @@
             }
         }
 
-        public IReadOnlyCollection<Seat> Seats => this.seats.AsReadOnly();
+        public IReadOnlyCollection<ISeat> Seats => this.seats.AsReadOnly();
 
-        private void AddSeats(int rows, int colms)
-        {
-            ValidateValues(rows, "Rows", 1, 100);
-            ValidateValues(colms, "Columns", 1, 10);
-            for (int row = 1; row <= rows; row++)
-            {
-                for (int colmn = 1; colmn <= colms; colmn++)
-                {
-                    this.AddSeat(row, colmn);
-                }
-            }
-        }
 
         public bool HasAvaibleSeats() => this.seats.Any(x => x.Booked == false);
 
@@ -78,9 +66,21 @@
             this.seats.Add(seat);
         }
 
-        private void ValidateValues(int value,string @type,int min,int max)
+        private void AddSeats(int rows, int colms)
         {
-            if (value<min || value > max)
+            ValidateValues(rows, "Rows", 1, 100);
+            ValidateValues(colms, "Columns", 1, 10);
+            for (int row = 1; row <= rows; row++)
+            {
+                for (int colmn = 1; colmn <= colms; colmn++)
+                {
+                    this.AddSeat(row, colmn);
+                }
+            }
+        }
+        private void ValidateValues(int value, string @type, int min, int max)
+        {
+            if (value < min || value > max)
             {
                 throw new ArgumentOutOfRangeException($"{type} of seat must be between {min} and {max}");
             }

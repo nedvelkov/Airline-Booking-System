@@ -36,5 +36,20 @@
             }
         }
 
+        public override int GetHashCode()
+        {
+            var hash = 0;
+            foreach (var letter in this.Name)
+            {
+                hash += (int)letter * 4;
+            }
+            return hash/2;
+        }
+
+        public override string ToString()
+        {
+            return $"Wellcome to airport {this.Name}";
+        }
+
     }
 }

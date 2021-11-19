@@ -1,7 +1,10 @@
 ﻿namespace Models.Contracts
 {
+    using System.Collections.Generic;
     public interface IAirline
     {
-        public void AddFlight(Flight flight);
+        public string Name { get; }
+        public IReadOnlyCollection<IFlight> Flights { get; }
+        public void AddFlight(IFlight flight);
     }
 }
