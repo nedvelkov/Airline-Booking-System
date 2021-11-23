@@ -29,7 +29,7 @@
 
                 if (flag == false)
                 {
-                    throw new InvalidCastException("Seat class is not valid.");
+                    throw new InvalidCastException("Seat class is not valid");
                 }
                 this.seatClass = value;
             }
@@ -45,7 +45,7 @@
             var seat = this.seats.FirstOrDefault(x => x.Row == row && x.Colmn == colmn);
             if (seat == null)
             {
-                throw new NullReferenceException("Seat with this number doesn't exist.");
+                throw new NullReferenceException("Seat with this number doesn't exist");
             }
             seat.BookSeat();
         }

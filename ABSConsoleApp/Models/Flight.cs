@@ -39,7 +39,7 @@
                 var today = DateTime.UtcNow.Date;
                 if (DateTime.Compare(value.Date, today) < 0)
                 {
-                    throw new ArgumentException("Date is not valid.");
+                    throw new ArgumentException("Date is not valid");
                 }
                 this.date = value;
             }
@@ -58,7 +58,7 @@
             {
                 if (this.origin.Equals(value))
                 {
-                    throw new ArgumentException("Destionation must be different from origin.");
+                    throw new ArgumentException("Destionation must be different from origin");
                 }
                 this.destination = value;
             }
@@ -80,8 +80,8 @@
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.AppendLine($"Flight #{this.Id} from ${this.Origin} to ${this.Destination}");
-            sb.AppendLine($"The flight has {this.flightSections.Count} section:");
+            sb.AppendLine($"Flight #{this.Id} from {this.Origin.Name} to {this.Destination.Name}.Departure at {this.Date.ToString("MM/dd/yyyy")}");
+            sb.AppendLine($"The flight has {this.flightSections.Count} section.");
             this.flightSections.ToList().ForEach(x => sb.AppendLine(x.ToString()));
 
             return sb.ToString().TrimEnd();

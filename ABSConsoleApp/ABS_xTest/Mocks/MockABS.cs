@@ -2,6 +2,8 @@
 {
     using Moq;
     using Models.Contracts;
+    using Facade;
+
     public static class MockABS
     {
         public static IAirport AirportMock(string name = null)
@@ -37,6 +39,13 @@
         {
             var mockFlight = new Mock<ISeat>();
             return mockFlight.Object;
+        }
+
+        public static ISystemManager SystemManagerMock()
+        {
+            var mockManager = new Mock<ISystemManager>();
+            mockManager.Setup(x => x.CreateAirline("BGAir"));
+            return mockManager.Object;
         }
     }
 }

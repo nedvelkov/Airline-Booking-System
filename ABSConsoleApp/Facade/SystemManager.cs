@@ -8,6 +8,7 @@
     using Models;
     using Models.Enums;
     using Models.Contracts;
+    using System.Globalization;
 
     public class SystemManager:ISystemManager
     {
@@ -19,44 +20,85 @@
             this.airports = new List<Airport>();
         }
 
-        public void CreateAirport(string name)
+        public string CreateAirport(string name)
         {
+            try
+            {
             HasItem(this.airports, x => x.Name == name);
             var airport = new Airport(name);
             this.airports.Add(airport);
+            }
+            catch (Exception a)
+            {
+                return a.Message;
+            }
+            return $"Airport {name} is created successfully";
         }
 
-        public void CreateAirline(string name)
+        public string CreateAirline(string name)
         {
-            HasItem(this.airlines, x => x.Name == name);
-            var airline = new Airline(name);
-            this.airlines.Add(airline);
+            try
+            {
+                HasItem(this.airlines, x => x.Name == name);
+                var airline = new Airline(name);
+                this.airlines.Add(airline);
+            }
+            catch (Exception a)
+            {
+                return a.Message;
+            }
+            return $"Airline {name} is created successfully";
+
         }
 
-        public void CreateFlight(string airlineName, string origin, string destination, int year, int month, int day, string id)
+        public string CreateFlight(string airlineName, string origin, string destination, int year, int month, int day, string id)
         {
-            var airline = GetItem(this.airlines, x => x.Name == airlineName);
-            var originAirport = GetItem(this.airports, x => x.Name == origin);
-            var destinationAirport = GetItem(this.airports, x => x.Name == destination);
-            var date = new DateTime(year, month, day);
-            var flight = new Flight(originAirport, destinationAirport, date, id);
+            try
+            {
+                var airline = GetItem(this.airlines, x => x.Name == airlineName, $"Airline with name {airlineName} don't exist");
+                var originAirport = GetItem(this.airports, x => x.Name == origin, $"Airport with name {origin} don't exist");
+                var destinationAirport = GetItem(this.airports, x => x.Name == destination, $"Airport with name {destination} don't exist");
+                var date = ValidateDate(year, month, day);
+                
+                var flight = new Flight(originAirport, destinationAirport, date, id);
+                
+                airline.AddFlight(flight);
+            }
+            catch (Exception a)
+            {
+                return a.Message;
+            }
 
-            airline.AddFlight(flight);
+            return $"Flight from {origin} to {destination} on airline {airlineName} is created successfully";
+
         }
 
-        public void CreateSection(string airlineName, string flightId, int rows, int colms, SeatClass seatClass)
+        public string CreateSection(string airlineName, string flightId, int rows, int colms, int seatClass)
         {
-            //var flight = GetItem(GetItem(this.airlines, x => x.Name == airlineName).Flights.ToList(), x => x.Id == flightId,false);
-            var airline = GetItem(this.airlines, x => x.Name == airlineName);
-            var flight = GetItem(airline.Flights.ToList(), x => x.Id == flightId,false);
+            try
+            {
+                //var flight = GetItem(GetItem(this.airlines, x => x.Name == airlineName).Flights.ToList(), x => x.Id == flightId,false);
+                var airline = GetItem(this.airlines, x => x.Name == airlineName, $"Airline with name {airlineName} don't exist");
+                var flight = GetItem(airline.Flights.ToList(), x => x.Id == flightId, $"Flight with id {flightId} don't exist");
 
-            flight.AddFlightSection(seatClass, rows, colms);
+                flight.AddFlightSection((SeatClass)seatClass, rows, colms);
+
+                return $"Section {(SeatClass)seatClass} class is created successfully for flight from {flight.Origin.Name} to {flight.Destination.Name} on airline {airlineName}";
+            }
+            catch (Exception a)
+            {
+                return a.Message;
+            }
         }
 
         public string FindAvailableFlights(string origin, string destination)
         {
-            var originAirport = GetItem(this.airports, x => x.Name == origin);
-            var destinationAirport = GetItem(this.airports, x => x.Name == destination);
+            if (destination.Equals(origin))
+            {
+                return "Origin point can't be same as destination";
+            }
+            var originAirport = GetItem(this.airports, x => x.Name == origin, $"Airport with name {origin} don't exist");
+            var destinationAirport = GetItem(this.airports, x => x.Name == destination, $"Airport with name {destination} don't exist");
             var flights = new List<Flight>();
             foreach (var airline in this.airlines)
             {
@@ -64,20 +106,35 @@
                 flights.AddRange(tmp.Select(x=>(Flight)x));
             }
 
+            if (flights.Count > 0)
+            {
             var sb = new StringBuilder();
             flights.ForEach(x => sb.AppendLine(x.ToString()));
 
             return sb.ToString().Trim();
-
+            }
+            return $"There is no flight from {origin} to {destination}, at this time";
         }
 
-        public void BookSeat(string airlineName, string flightId, SeatClass seatClass, int row, char colmn)
+        public string BookSeat(string airlineName, string flightId, int seatClass, int row, char colmn)
         {
-            var airline = GetItem(this.airlines, x => x.Name == airlineName);
-            var flight = GetItem(airline.Flights.ToList(), x => x.Id == flightId, false);
-            var flightSections= GetItem(flight.FlightSections.ToList(),x=>x.SeatClass==seatClass);
+            try
+            {
+                var seatClassEnum = GetSeatClass(seatClass);
+                var airline = GetItem(this.airlines, x => x.Name == airlineName,$"Airline with name {airlineName} don't exist");
+                var flight = GetItem(airline.Flights.ToList(), x => x.Id == flightId, $"Flight with id {flightId} don't exist");
+                var flightSections = GetItem(flight.FlightSections.ToList(), x => x.SeatClass ==seatClassEnum,$"Section with name {seatClass} don't exist");
 
-            flightSections.BookSeat(row, colmn);
+                flightSections.BookSeat(row, colmn);
+
+                return $"Seat {row:D3}{colmn} in {seatClass} class is booked for flight from {flight.Origin.Name} to {flight.Destination.Name} on airline {airlineName}";
+
+            }
+            catch (Exception a)
+            {
+                return a.Message;
+            }
+
         }
 
         public string DisplaySystemDetails()
@@ -96,13 +153,12 @@
             return sb.ToString().Trim();
         }
 
-        private T GetItem<T>(List<T> list, Func<T, bool> func,bool flag=true)
+        private T GetItem<T>(List<T> list, Func<T, bool> func,string exceptionMessage)
         {
             var getItem = list.FirstOrDefault(func);
             if (getItem == null)
             {
-                var name = flag ? "name" : "id";
-                throw new ArgumentNullException($"{getItem.GetType().Name} with this ${name} don't exist.");
+                throw new ArgumentException(exceptionMessage);
             }
             return getItem;
         }
@@ -112,10 +168,26 @@
             var getItem = list.FirstOrDefault(func);
             if (getItem != null)
             {
-                throw new ArgumentNullException($"{getItem.GetType().Name} with this name already exist.");
+                throw new ArgumentNullException($"{getItem.GetType().Name} with this name already exist");
             }
             return false;
         }
 
+        private DateTime ValidateDate(int year,int month,int day)
+        {
+            DateTime date;
+            var validDate = DateTime.TryParse($"{month}/{day}/{year}", CultureInfo.InvariantCulture, DateTimeStyles.None, out date);
+            if (validDate == false)
+            {
+                throw new ArgumentException("Date is not valid");
+            }
+            return date;
+        }
+
+        private SeatClass GetSeatClass(int value)
+        {
+            var seatClass = (SeatClass)value;
+            return Enum.IsDefined(typeof(SeatClass), value) ? seatClass : throw new InvalidCastException("Seat class is not valid");
+        }
     }
 }

@@ -40,7 +40,7 @@
             //Arrange
             var today = DateTime.UtcNow.Date;
             var date = today.AddDays(days);
-            var expected = "Date is not valid.";
+            var expected = "Date is not valid";
             //Act
             string result = null;
             try
@@ -67,7 +67,7 @@
             var destination = new Airport(dest);
             var today = DateTime.UtcNow.Date;
             var date = today.AddDays(days);
-            var expected = "Destionation must be different from origin.";
+            var expected = "Destionation must be different from origin";
             //Act
             string result = null;
             try

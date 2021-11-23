@@ -35,7 +35,7 @@
         public void CreateInvalidFlightSectionWithWrongSeatClass(SeatClass seatClass, int rows, int colms)
         {
             //Arrange
-            var expected = "Seat class is not valid.";
+            var expected = "Seat class is not valid";
             
             //Act
             string result = null;

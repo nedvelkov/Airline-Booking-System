@@ -20,7 +20,6 @@
         [InlineData("BGAir")]
         [InlineData("TRAir")]
         [InlineData("UKAir")]
-        [InlineData("A  a")] //Not good name
         [InlineData("BCD")]
         public void CreateValidAirline(string name)
         {
@@ -38,7 +37,7 @@
         [InlineData("   ")]
         [InlineData("")]
         [InlineData("Lufthansa")]
-        public void CreateInvalidAirline(string name)
+        public void CreateInvalidAirlineWithWrongLength(string name)
         {
             //Arrange
             var expected = "Name of airline must be between 1 and 5 characters";
@@ -53,6 +52,27 @@
                 Assert.Equal(expected, a.Message);
             }
         }
+
+       [Theory]
+       [InlineData("AW dw")]
+       [InlineData("A  a")]
+       [InlineData("A+wWa")]
+        public void CreateInvalidAirlineWith(string name)
+        {
+            //Arrange
+            var expected = "Name of airline must have only letters";
+            //Act
+            try
+            {
+                var airline = new Airline(name);
+            }
+            catch (Exception a)
+            {
+                //Asert
+                Assert.Equal(expected, a.Message);
+            }
+        }
+
 
         [Fact]
         public void TestFligthsListInNewAirline()
@@ -84,6 +104,7 @@
             //Arrange
             var airline = new Airline("test");
             var expected = $"Flight with id:{flightId} already exist";
+            var expectedCount = 1;
             //Act
             airline.AddFlight(this.flight);
             try
@@ -94,6 +115,7 @@
             {
                 //Asert
                 Assert.Equal(expected, a.Message);
+                Assert.Equal(expectedCount, airline.Flights.Count);
             }
         }
     }

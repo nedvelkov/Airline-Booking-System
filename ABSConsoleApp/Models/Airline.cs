@@ -6,6 +6,7 @@
     using ABSComon;
     using Models.Contracts;
     using System.Text;
+    using System.Text.RegularExpressions;
 
     public class Airline:IAirline
     {
@@ -22,9 +23,15 @@
             get { return this.name; }
             init
             {
-                if (string.IsNullOrEmpty(value) || value.Length >= 6)
+                if (string.IsNullOrEmpty(value) || string.IsNullOrWhiteSpace(value) ||value.Length >= 6)
                 {
                     throw new ArgumentException("Name of airline must be between 1 and 5 characters");
+                }
+                var regex = new Regex("^[a-zA-Z]{1,5}$");
+                if (regex.IsMatch(value)==false)
+                {
+                    throw new ArgumentException("Name of airline must have only letters");
+
                 }
                 this.name = value;
             }

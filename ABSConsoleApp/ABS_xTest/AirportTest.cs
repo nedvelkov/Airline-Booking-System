@@ -23,8 +23,10 @@
         [Theory]
         [InlineData("SA")]
         [InlineData("VRNaa")]
+        [InlineData("A  F")]
+        [InlineData("           ")]
         [InlineData(null)]
-        public void CreateInvalidAirport(string name)
+        public void CreateInvalidAirportWithWrongLength(string name)
         {
             //Arrange
             var expected = "Airport name must be 3 characters in length";
@@ -40,6 +42,28 @@
             }
             //Asert
             Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData("S A")]
+        [InlineData("A12")]
+        [InlineData("   ")]
+        [InlineData("123")]
+        public void CreateInvalidAirportWithWrongSymbols(string name)
+        {
+            //Arrange
+            var expected = "Airport name must be 3 upper letters";
+            //Act
+            try
+            {
+                var airport = new Airport(name);
+            }
+            catch (Exception a)
+            {
+                //Asert
+                Assert.Equal(expected, a.Message);
+            }
+
         }
     }
 }

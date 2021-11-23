@@ -2,6 +2,8 @@
 {
     using Models.Contracts;
     using System;
+    using System.Text.RegularExpressions;
+
     public class Airport:IAirport
     {
         private string name;
@@ -15,10 +17,18 @@
             get { return this.name; }
             init
             {
+                //var airportName = value.ToUpper();
                 if (string.IsNullOrEmpty(value) || value.Length != 3)
                 {
                     throw new ArgumentException("Airport name must be 3 characters in length");
                 }
+
+                var regex = new Regex("^[A-Z]{3}$");
+                if (regex.IsMatch(value) == false)
+                {
+                    throw new ArgumentException("Airport name must be 3 upper letters");
+                }
+
                 this.name = value;
             }
         }
