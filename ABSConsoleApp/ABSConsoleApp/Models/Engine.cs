@@ -12,6 +12,8 @@
         private IWriter writer;
         private ISystemManager manager;
         private List<string> types = new List<string> { "Airport", "Airlane", "Flight", "Flight section" };
+        private const string title= "ABS - Airline Bookig System";
+        private const int breakVoid = -257;
         public Engine(IReader reader, IWriter writer)
         {
             this.reader = reader;
@@ -22,14 +24,10 @@
         public void Run()
         {
             SetConsoleSize();
-            ConsoleSettings.Title = "ABS - Airline Bookig System";
-            var greeting = "Welcome to ABS - Airline Bookig System!";
-            ConsoleSettings.Clear();
-            writer.WriteLine(greeting);
-            writer.WriteLine(Help());
             var flag = true;
             while (flag)
             {
+                MainMenu();
                 var command = reader.ReadLine();
                 switch (command.ToLower())
                 {
@@ -38,6 +36,7 @@
                         SelectCreateType();
                         break;
                     case "-find":
+                        Find();
                         break;
                     case "-book":
                         Book();
@@ -76,7 +75,6 @@
 
         private string Create()
         {
-            var title = ConsoleSettings.Title;
             ConsoleSettings.Clear();
             ConsoleSettings.Title = title + "-Create";
             var sb = new StringBuilder();
@@ -91,7 +89,6 @@
 
             var infoRow = rowPosition + 2;
             var flag = true;
-            var main = false;
             ConsoleSettings.SetPossition(0, rowPosition);
             while (flag)
             {
@@ -102,9 +99,7 @@
                 {
                     case ConsoleKey.Escape:
                         flag = false;
-                        main = true;
                         break;
-
                     case ConsoleKey.UpArrow:
                         ConsoleSettings.SetPossition(0, curentRow - 1);
                         break;
@@ -118,19 +113,19 @@
                         switch (action)
                         {
                             case "Airport":
-                                main = Airport();
+                                 Airport();
                                 flag = false;
                                 break;
                             case "Airlane":
-                                main = Airline();
+                                 Airline();
                                 flag = false;
                                 break;
                             case "Flight":
-                                main = Flight();
+                                 Flight();
                                 flag = false;
                                 break;
                             case "Flight section":
-                                main = FlightSection();
+                                 FlightSection();
                                 flag = false;
                                 break;
                         }
@@ -145,18 +140,14 @@
                         break;
                 }
             }
-            if (main)
-            {
-                Run();
-            }
         }
 
-        private bool Airline()
+        private void Airline()
         {
+            ConsoleSettings.Title = title + "-Create Airline";
             writer.WriteLine("Airline name must be between 1 and 5 letters");
             writer.WriteLine("Enter name for airline:");
             var flag = true;
-            var main = false;
             while (flag)
             {
                 writer.Write("Name:");
@@ -167,7 +158,6 @@
                 {
                     writer.Write("Do you want to return in main menu (Y/N): ");
                     flag = ReurnToMainMenu();
-                    main = !flag;
                     writer.WriteLine("");
 
                 }
@@ -176,14 +166,14 @@
                     flag = false;
                 }
             }
-            return main;
         }
 
-        private bool Airport()
+        private void Airport()
         {
+            ConsoleSettings.Title = title + "-Create Airport";
+
             writer.WriteLine("Airport name must be 3 upper letters");
             var flag = true;
-            var main = false;
             while (flag)
             {
                 writer.WriteLine("Enter name for aiport:");
@@ -195,7 +185,6 @@
                 {
                     writer.Write("Do you want to return in main menu (Y/N): ");
                     flag = ReurnToMainMenu();
-                    main = !flag;
                     writer.WriteLine("");
                 }
                 else
@@ -203,13 +192,13 @@
                     flag = false;
                 }
             }
-            return main;
         }
 
-        private bool Flight()
+        private void Flight()
         {
+            ConsoleSettings.Title = title + "-Create Flight";
+
             var flag = true;
-            var main = false;
             while (flag)
             {
                 writer.Write("Airline associate with flight:");
@@ -233,22 +222,20 @@
                 {
                     writer.Write("Do you want to return in main menu (Y/N): ");
                     flag = ReurnToMainMenu();
-                    main = !flag;
                     writer.WriteLine("");
-
                 }
                 else
                 {
                     flag = false;
                 }
             }
-            return main;
         }
 
-        private bool FlightSection()
+        private void FlightSection()
         {
+            ConsoleSettings.Title = title + "-Create flight section";
+
             var flag = true;
-            var main = false;
             while (flag)
             {
                 var seatClass = SelectSection();
@@ -268,7 +255,6 @@
                 {
                     writer.Write("Do you want to return in main menu (Y/N): ");
                     flag = ReurnToMainMenu();
-                    main = !flag;
                     writer.WriteLine("");
                 }
                 else
@@ -276,17 +262,21 @@
                     flag = false;
                 }
             }
-            return main;
         }
 
         private void Book()
         {
+            ConsoleSettings.Title = title + "-Book seat";
+
             var flag = true;
             while (flag)
             {
-
                 ConsoleSettings.Clear();
                 var seatClass = SelectSection();
+                if (seatClass == breakVoid)
+                {
+                    return;
+                }
                 writer.Write("Airline associate with flight:");
                 var airlineName = reader.ReadLine();
                 writer.Write("Flight identification number:");
@@ -296,7 +286,7 @@
                 writer.Write("Column of section:");
                 var colmn = reader.ReadLine();
 
-                var message = this.manager.BookSeat(airlineName, id,seatClass,row,colmn[0]);
+                var message = this.manager.BookSeat(airlineName, id, seatClass, row, colmn[0]);
                 writer.WriteLine(message);
 
                 if (message.Contains("successfully") == false)
@@ -304,7 +294,6 @@
                     writer.Write("Do you want to return in main menu (Y/N): ");
                     flag = ReurnToMainMenu();
                     writer.WriteLine("");
-                    Run();
                 }
                 else
                 {
@@ -316,6 +305,37 @@
         {
             ConsoleSettings.Clear();
             writer.WriteLine(this.manager.DisplaySystemDetails());
+        }
+
+        private void Find()
+        {
+            ConsoleSettings.Title = title + "-Find flight";
+
+            var flag = true;
+            while (flag)
+            {
+                writer.Write("Origin of flight (airport name):");
+                var origin = reader.ReadLine();
+                writer.Write("Destination point of flight (airport name):");
+                var destination = reader.ReadLine();
+                this.manager.FindAvailableFlights(origin, destination);
+
+                var message = this.manager.FindAvailableFlights( origin, destination);
+                writer.WriteLine(message);
+
+                if (message.Contains("Departure") == false)
+                {
+                    writer.Write("Do you want to return in main menu (Y/N): ");
+                    flag = ReurnToMainMenu();
+                    writer.WriteLine("");
+
+                }
+                else
+                {
+                    flag = false;
+                }
+            }
+
         }
         private void HelpMenu()
         {
@@ -339,8 +359,7 @@
                 switch (key.Key)
                 {
                     case ConsoleKey.Escape:
-                        Run();
-                        break;
+                        return breakVoid;
                     case ConsoleKey.UpArrow:
                         ConsoleSettings.SetPossition(0, curentRow - 1);
                         break;
@@ -388,6 +407,15 @@
                  ConsoleKey.Escape => false,
                  _ => true,
              };
+
+        private void MainMenu()
+        {
+            ConsoleSettings.Title = title;
+            var greeting = "Welcome to ABS - Airline Bookig System!";
+            ConsoleSettings.Clear();
+            writer.WriteLine(greeting);
+            writer.WriteLine(Help());
+        }
 
     }
 }

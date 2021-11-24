@@ -10,7 +10,7 @@
     using Models.Contracts;
     using System.Globalization;
 
-    public class SystemManager:ISystemManager
+    public class SystemManager : ISystemManager
     {
         private List<Airline> airlines;
         private List<Airport> airports;
@@ -24,9 +24,9 @@
         {
             try
             {
-            HasItem(this.airports, x => x.Name == name);
-            var airport = new Airport(name);
-            this.airports.Add(airport);
+                HasItem(this.airports, x => x.Name == name);
+                var airport = new Airport(name);
+                this.airports.Add(airport);
             }
             catch (Exception a)
             {
@@ -59,9 +59,9 @@
                 var originAirport = GetItem(this.airports, x => x.Name == origin, $"Airport with name {origin} don't exist");
                 var destinationAirport = GetItem(this.airports, x => x.Name == destination, $"Airport with name {destination} don't exist");
                 var date = ValidateDate(year, month, day);
-                
+
                 var flight = new Flight(originAirport, destinationAirport, date, id);
-                
+
                 airline.AddFlight(flight);
             }
             catch (Exception a)
@@ -97,21 +97,32 @@
             {
                 return "Origin point can't be same as destination";
             }
-            var originAirport = GetItem(this.airports, x => x.Name == origin, $"Airport with name {origin} don't exist");
-            var destinationAirport = GetItem(this.airports, x => x.Name == destination, $"Airport with name {destination} don't exist");
+            IAirport originAirport;
+            IAirport destinationAirport;
+            try
+            {
+                originAirport = GetItem(this.airports, x => x.Name == origin, $"Airport with name {origin} don't exist");
+                destinationAirport = GetItem(this.airports, x => x.Name == destination, $"Airport with name {destination} don't exist");
+
+            }
+            catch (Exception a)
+            {
+
+                return a.Message;
+            }
             var flights = new List<Flight>();
             foreach (var airline in this.airlines)
             {
                 var tmp = airline.Flights.ToList().Where(x => x.Origin.Equals(originAirport) && x.Destination.Equals(destinationAirport));
-                flights.AddRange(tmp.Select(x=>(Flight)x));
+                flights.AddRange(tmp.Select(x => (Flight)x));
             }
 
             if (flights.Count > 0)
             {
-            var sb = new StringBuilder();
-            flights.ForEach(x => sb.AppendLine(x.ToString()));
+                var sb = new StringBuilder();
+                flights.ForEach(x => sb.AppendLine(x.ToString()));
 
-            return sb.ToString().Trim();
+                return sb.ToString().Trim();
             }
             return $"There is no flight from {origin} to {destination}, at this time";
         }
@@ -121,9 +132,9 @@
             try
             {
                 var seatClassEnum = GetSeatClass(seatClass);
-                var airline = GetItem(this.airlines, x => x.Name == airlineName,$"Airline with name {airlineName} don't exist");
+                var airline = GetItem(this.airlines, x => x.Name == airlineName, $"Airline with name {airlineName} don't exist");
                 var flight = GetItem(airline.Flights.ToList(), x => x.Id == flightId, $"Flight with id {flightId} don't exist");
-                var flightSections = GetItem(flight.FlightSections.ToList(), x => x.SeatClass ==seatClassEnum,$"Section with name {seatClass} don't exist");
+                var flightSections = GetItem(flight.FlightSections.ToList(), x => x.SeatClass == seatClassEnum, $"Section with name {seatClass} don't exist");
 
                 flightSections.BookSeat(row, colmn);
 
@@ -141,9 +152,9 @@
         {
             var sb = new StringBuilder();
             sb.AppendLine($"Airort aviable {this.airports.Count}");
-            if (this.airports.Count>0)
+            if (this.airports.Count > 0)
             {
-            this.airports.ForEach(x => sb.AppendLine(x.ToString()));
+                this.airports.ForEach(x => sb.AppendLine(x.ToString()));
             }
             sb.AppendLine($"Airline aviable {this.airlines.Count}");
             if (this.airlines.Count > 0)
@@ -153,7 +164,7 @@
             return sb.ToString().Trim();
         }
 
-        private T GetItem<T>(List<T> list, Func<T, bool> func,string exceptionMessage)
+        private T GetItem<T>(List<T> list, Func<T, bool> func, string exceptionMessage)
         {
             var getItem = list.FirstOrDefault(func);
             if (getItem == null)
@@ -173,7 +184,7 @@
             return false;
         }
 
-        private DateTime ValidateDate(int year,int month,int day)
+        private DateTime ValidateDate(int year, int month, int day)
         {
             DateTime date;
             var validDate = DateTime.TryParse($"{month}/{day}/{year}", CultureInfo.InvariantCulture, DateTimeStyles.None, out date);

@@ -1,12 +1,10 @@
 ﻿namespace ABS_xTest
 {
 
-    using System;
-
-    using Xunit;
     using Facade;
-
     using Models.Enums;
+    using System;
+    using Xunit;
 
     public class SystemManagerTest
     {
