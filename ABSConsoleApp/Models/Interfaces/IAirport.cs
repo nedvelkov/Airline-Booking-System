@@ -1,4 +1,4 @@
-﻿namespace Models.Contracts
+﻿namespace Models.Interfaces
 {
     public interface IAirport
     {

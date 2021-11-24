@@ -1,10 +1,10 @@
-﻿namespace Models
+﻿namespace Models.Models
 {
     using System;
     using System.Linq;
     using System.Collections.Generic;
     using ABSComon;
-    using Models.Contracts;
+    using Models.Interfaces;
     using System.Text;
     using System.Text.RegularExpressions;
 
@@ -31,7 +31,6 @@
                 if (regex.IsMatch(value)==false)
                 {
                     throw new ArgumentException("Name of airline must have only letters");
-
                 }
                 this.name = value;
             }

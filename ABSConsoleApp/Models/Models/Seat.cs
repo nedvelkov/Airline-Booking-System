@@ -1,6 +1,6 @@
 ﻿namespace Models
 {
-    using Models.Contracts;
+    using Models.Interfaces;
     using System;
 
     public class Seat:ISeat

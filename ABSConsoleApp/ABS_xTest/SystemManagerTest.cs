@@ -2,7 +2,6 @@
 {
 
     using Facade;
-    using Models.Enums;
     using System;
     using Xunit;
 

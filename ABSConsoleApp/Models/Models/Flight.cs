@@ -7,7 +7,7 @@
 
     using Enums;
     using ABSComon;
-    using Models.Contracts;
+    using Models.Interfaces;
 
     public class Flight:IFlight
     {
@@ -25,6 +25,7 @@
             this.Id = id;
             this.flightSections = new List<IFlightSection>();
         }
+
         public string Id
         {
             get { return this.id; }

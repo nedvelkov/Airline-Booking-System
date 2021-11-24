@@ -1,4 +1,4 @@
-﻿namespace Models.Contracts
+﻿namespace Models.Interfaces
 {
     using System.Collections.Generic;
     public interface IAirline

@@ -1,4 +1,4 @@
-﻿namespace Models.Enums
+﻿namespace Facade
 {
     public enum SeatClass
     {

@@ -1,63 +1,71 @@
-﻿namespace Facade
+﻿namespace Facade.Models
 {
     using System;
     using System.Linq;
     using System.Text;
     using System.Collections.Generic;
 
-    using Models;
-    using Models.Enums;
-    using Models.Contracts;
+    using Interfaces;
     using System.Globalization;
+    using System.Text.RegularExpressions;
+
+    using DataConstants;
 
     public class SystemManager : ISystemManager
     {
-        private List<Airline> airlines;
-        private List<Airport> airports;
+        private Dictionary<string, Airline> _airlines;
+        private Dictionary<string, Airport> _airports;
+        private Dictionary<string, Flight> _flights;
+
         public SystemManager()
         {
-            this.airlines = new List<Airline>();
-            this.airports = new List<Airport>();
+            _airlines = new();
+            _airports = new();
         }
 
         public string CreateAirport(string name)
         {
             try
             {
-                HasItem(this.airports, x => x.Name == name);
-                var airport = new Airport(name);
-                this.airports.Add(airport);
+                ValidateName(name, "^[A-Z]{3}$", Error.airportName);
+                ContainsItem(_airports, name, String.Format(Error.dublicateName, "Airport", name));
+
+                _airports.Add(name, new Airport() { Name = name });
+
+                return String.Format(Success.createdAirport, name);
             }
             catch (Exception a)
             {
+
                 return a.Message;
             }
-            return $"Airport {name} is created successfully";
         }
 
         public string CreateAirline(string name)
         {
             try
             {
-                HasItem(this.airlines, x => x.Name == name);
-                var airline = new Airline(name);
-                this.airlines.Add(airline);
+                ValidateName(name, "^[a-zA-Z]{1,5}$", Error.airlineName);
+                ContainsItem(_airlines, name, String.Format(Error.dublicateName, "Airline", name));
+
+                _airlines.Add(name, new Airline() { Name = name });
+
+                return String.Format(Success.createdAirline, name);
             }
             catch (Exception a)
             {
+
                 return a.Message;
             }
-            return $"Airline {name} is created successfully";
-
         }
 
         public string CreateFlight(string airlineName, string origin, string destination, int year, int month, int day, string id)
         {
             try
             {
-                var airline = GetItem(this.airlines, x => x.Name == airlineName, $"Airline with name {airlineName} don't exist");
-                var originAirport = GetItem(this.airports, x => x.Name == origin, $"Airport with name {origin} don't exist");
-                var destinationAirport = GetItem(this.airports, x => x.Name == destination, $"Airport with name {destination} don't exist");
+                var airline = GetItem(_airlines, airlineName, String.Format(Error.airlineMissing, airlineName));
+                var originAirport = GetItem(_airports, origin, String.Format(Error.airportMissing, origin));
+                var destinationAirport = GetItem(_airports, destination, String.Format(Error.airportMissing, destination));
                 var date = ValidateDate(year, month, day);
 
                 var flight = new Flight(originAirport, destinationAirport, date, id);
@@ -77,8 +85,8 @@
         {
             try
             {
-                //var flight = GetItem(GetItem(this.airlines, x => x.Name == airlineName).Flights.ToList(), x => x.Id == flightId,false);
-                var airline = GetItem(this.airlines, x => x.Name == airlineName, $"Airline with name {airlineName} don't exist");
+                //var flight = GetItem(GetItem(airlines, x => x.Name == airlineName).Flights.ToList(), x => x.Id == flightId,false);
+                var airline = GetItem(_airlines, x => x.Name == airlineName, $"Airline with name {airlineName} don't exist");
                 var flight = GetItem(airline.Flights.ToList(), x => x.Id == flightId, $"Flight with id {flightId} don't exist");
 
                 flight.AddFlightSection((SeatClass)seatClass, rows, colms);
@@ -101,8 +109,8 @@
             IAirport destinationAirport;
             try
             {
-                originAirport = GetItem(this.airports, x => x.Name == origin, $"Airport with name {origin} don't exist");
-                destinationAirport = GetItem(this.airports, x => x.Name == destination, $"Airport with name {destination} don't exist");
+                originAirport = GetItem(_airports, x => x.Name == origin, $"Airport with name {origin} don't exist");
+                destinationAirport = GetItem(_airports, x => x.Name == destination, $"Airport with name {destination} don't exist");
 
             }
             catch (Exception a)
@@ -111,7 +119,7 @@
                 return a.Message;
             }
             var flights = new List<Flight>();
-            foreach (var airline in this.airlines)
+            foreach (var airline in _airlines)
             {
                 var tmp = airline.Flights.ToList().Where(x => x.Origin.Equals(originAirport) && x.Destination.Equals(destinationAirport));
                 flights.AddRange(tmp.Select(x => (Flight)x));
@@ -132,7 +140,7 @@
             try
             {
                 var seatClassEnum = GetSeatClass(seatClass);
-                var airline = GetItem(this.airlines, x => x.Name == airlineName, $"Airline with name {airlineName} don't exist");
+                var airline = GetItem(_airlines, x => x.Name == airlineName, $"Airline with name {airlineName} don't exist");
                 var flight = GetItem(airline.Flights.ToList(), x => x.Id == flightId, $"Flight with id {flightId} don't exist");
                 var flightSections = GetItem(flight.FlightSections.ToList(), x => x.SeatClass == seatClassEnum, $"Section with name {seatClass} don't exist");
 
@@ -151,19 +159,19 @@
         public string DisplaySystemDetails()
         {
             var sb = new StringBuilder();
-            sb.AppendLine($"Airort aviable {this.airports.Count}");
-            if (this.airports.Count > 0)
+            sb.AppendLine($"Airort aviable {_airports.Count}");
+            if (_airports.Count > 0)
             {
-                this.airports.ForEach(x => sb.AppendLine(x.ToString()));
+                _airports.ForEach(x => sb.AppendLine(x.ToString()));
             }
-            sb.AppendLine($"Airline aviable {this.airlines.Count}");
-            if (this.airlines.Count > 0)
+            sb.AppendLine($"Airline aviable {_airlines.Count}");
+            if (_airlines.Count > 0)
             {
-                this.airlines.ForEach(x => sb.AppendLine(x.ToString()));
+                _airlines.ForEach(x => sb.AppendLine(x.ToString()));
             }
             return sb.ToString().Trim();
         }
-
+        /*
         private T GetItem<T>(List<T> list, Func<T, bool> func, string exceptionMessage)
         {
             var getItem = list.FirstOrDefault(func);
@@ -173,7 +181,7 @@
             }
             return getItem;
         }
-
+        */
         private bool HasItem<T>(List<T> list, Func<T, bool> func)
         {
             var getItem = list.FirstOrDefault(func);
@@ -193,6 +201,51 @@
                 throw new ArgumentException("Date is not valid");
             }
             return date;
+        }
+
+        /// <summary>
+        /// Validate <paramref name="name"/> based on regex <paramref name="expression"/>.Throw error with <paramref name="message"/> if <paramref name="name"/> is not valid
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="expression"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        private void ValidateName(string name, string expression, string message)
+        {
+            var regex = new Regex(expression);
+            if (!regex.IsMatch(name))
+            {
+                throw new ArgumentException(message);
+            }
+        }
+
+        /// <summary>
+        /// Determines whether the <paramref name="dictionary"/> contains item <typeparamref name="T"/> the specified <paramref name="key"/>.Throw error with <paramref name="message"/> if is true
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dictionary"></param>
+        /// <param name="key"></param>
+        /// <param name="message"></param>
+        private void ContainsItem<T>(Dictionary<string, T> dictionary, string key, string message)
+        {
+            if (dictionary.ContainsKey(key))
+            {
+                throw new ArgumentException(message);
+            }
+        }
+
+        /// <summary>
+        /// Return item of type <typeparamref name="T"/> with key <paramref name="key"/>. If <paramref name="dictionary"/> don't contains item with such <paramref name="key"/>, thrown erro with <paramref name="message"/>.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dictionary"></param>
+        /// <param name="key"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        private T GetItem<T>(Dictionary<string, T> dictionary, string key, string message)
+        {
+            ContainsItem(dictionary, key, message);
+            return dictionary[key];
         }
 
         private SeatClass GetSeatClass(int value)

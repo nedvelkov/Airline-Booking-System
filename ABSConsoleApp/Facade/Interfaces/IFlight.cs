@@ -1,0 +1,20 @@
+﻿namespace Facade.Interfaces
+{
+    using System;
+    using System.Collections.Generic;
+
+    interface IFlight
+    {
+        public string Id { get; }
+
+        public DateTime Date { get; }
+
+        public IAirport Origin { get; }
+
+        public IAirport Destination { get; }
+
+        public IReadOnlyDictionary<SeatClass, IFlightSection> FlightSections { get; }
+
+        public void AddFlightSection(IFlightSection flightSection);
+    }
+}
