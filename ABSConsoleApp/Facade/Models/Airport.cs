@@ -1,10 +1,18 @@
 ﻿namespace Facade.Models
 {
     using Facade.Interfaces;
+    using System.Collections.Generic;
 
     class Airport:IAirport
     {
+        private Dictionary<string, IFlight> _departuresFlights;
+        public Airport() => _departuresFlights = new();
         public string Name { get; init; }
+
+        public IReadOnlyDictionary<string, IFlight> DeparturesFlights() => _departuresFlights;
+
+        public void AddDeparureFlight(IFlight flight) => _departuresFlights.Add(flight.Id, flight);
+
 
         public override bool Equals(object obj)
         {

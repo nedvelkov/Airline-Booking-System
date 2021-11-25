@@ -12,6 +12,6 @@
 
         public void BookSeat(ISeatNumber number);
 
-        public void AddSeat(IEnumerable<ISeat> seats);
+        public void AddSeats(IEnumerable<ISeat> seats);
     }
 }

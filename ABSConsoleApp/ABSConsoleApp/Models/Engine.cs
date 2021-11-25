@@ -4,7 +4,8 @@
     using System.Collections.Generic;
     using System.Text;
     using Contracts;
-    using Facade;
+    using Facade.Interfaces;
+    using Facade.Models;
     using UI;
     public class Engine
     {

@@ -13,6 +13,8 @@
 
         public IAirport Destination { get; }
 
+        public IAirline Airline { get; }
+
         public IReadOnlyDictionary<SeatClass, IFlightSection> FlightSections { get; }
 
         public void AddFlightSection(IFlightSection flightSection);

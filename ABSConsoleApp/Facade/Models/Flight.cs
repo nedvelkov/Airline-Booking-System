@@ -21,6 +21,8 @@
 
         public IAirport Destination { get; set; }
 
+        public IAirline Airline { get; init; }
+
         public IReadOnlyDictionary<SeatClass,IFlightSection> FlightSections => _flightSections;
 
         public void AddFlightSection(IFlightSection flightSection) => _flightSections.Add(flightSection.SeatClass, flightSection);

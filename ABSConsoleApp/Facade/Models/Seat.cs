@@ -4,12 +4,9 @@
 
     class Seat:ISeat
     {
-        private ISeatNumber _number;
         private bool _booked;
 
-        public Seat(ISeatNumber number) => _number = number;
-
-        public ISeatNumber Number => _number;
+        public ISeatNumber Number { get; init; }
 
         public bool Booked => _booked;
 
@@ -18,7 +15,7 @@
         public override string ToString()
         {
             var seatIsBooked = this.Booked ? "booked" : "free";
-            var text = $" {_number.Row.ToString("D3")}{_number.Colmn} - {seatIsBooked}";
+            var text = $" {Number} - {seatIsBooked}";
             return text;
         }
     }

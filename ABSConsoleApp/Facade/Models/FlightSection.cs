@@ -19,7 +19,7 @@
 
         public void BookSeat(ISeatNumber number) => _seats[number].BookSeat();
 
-        public void AddSeat(IEnumerable<ISeat> seats) => seats.ToList().ForEach(x => _seats.Add(x.Number, x));
+        public void AddSeats(IEnumerable<ISeat> seats) => seats.ToList().ForEach(x => _seats.Add(x.Number, x));
 
         public override string ToString()
         {
