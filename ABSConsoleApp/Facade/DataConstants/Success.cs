@@ -17,5 +17,6 @@
 
         //Seat
         public const string bookedSeat = "Seat {0} in {1} class is booked for flight from {2} to {3} on airline {4}";
+
     }
 }

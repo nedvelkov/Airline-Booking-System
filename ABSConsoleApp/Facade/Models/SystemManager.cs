@@ -107,37 +107,6 @@
             }
         }
 
-        /// <summary>
-        /// This method is only for test purpose.
-        /// </summary>
-        /// <param name="airlineName"></param>
-        /// <param name="flightId"></param>
-        /// <param name="rows"></param>
-        /// <param name="colms"></param>
-        /// <param name="seatClass"></param>
-        /// <param name="sectionDate"></param>
-        /// <returns></returns>
-        public string CreateSection(string airlineName, string flightId, int rows, int colms, int seatClass,DateTime sectionDate)
-        {
-            _testDate = sectionDate;
-            try
-            {
-                var flight = AirlaneGotFlight(flightId, airlineName);
-
-                var flightSection = CreateFlightSection(rows, colms, seatClass);
-
-                ContainsItem(flight.FlightSections, (SeatClass)seatClass, String.Format(Error.dublicateItem, "Flight section", "name"));
-
-                flight.AddFlightSection(flightSection);
-
-                return String.Format(Success.createFlightSection, (SeatClass)seatClass, flight.Origin.Name, flight.Destination.Name, airlineName);
-            }
-            catch (Exception a)
-            {
-                return a.Message;
-            }
-        }
-
         public string FindAvailableFlights(string origin, string destination)
         {
             try
@@ -148,7 +117,7 @@
 
                 var flights = originAirport.DeparturesFlights()
                              .Where(x => x.Value.Destination.Equals(destinationAirport)  // Filter collection and take flights with give destination
-                             && DateTime.Compare(x.Value.Date,DateTime.UtcNow)>=0)       // Validate flight date
+                             && DateTime.Compare(x.Value.Date,DateTime.UtcNow.Date)>0)   // Validate flight date
                              .Select(x => x.Value)                                       // Select IFlight objects
                              .ToList();                                                  // Convert to List<IFlight> objects
                 flights.ForEach(f => sb.AppendLine(f.ToString()));                       // Append every IFlight object to strig and add it to StringBuilder sb
@@ -162,6 +131,50 @@
                 return a.Message;
             }
         }
+
+        #region Methods for test
+
+        /// <summary>
+        /// This method is only for test purpose.
+        /// </summary>
+        /// <param name="sectionDate"></param>
+        /// <returns></returns>
+        public void SetTestDate(DateTime sectionDate)
+        {
+            _testDate = sectionDate.Date;
+        }
+
+        /// <summary>
+        /// This method is for test purpose.It works with _testDate
+        /// </summary>
+        /// <param name="origin"></param>
+        /// <param name="destination"></param>
+        /// <returns></returns>
+        public string FindAvailableFlightsTest(string origin, string destination)
+        {
+            try
+            {
+                var (originAirport, destinationAirport) = ValidateFlightDestination(origin, destination);
+
+                var sb = new StringBuilder();
+
+                var flights = originAirport.DeparturesFlights()
+                             .Where(x => x.Value.Destination.Equals(destinationAirport)  // Filter collection and take flights with give destination
+                             && DateTime.Compare(x.Value.Date, _testDate) > 0)           // Validate flight date
+                             .Select(x => x.Value)                                       // Select IFlight objects
+                             .ToList();                                                  // Convert to List<IFlight> objects
+                flights.ForEach(f => sb.AppendLine(f.ToString()));                       // Append every IFlight object to strig and add it to StringBuilder sb
+
+                return flights.Count > 0 ? sb.ToString() : String.Format(Error.noFlights, origin, destination);
+
+            }
+            catch (Exception a)
+            {
+
+                return a.Message;
+            }
+        }
+        #endregion
 
         public string BookSeat(string airlineName, string flightId, int seatClass, int row, char colmn)
         {
@@ -190,12 +203,12 @@
         public string DisplaySystemDetails()
         {
             var sb = new StringBuilder();
-            sb.AppendLine($"Airort aviable {_airports.Count}");
+            sb.AppendLine(String.Format(DataConstrain.displayAirportsTitle,_airports.Count));
             if (_airports.Count > 0)
             {
                 _airports.Select(x => x.Value).ToList().ForEach(x => sb.AppendLine(x.ToString()));
             }
-            sb.AppendLine($"Airline aviable {_airlines.Count}");
+            sb.AppendLine(String.Format(DataConstrain.displayAirlinesTitle,_airlines.Count));
             if (_airlines.Count > 0)
             {
                 _airlines.Select(x => x.Value).ToList().ForEach(x => sb.AppendLine(x.ToString()));
@@ -256,7 +269,6 @@
         /// <param name="dictionary"></param>
         /// <param name="key"></param>
         /// <param name="message"></param>
-
         private void ContainsItem<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> dictionary, TKey key, string message)
         {
             if (dictionary.ContainsKey(key))
@@ -343,8 +355,8 @@
         /// <param name="message"></param>
         private void ValidateFlightDate(DateTime date,string message)
         {
-            var dateToCompare = _testDate != DateTime.MinValue ? _testDate : DateTime.UtcNow;
-            if (DateTime.Compare(date.Date, dateToCompare.Date) < 0)
+            var dateToCompare = _testDate != DateTime.MinValue ? _testDate : DateTime.UtcNow.Date;
+            if (DateTime.Compare(date.Date, dateToCompare) <= 0)
             {
                 throw new ArgumentException(message);
             }
@@ -414,7 +426,7 @@
                     var seatNumber = new SeatNumber()
                     {
                         Row = row,
-                        Colmn = (char)(colmn + DataConstrain.initialValueForSeatColm)
+                        Colmn = (char)(colmn + DataConstrain.initialValueForSeatColmn)
                     };
 
                     var seat = new Seat() { Number = seatNumber };
@@ -427,11 +439,11 @@
 
         private void ValidateSeatNumber(int row, char colmn)
         {
-            if (row < DataConstrain.minSeatRows && row > DataConstrain.maxSeatRows)
+            if (row < DataConstrain.minSeatRows || row > DataConstrain.maxSeatRows)
             {
                 throw new ArgumentException(Error.invalidSeatRow);
             }
-            if (colmn < DataConstrain.firstSeatChar && colmn > DataConstrain.lastSeatChar)
+            if (colmn < DataConstrain.firstSeatChar || colmn > DataConstrain.lastSeatChar)
             {
                 throw new ArgumentException(Error.invalidSeatColmn);
             }

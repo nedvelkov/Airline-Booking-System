@@ -6,12 +6,13 @@
     using System.Collections.Generic;
 
     using Facade.Interfaces;
+    using static DataConstants.DataConstrain;
 
     class Flight:IFlight
     {
         private Dictionary<SeatClass,IFlightSection> _flightSections;
 
-        public Flight() => this._flightSections = new();
+        public Flight() => _flightSections = new();
 
         public string Id { get; init; }
 
@@ -30,9 +31,9 @@
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.AppendLine($"Flight #{this.Id} from {this.Origin.Name} to {this.Destination.Name}.Departure at {this.Date.ToString("MM/dd/yyyy")}");
-            sb.AppendLine($"The flight has {this._flightSections.Count} section.");
-            this._flightSections.ToList().ForEach(x => sb.AppendLine(x.ToString()));
+            sb.AppendLine(String.Format(flightToStringTitle,Id,Origin.Name,Destination.Name,Date.ToString(formatDateTime)));
+            sb.AppendLine(String.Format(flightSectionCount,_flightSections.Count));
+            _flightSections.ToList().ForEach(x => sb.AppendLine(x.Value.ToString()));
 
             return sb.ToString().TrimEnd();
         }

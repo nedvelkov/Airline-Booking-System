@@ -1,10 +1,12 @@
 ﻿namespace Facade.Models
 {
+    using System;
     using System.Linq;
     using System.Text;
     using System.Collections.Generic;
 
     using Facade.Interfaces;
+    using static Facade.DataConstants.DataConstrain;
 
     class FlightSection : IFlightSection
     {
@@ -15,7 +17,7 @@
 
         public IReadOnlyDictionary<ISeatNumber, ISeat> Seats => _seats;
 
-        public bool HasAvaibleSeats() => this._seats.Any(x => x.Value.Booked == false);
+        public bool HasAvaibleSeats() => _seats.Any(x => x.Value.Booked == false);
 
         public void BookSeat(ISeatNumber number) => _seats[number].BookSeat();
 
@@ -24,8 +26,8 @@
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.AppendLine($"Flight section {SeatClass} class with {_seats.Count} seats");
-            _seats.ToList().ForEach(x => sb.AppendLine(x.ToString()));
+            sb.AppendLine(String.Format(flightSectionToStringTitle,SeatClass,_seats.Count));
+            _seats.ToList().ForEach(x => sb.AppendLine(x.Value.ToString()));
 
             return sb.ToString().TrimEnd();
         }

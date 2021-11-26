@@ -7,6 +7,7 @@
     using Facade;
     using Facade.Models;
     using Facade.DataConstants;
+    using System.Text;
 
     public class SystemManagerTest
     {
@@ -88,7 +89,7 @@
         }
 
         [Theory]
-        [InlineData(0)]
+        [InlineData(8541)]
         [InlineData(10)]
         public void CreateValidFlight(int days)
         {
@@ -443,24 +444,23 @@
         }
 
         [Theory]
-        // dayOfSection is date of createing section
-        // departureDay is day of flight
-        // dayOfSection must be bigger than departureDay
+        // dayTest is date of testing
+        // dayFlight is day of flight
+        // dayTest must be bigger than dayFlight
         [InlineData(2, 5)]
         [InlineData(5, 15)]
         [InlineData(10, 11)]
-        public void TestCreateSectionOnDeparureFlight(int departureDay, int dayOfSection)
+        public void TestCreateSectionOnDeparureFlight(int dayFlight, int dayTest)
         {
             //Arrange
             var airlineName = "BGAir";
             var origin = "SFA";
             var destination = "PLD";
             var today = DateTime.UtcNow;
-            var flightDate = today.AddDays(departureDay);
+            var flightDate = today.AddDays(dayFlight);
             var yearDeparture = flightDate.Year;
             var monthDeparture = flightDate.Month;
             var dayDeparture = flightDate.Day;
-
             var flightId = "BG14844";
             var rows = 2;
             var colms = 2;
@@ -471,12 +471,13 @@
             system.CreateAirport(origin);
             system.CreateAirport(destination);
             system.CreateFlight(airlineName, origin, destination, yearDeparture, monthDeparture, dayDeparture, flightId);
+            system.SetTestDate(today.AddDays(dayTest));
 
             var expected = Error.departedFlight;
 
 
             //Act
-            var result = system.CreateSection(airlineName, flightId, rows, colms, seatClass,today.AddDays(dayOfSection));
+            var result = system.CreateSection(airlineName, flightId, rows, colms, seatClass);
 
             //Assert
             Assert.Equal(expected, result);
@@ -552,22 +553,58 @@
 
         }
 
+        [Theory]
+        [InlineData(1, 2)]
+        [InlineData(1, 1)]
+        public void TestFindAvailableFlightsWithDepartedFlight(int dayFilight, int dayTest)
+        {
+            //Arrange
+            var origin = "SFA";
+            var destination = "PRS";
+            var airlineName = "BGAir";
+            var today = DateTime.UtcNow;
+            var flightDate = today.AddDays(dayFilight);
+            var year = flightDate.Year;
+            var month = flightDate.Month;
+            var day = flightDate.Day;
+            var id = "BG14844";
+
+            var system = new SystemManager();
+            system.CreateAirline(airlineName);
+            system.CreateAirport(origin);
+            system.CreateAirport(destination);
+            system.CreateFlight(airlineName, origin, destination, year, month, day, id);
+            system.SetTestDate(today.AddDays(dayTest));
+
+            var expected = String.Format(Error.noFlights, origin, destination);
+
+            //Act
+            var result = system.FindAvailableFlightsTest(origin, destination);
+
+            //Assert
+            Assert.Equal(expected, result);
+
+        }
+
         [Fact]
         public void TestBookSeat()
         {
             //Arrange
-            const string origin = "PLD";
-            const string destination = "PRS";
-            const string airlineName = "BGAir";
-            const string flightId = "BG14844";
+            var origin = "PLD";
+            var destination = "PRS";
+            var airlineName = "BGAir";
+            var flightId = "BG14844";
             const int seatClass = 1;
             const int rows = 5;
-            const int row = 2;
             const int colms = 5;
+            var today = DateTime.UtcNow;
+            var flightDate = today.AddDays(10);
+            var year = flightDate.Year;
+            var month = flightDate.Month;
+            var day = flightDate.Day;
+
+            const int row = 2;
             const char colmn = 'C';
-            var year = DateTime.UtcNow.Year;
-            var month = DateTime.UtcNow.Month;
-            var day = DateTime.UtcNow.Day;
 
             var system = new SystemManager();
             system.CreateAirline(airlineName);
@@ -576,7 +613,47 @@
             system.CreateFlight(airlineName, origin, destination, year, month, day, flightId);
             system.CreateSection(airlineName, flightId, rows, colms, seatClass);
 
-            var expected = $"Seat {row:D3}{colmn} in {seatClass} class is booked for flight from {origin} to {destination} on airline {airlineName}";
+            var expected = String.Format(Success.bookedSeat, $"{row:D3}{colmn}", (SeatClass)seatClass, origin, destination, airlineName);
+
+            //Act
+            var result = system.BookSeat(airlineName, flightId, seatClass, row, colmn);
+
+            //Assert
+            Assert.Equal(expected, result);
+
+        }
+
+        [Theory]
+        [InlineData(2, 5)]
+        [InlineData(5, 5)]
+        public void TestBookSeatOnDepartedFlight(int dayFlight, int dayTest)
+        {
+            //Arrange
+            var origin = "PLD";
+            var destination = "PRS";
+            var airlineName = "BGAir";
+            var flightId = "BG14844";
+            const int seatClass = 1;
+            const int rows = 5;
+            const int colms = 5;
+            var today = DateTime.UtcNow;
+            var flightDate = today.AddDays(dayFlight);
+            var year = flightDate.Year;
+            var month = flightDate.Month;
+            var day = flightDate.Day;
+
+            const int row = 2;
+            const char colmn = 'C';
+
+            var system = new SystemManager();
+            system.CreateAirline(airlineName);
+            system.CreateAirport(origin);
+            system.CreateAirport(destination);
+            system.CreateFlight(airlineName, origin, destination, year, month, day, flightId);
+            system.CreateSection(airlineName, flightId, rows, colms, seatClass);
+            system.SetTestDate(today.AddDays(dayTest));
+
+            var expected = Error.departedFlight;
 
             //Act
             var result = system.BookSeat(airlineName, flightId, seatClass, row, colmn);
@@ -587,27 +664,183 @@
         }
 
         [Fact]
+        public void TestBookSeatAlreadyBooked()
+        {
+            //Arrange
+            var origin = "PLD";
+            var destination = "PRS";
+            var airlineName = "BGAir";
+            var flightId = "BG14844";
+            const int seatClass = 1;
+            const int rows = 5;
+            const int colms = 5;
+            var today = DateTime.UtcNow;
+            var flightDate = today.AddDays(10);
+            var year = flightDate.Year;
+            var month = flightDate.Month;
+            var day = flightDate.Day;
+
+            const int row = 2;
+            const char colmn = 'C';
+
+            var system = new SystemManager();
+            system.CreateAirline(airlineName);
+            system.CreateAirport(origin);
+            system.CreateAirport(destination);
+            system.CreateFlight(airlineName, origin, destination, year, month, day, flightId);
+            system.CreateSection(airlineName, flightId, rows, colms, seatClass);
+
+            var expected = Error.bookedSeat;
+
+            //Act
+            system.BookSeat(airlineName, flightId, seatClass, row, colmn);
+            var result = system.BookSeat(airlineName, flightId, seatClass, row, colmn);
+
+            //Assert
+            Assert.Equal(expected, result);
+
+        }
+
+        [Theory]
+        [InlineData(2, 101)]
+        [InlineData(5, -5)]
+        [InlineData(5, 0)]
+        public void TestBookSeatWithWrongRow(int rows, int row)
+        {
+            //Arrange
+            var origin = "PLD";
+            var destination = "PRS";
+            var airlineName = "BGAir";
+            var flightId = "BG14844";
+            const int seatClass = 1;
+            const int colms = 5;
+            var today = DateTime.UtcNow;
+            var flightDate = today.AddDays(10);
+            var year = flightDate.Year;
+            var month = flightDate.Month;
+            var day = flightDate.Day;
+
+            const char colmn = 'C';
+
+            var system = new SystemManager();
+            system.CreateAirline(airlineName);
+            system.CreateAirport(origin);
+            system.CreateAirport(destination);
+            system.CreateFlight(airlineName, origin, destination, year, month, day, flightId);
+            system.CreateSection(airlineName, flightId, rows, colms, seatClass);
+
+            var expected = Error.invalidSeatRow;
+
+            //Act
+            var result = system.BookSeat(airlineName, flightId, seatClass, row, colmn);
+
+            //Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData(2, 'a')]
+        [InlineData(5, 'K')]
+        [InlineData(5, 'Е')]
+        public void TestBookSeatWithWrongColm(int colms, char colmn)
+        {
+            //Arrange
+            var origin = "PLD";
+            var destination = "PRS";
+            var airlineName = "BGAir";
+            var flightId = "BG14844";
+            const int seatClass = 1;
+            const int rows = 5;
+            var today = DateTime.UtcNow;
+            var flightDate = today.AddDays(10);
+            var year = flightDate.Year;
+            var month = flightDate.Month;
+            var day = flightDate.Day;
+
+            var row = 1;
+
+            var system = new SystemManager();
+            system.CreateAirline(airlineName);
+            system.CreateAirport(origin);
+            system.CreateAirport(destination);
+            system.CreateFlight(airlineName, origin, destination, year, month, day, flightId);
+            system.CreateSection(airlineName, flightId, rows, colms, seatClass);
+
+            var expected = Error.invalidSeatColmn;
+
+            //Act
+            var result = system.BookSeat(airlineName, flightId, seatClass, row, colmn);
+
+            //Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        // row and colmn must be bigger from rows and colms
+        [InlineData(2, 3, 3, 'D')]
+        [InlineData(5, 6, 4, 'E')]
+        public void TestBookSeatWithWrongSeatNumber(int rows, int row, int colms, char colmn)
+        {
+            //Arrange
+            var origin = "PLD";
+            var destination = "PRS";
+            var airlineName = "BGAir";
+            var flightId = "BG14844";
+            const int seatClass = 1;
+            var today = DateTime.UtcNow;
+            var flightDate = today.AddDays(10);
+            var year = flightDate.Year;
+            var month = flightDate.Month;
+            var day = flightDate.Day;
+
+            var system = new SystemManager();
+            system.CreateAirline(airlineName);
+            system.CreateAirport(origin);
+            system.CreateAirport(destination);
+            system.CreateFlight(airlineName, origin, destination, year, month, day, flightId);
+            system.CreateSection(airlineName, flightId, rows, colms, seatClass);
+
+            var expected = String.Format(Error.missingItem, "Seat", "number", $"{row:D3}{colmn}");
+
+            //Act
+            var result = system.BookSeat(airlineName, flightId, seatClass, row, colmn);
+
+            //Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
         public void TestDisplaySystemDetails()
         {
             //Arrange
             var system = new SystemManager();
-            const string origin = "PLD";
-            const string destination = "PRS";
-            const string airlineName = "BGAir";
-            const string flightId = "BG14844";
+            var origin = "PLD";
+            var destination = "PRS";
+            var airlineName = "BGAir";
+            var flightId = "BG14844";
 
-            var year = DateTime.UtcNow.Year;
-            var month = DateTime.UtcNow.Month;
-            var day = DateTime.UtcNow.Day;
+            var today = DateTime.UtcNow;
+            var flightDate = today.AddDays(10);
+            var year = flightDate.Year;
+            var month = flightDate.Month;
+            var day = flightDate.Day;
             system.CreateAirline(airlineName);
             system.CreateAirport(origin);
             system.CreateAirport(destination);
             system.CreateFlight(airlineName, origin, destination, year, month, day, flightId);
 
-            var expected = $"Airort aviable 2\r\nWellcome to airport {origin}" +
-                           $"\r\nWellcome to airport {destination}\r\nAirline aviable 1\r\n" +
-                           $"Airlne {airlineName} offers flights to over 1 destinations\r\n" +
-                           $"Flight #{flightId} from {origin} to {destination}.Departure at {DateTime.UtcNow.ToString("MM/dd/yyyy")}\r\nThe flight has 0 section.";
+            #region Expected
+            var sb = new StringBuilder();
+            sb.AppendLine(String.Format(DataConstrain.displayAirportsTitle, 2));
+            sb.AppendLine(String.Format(DataConstrain.airportToStringTitle, origin));
+            sb.AppendLine(String.Format(DataConstrain.airportToStringTitle, destination));
+            sb.AppendLine(String.Format(DataConstrain.displayAirlinesTitle, 1));
+            sb.AppendLine(String.Format(DataConstrain.airlineToStringTitle, airlineName,String.Format(DataConstrain.airlineWithFlights,1)));
+            sb.AppendLine(String.Format(DataConstrain.flightToStringTitle, flightId,origin,destination,flightDate.ToString(DataConstrain.formatDateTime)));
+            sb.AppendLine(String.Format(DataConstrain.flightSectionCount, 0));
+
+            var expected = sb.ToString().Trim();
+            #endregion
 
             //Act
             var result = system.DisplaySystemDetails();

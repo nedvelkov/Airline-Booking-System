@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ABSConsoleApp", "ABSConsole
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Facade", "Facade\Facade.csproj", "{E25DF3E3-D0A9-4683-9400-02DFAA658C3C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{C15230BA-84C4-4812-9D5E-1811622669FD}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ABS_xTest", "ABS_xTest\ABS_xTest.csproj", "{4C5230AF-4A42-40E0-AD39-5D9E6BBA8F90}"
 EndProject
 Global
@@ -32,9 +30,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{4C5230AF-4A42-40E0-AD39-5D9E6BBA8F90} = {C15230BA-84C4-4812-9D5E-1811622669FD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {25C0487B-F1FA-46F1-817D-1855802E2E88}

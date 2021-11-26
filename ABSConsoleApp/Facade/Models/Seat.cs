@@ -14,7 +14,7 @@
 
         public override string ToString()
         {
-            var seatIsBooked = this.Booked ? "booked" : "free";
+            var seatIsBooked = Booked ? "booked" : "free";
             var text = $" {Number} - {seatIsBooked}";
             return text;
         }
