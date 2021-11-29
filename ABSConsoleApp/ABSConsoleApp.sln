@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31829.152
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ABSConsoleApp", "ABSConsoleApp\ABSConsoleApp.csproj", "{DB6ECC9F-59C7-4717-8B90-FAC9270D3E3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ABS_ConsoleApp", "ABS_ConsoleApp\ABS_ConsoleApp.csproj", "{DB6ECC9F-59C7-4717-8B90-FAC9270D3E3E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Facade", "Facade\Facade.csproj", "{E25DF3E3-D0A9-4683-9400-02DFAA658C3C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ABS_SystemManager", "ABS_SystemManager\ABS_SystemManager.csproj", "{E25DF3E3-D0A9-4683-9400-02DFAA658C3C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ABS_xTest", "ABS_xTest\ABS_xTest.csproj", "{4C5230AF-4A42-40E0-AD39-5D9E6BBA8F90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ABS_Test", "ABS_Test\ABS_Test.csproj", "{4C5230AF-4A42-40E0-AD39-5D9E6BBA8F90}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

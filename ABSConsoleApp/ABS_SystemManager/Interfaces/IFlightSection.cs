@@ -1,0 +1,17 @@
+﻿namespace ABS_SystemManager.Interfaces
+{
+    using System.Collections.Generic;
+
+    interface IFlightSection
+    {
+        public SeatClass SeatClass { get; }
+
+        public IReadOnlyDictionary<ISeatNumber,ISeat> Seats { get; }
+
+        public bool HasAvaibleSeats();
+
+        public void BookSeat(ISeatNumber number);
+
+        public void AddSeats(IEnumerable<ISeat> seats);
+    }
+}
