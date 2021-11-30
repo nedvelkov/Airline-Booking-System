@@ -3,33 +3,36 @@
     using System;
     using System.Linq;
     using System.Text;
-    using System.Collections.Generic;
 
     using ABS_SystemManager.Interfaces;
     using static ABS_SystemManager.DataConstants.DataConstrain;
 
-    class FlightSection : IFlightSection
+    internal class FlightSection : IFlightSection
     {
         //TODO: Change Dictionary<ISeatNumber, ISeat> _seats to [,] _seats!!!
 
-        private Dictionary<ISeatNumber, ISeat> _seats;
+        private ISeat[,] _seats;
 
-        public FlightSection() => _seats = new();
         public SeatClass SeatClass { get; init; }
 
-        public IReadOnlyDictionary<ISeatNumber, ISeat> Seats => _seats;
+        public ISeat[,] Seats => _seats;
 
-        public bool HasAvaibleSeats() => _seats.Any(x => x.Value.Booked == false);
+        public bool HasAvaibleSeats()
+        {
+            var listOfSeats = _seats.Cast<ISeat>().ToList();
+            return listOfSeats.Any(x => x.Booked);
+        }
 
-        public void BookSeat(ISeatNumber number) => _seats[number].BookSeat();
+        public void BookSeat(int row, int column) => _seats[row, column].BookSeat();
 
-        public void AddSeats(IEnumerable<ISeat> seats) => seats.ToList().ForEach(x => _seats.Add(x.Number, x));
+        public void AddSeats(ISeat[,] seats) => _seats = seats;
 
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.AppendLine(String.Format(flightSectionToStringTitle,SeatClass,_seats.Count));
-            _seats.ToList().ForEach(x => sb.AppendLine(x.Value.ToString()));
+            sb.AppendLine(String.Format(flightSectionToStringTitle, SeatClass, _seats.Length));
+            var listOfSeats = _seats.Cast<ISeat>().ToList();
+            listOfSeats.ForEach(x => sb.AppendLine(x.ToString()));
 
             return sb.ToString().TrimEnd();
         }

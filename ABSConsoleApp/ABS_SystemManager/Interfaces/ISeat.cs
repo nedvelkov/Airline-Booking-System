@@ -1,8 +1,9 @@
 ﻿namespace ABS_SystemManager.Interfaces
 {
-    interface ISeat
+    internal interface ISeat
     {
-        public ISeatNumber Number { get; }
+        public int Row { get; }
+        public char Column { get; }
         public bool Booked { get; }
         public void BookSeat();
     }

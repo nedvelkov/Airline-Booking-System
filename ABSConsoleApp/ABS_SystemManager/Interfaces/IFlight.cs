@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
 
-    interface IFlight
+    internal interface IFlight
     {
         public string Id { get; }
 

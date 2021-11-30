@@ -43,11 +43,17 @@
         public const int maxSeatColms = 10;
         public const char firstSeatChar = 'A';
         public const char lastSeatChar = 'J';
+        public const string seatNumber = "{0:D3}{1}";
 
         /// <summary>
         /// This value plus count of column gives right column letter
         /// </summary>
-        public const int initialValueForSeatColmn = 64;
+        public const int initialValueForSeatColumn = 65;
+
+        /// <summary>
+        /// This value minus letter of column as integer gives right column possition in array.
+        /// /// </summary>
+        public const int valueForSeatColumn = 65;
 
         //System manager
         public const string displayAirportsTitle= "Airports aviable {0}";

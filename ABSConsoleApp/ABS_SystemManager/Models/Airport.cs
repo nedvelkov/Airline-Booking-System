@@ -6,7 +6,7 @@
     using ABS_SystemManager.Interfaces;
     using static ABS_SystemManager.DataConstants.DataConstrain;
 
-    class Airport:IAirport
+    internal class Airport : IAirport
     {
         private List<string> _departuresFlights;
         private List<string> _arriavalFlights;
@@ -46,12 +46,12 @@
             {
                 hash += (int)letter * 4;
             }
-            return hash/2;
+            return hash / 2;
         }
 
         public override string ToString()
         {
-            return String.Format(airportToStringTitle,Name);
+            return String.Format(airportToStringTitle, Name);
         }
 
     }

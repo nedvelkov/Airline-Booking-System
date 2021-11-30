@@ -3,7 +3,7 @@
 
     using System.Collections.Generic;
 
-    interface IAirport
+    internal interface IAirport
     {
         public string Name { get; }
 

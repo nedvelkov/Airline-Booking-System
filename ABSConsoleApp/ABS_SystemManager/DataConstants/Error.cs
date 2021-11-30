@@ -31,7 +31,7 @@
 
         //SeatNumber
         public const string invalidSeatRow = "Invalid seat row";
-        public const string invalidSeatColmn = "Invalid seat column";
+        public const string invalidSeatColumn = "Invalid seat column";
 
         //Date
         public const string notValidDate = "Date is not valid";

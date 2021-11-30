@@ -191,27 +191,31 @@
         public string BookSeat(string airlineName, string flightId, int seatClass, int row, char column)
         {
             IFlight flight;
-            ISeatNumber seatNumber;
             IFlightSection flightSection;
+
+            int arrayRow;
+            int arrayColumn;
 
             try
             {
                 flight = AirlaneGotFlight(flightId, airlineName);
 
                 flightSection = GetFlightSection(flight, seatClass);
+                arrayRow = row - 1;
+                arrayColumn = (int)column - DataConstrain.valueForSeatColumn;
 
-                seatNumber = GetSeatNumber(row, column);
+                CheckIfSeatIsValid(arrayRow, arrayColumn, flightSection);
 
-                ChekIfSeatIsBooked(seatNumber, flightSection);
+                ChekIfSeatIsBooked(arrayRow, arrayColumn, flightSection);
             }
             catch (Exception a)
             {
                 return a.Message;
             }
 
-            flightSection.BookSeat(seatNumber);
+            flightSection.BookSeat(arrayRow, arrayColumn);
 
-            return String.Format(Success.bookedSeat, seatNumber, (SeatClass)seatClass, flight.Origin.Name, flight.Destination.Name, airlineName);
+            return String.Format(Success.bookedSeat, String.Format(DataConstrain.seatNumber, row, column), (SeatClass)seatClass, flight.Origin.Name, flight.Destination.Name, airlineName);
 
         }
 
@@ -392,22 +396,28 @@
             return flightSection;
         }
 
-        private ISeatNumber GetSeatNumber(int row, char column)
+        private void ChekIfSeatIsBooked(int row, int column, IFlightSection flightSection)
         {
-            ValidateSeatNumber(row, column);
-            return new SeatNumber()
-            {
-                Row = row,
-                Column = column
-            };
-        }
-
-        private void ChekIfSeatIsBooked(ISeatNumber number, IFlightSection flightSection)
-        {
-            var seat = GetItem(flightSection.Seats, number, String.Format(Error.missingItem, "Seat", "number", number.ToString()));
+            var seat = flightSection.Seats[row, column];
             if (seat.Booked)
             {
                 throw new ArgumentException(Error.bookedSeat);
+            }
+        }
+
+        private void CheckIfSeatIsValid(int row, int column, IFlightSection flightSection)
+        {
+            var rows = flightSection.Seats.GetLength(0);
+            var columns = flightSection.Seats.GetLength(1);
+
+            if (row < 0 || row >= rows)
+            {
+                throw new ArgumentException(Error.invalidSeatRow);
+            }
+
+            if (column < 0 || column >= columns)
+            {
+                throw new ArgumentException(Error.invalidSeatColumn);
             }
         }
 
@@ -431,21 +441,20 @@
             }
         }
 
-        private IEnumerable<ISeat> SeatCollection(int rows, int columns)
+        private ISeat[,] SeatCollection(int rows, int columns)
         {
-            var seats = new List<ISeat>();
-            for (int row = 1; row <= rows; row++)
+            var seats = new ISeat[rows, columns];
+            for (int row = 0; row < rows; row++)
             {
-                for (int colmn = 1; colmn <= columns; colmn++)
+                for (int column = 0; column < columns; column++)
                 {
-                    var seatNumber = new SeatNumber()
+                    var columnCharAsInt = column + DataConstrain.initialValueForSeatColumn;
+                    var seat = new Seat()
                     {
-                        Row = row,
-                        Column = (char)(colmn + DataConstrain.initialValueForSeatColmn)
+                        Row = row + 1,
+                        Column=(char)columnCharAsInt
                     };
-
-                    var seat = new Seat() { Number = seatNumber };
-                    seats.Add(seat);
+                    seats[row, column] = seat;
                 }
             }
 
@@ -460,7 +469,7 @@
             }
             if (column < DataConstrain.firstSeatChar || column > DataConstrain.lastSeatChar)
             {
-                throw new ArgumentException(Error.invalidSeatColmn);
+                throw new ArgumentException(Error.invalidSeatColumn);
             }
         }
 

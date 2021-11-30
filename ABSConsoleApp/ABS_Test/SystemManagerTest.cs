@@ -686,7 +686,7 @@
             system.CreateFlight(airlineName, origin, destination, year, month, day, flightId);
             system.CreateSection(airlineName, flightId, rows, colms, seatClass);
 
-            var expected = Error.invalidSeatColmn;
+            var expected = Error.invalidSeatColumn;
 
             //Act
             var result = system.BookSeat(airlineName, flightId, seatClass, row, colmn);
