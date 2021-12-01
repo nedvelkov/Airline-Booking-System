@@ -1,0 +1,31 @@
+﻿@model CreateAirlineViewModel
+
+@section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+}
+
+@{
+    ViewData["Title"] = "Create airline";
+}
+
+<div class="col-md-6 offset-md-3">
+    <div class="card card-body bg-light">
+        <form method="post">
+
+            <div asp-validation-summary="ModelOnly"></div>
+
+            <div class="form-group">
+                <label asp-for="Name"></label>
+                <input type="text" asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name"></span>
+            </div>
+
+            <div class="form-group">
+                <button type="submit">Create airline</button>
+                <span class="text-success">@ViewBag.Success</span>
+            </div>
+
+        </form>
+    </div>
+</div>
