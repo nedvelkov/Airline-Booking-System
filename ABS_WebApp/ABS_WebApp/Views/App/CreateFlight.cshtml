@@ -16,31 +16,46 @@
             <div asp-validation-summary="ModelOnly"></div>
 
             <div class="form-group">
-                <label asp-for="Id"></label>
+                <p class="mb-0">
+                    <i class="fas fa-passport d-inline"></i>
+                    <label asp-for="Id"></label>
+                </p>
                 <input type="text" asp-for="Id" class="form-control" />
                 <span asp-validation-for="Id" class="text-danger font-weight-bold"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="AirlineName"></label>
+                <p class="mb-0">
+                    <i class="far fa-paper-plane"></i>
+                    <label asp-for="AirlineName"></label>
+                </p>
                 <input type="text" asp-for="AirlineName" class="form-control" />
                 <span asp-validation-for="AirlineName" class="text-danger font-weight-bold"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="Origin"></label>
+                <p class="mb-0">
+                    <i class="fas fa-plane-departure"></i>
+                    <label asp-for="Origin"></label>
+                </p>
                 <input type="text" asp-for="Origin" class="form-control" />
                 <span asp-validation-for="Origin" class="text-danger font-weight-bold"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="Destination"></label>
+                <p class="mb-0">
+                    <i class="fas fa-plane-arrival d-inline"></i>
+                    <label asp-for="Destination"></label>
+                </p>
                 <input type="text" asp-for="Destination" class="form-control" />
                 <span asp-validation-for="Destination" class="text-danger font-weight-bold"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="Date" class="control-label"></label>
+                <p class="mb-0">
+                    <i class="far fa-calendar-alt"></i>
+                    <label asp-for="Date" class="control-label"></label>
+                </p>
                 <input asp-for="Date" class="form-control" />
                 <span asp-validation-for="Date" class="text-danger font-weight-bold"></span>
             </div>

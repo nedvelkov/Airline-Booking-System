@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ABS_WebApp</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/lib/fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ABS_WebApp</a>
+                <a class="navbar-brand" asp-area="" asp-controller="App" asp-action="DisplaySystemDetails"><i class="fas fa-plane"></i> ABS</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -19,29 +20,27 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="App" asp-action="DisplaySystemDetails">ABS details</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="App" asp-action="CreateAirport">Create Airport</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="App" asp-action="CreateAirport">Create airport</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="App" asp-action="CreateAirline">Create Airline</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="App" asp-action="CreateAirline">Create airline</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="App" asp-action="CreateFlight">Create Flight</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="App" asp-action="CreateFlight">Create flight</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="App" asp-action="CreateSection">Create Flight section</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="App" asp-action="CreateSection">Create flight section</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="App" asp-action="FindAvailableFlights">Find avaible flights</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="App" asp-action="FindAvailableFlights">Find flights</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="App" asp-action="BookSeat">Book seat in flight</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="App" asp-action="BookSeat">Book seat</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="App" asp-action="DisplaySystemDetails">Display system details</a>
-                        </li>
+
                     </ul>
                 </div>
             </div>
