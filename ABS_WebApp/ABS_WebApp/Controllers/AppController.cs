@@ -23,8 +23,7 @@ namespace ABS_WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _manager.CreateAirport(model.Name);
-                ViewBag.Success = string.Format(createdAirport, model.Name);
+                ViewBag.Success = _manager.CreateAirport(model.Name);
                 ModelState.Clear();
             }
             return View();
@@ -38,8 +37,7 @@ namespace ABS_WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                _manager.CreateAirline(model.Name);
-                ViewBag.Success = string.Format(createdAirline, model.Name);
+                ViewBag.Success = _manager.CreateAirline(model.Name);
                 ModelState.Clear();
             }
             return View();
@@ -48,8 +46,40 @@ namespace ABS_WebApp.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateFlight() => View();
 
+        [HttpPost]
+        public async Task<IActionResult> CreateFlight(CreateFlightViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                ViewBag.Success = _manager.CreateFlight(model.AirlineName,
+                                                        model.Origin,
+                                                        model.Destination,
+                                                        model.Date.Year,
+                                                        model.Date.Month,
+                                                        model.Date.Day,
+                                                        model.Id);
+                ModelState.Clear();
+            }
+            return View();
+        }
+
         [HttpGet]
         public async Task<IActionResult> CreateSection() => View();
+
+        [HttpPost]
+        public async Task<IActionResult> CreateSection(CreateSectionViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                ViewBag.Success = _manager.CreateSection(model.AirlineName,
+                                                         model.Id,
+                                                         model.Rows,
+                                                         model.Columns,
+                                                         model.SeatClass);
+                ModelState.Clear();
+            }
+            return View();
+        }
 
         [HttpGet]
         public async Task<IActionResult> FindAvailableFlights() => View();

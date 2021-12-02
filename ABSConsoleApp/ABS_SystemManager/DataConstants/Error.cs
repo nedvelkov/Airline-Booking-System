@@ -28,6 +28,8 @@
         public const string wrongSeatNumber = "Seat with this number doesn't exist";
         public const string bookedSeat = "This seat is already booked";
         public const string invalidCount = "{0} of seat must be between {1} and {2}";
+        public const string invalidCountRows = "Rows of seat must be between 1 and 100";
+        public const string invalidCountColumns = "Columns of seat must be between 1 and 10";
 
         //SeatNumber
         public const string invalidSeatRow = "Invalid seat row";
