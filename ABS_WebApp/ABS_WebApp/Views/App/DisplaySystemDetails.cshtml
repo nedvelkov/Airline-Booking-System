@@ -1,0 +1,17 @@
+﻿@model DisplaySystemDetailsViewModel
+
+
+@{
+    ViewData["Title"] = "Display system details";
+}
+
+<div class="col-md-6 offset-md-3">
+    <div class="card card-body bg-light">
+        <ul>
+            @foreach (var item in Model.Details)
+            {
+                <li>@item</li>
+            }
+        </ul>
+    </div>
+</div>

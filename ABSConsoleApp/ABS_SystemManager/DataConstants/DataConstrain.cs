@@ -7,6 +7,7 @@
         public const string evaluateAirportName = "^[A-Z]{3}$";
         public const string evaluateAirlineName = "^[a-zA-Z]{1,5}$";
         public const string evaluateFlightId = "^[a-zA-Z0-9]+$";
+        public const string evaluateSeatColumn = "^[A-J]{1}$";
 
         //Airport
         public const string airportToStringTitle = "Airport {0} is available for all airlines and flights";

@@ -82,12 +82,44 @@ namespace ABS_WebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> FindAvailableFlights() => View();
+        public async Task<IActionResult> FindAvailableFlights() => View(new FindAvaibleFlightsViewModel());
+
+        [HttpPost]
+        public async Task<IActionResult> FindAvailableFlights(FindAvaibleFlightsViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                model.Flights = _manager.FindAvailableFlights(model.Origin, model.Destination).Split("\r\n").ToList();
+            }
+            return View(model);
+        }
 
         [HttpGet]
         public async Task<IActionResult> BookSeat() => View();
 
+        [HttpPost]
+        public async Task<IActionResult> BookSeat(BookSeatViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                ViewBag.Success = _manager.BookSeat(model.AirlineName,
+                                                    model.Id,
+                                                    model.SeatClass,
+                                                    model.Row,
+                                                    model.Column[0]);
+                ModelState.Clear();
+            }
+            return View();
+        }
+
+
         [HttpGet]
-        public async Task<IActionResult> DisplaySystemDetails() => View();
+        public async Task<IActionResult> DisplaySystemDetails()
+        {
+            var details = _manager.DisplaySystemDetails().Split("\r\n").ToList();
+            var model = new DisplaySystemDetailsViewModel();
+            model.Details = details;
+            return View(model);
+        }
     }
 }

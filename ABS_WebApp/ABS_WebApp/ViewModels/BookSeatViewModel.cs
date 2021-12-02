@@ -1,13 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-
+using System.Linq;
+using System.Threading.Tasks;
 
 using static ABS_SystemManager.DataConstants.DataConstrain;
 using static ABS_SystemManager.DataConstants.Error;
 
 namespace ABS_WebApp.ViewModels
 {
-    public class CreateSectionViewModel
+    public class BookSeatViewModel
     {
         [Required]
         [RegularExpression(evaluateFlightId, ErrorMessage = flightId)]
@@ -20,17 +22,16 @@ namespace ABS_WebApp.ViewModels
         public string AirlineName { get; set; }
 
         [Required]
-        [Range(minSeatRows,maxSeatRows,ErrorMessage = invalidCountRows)]
-        [Display(Name = "Count or rows")]
-        public int Rows { get; set; }
+        [Range(minSeatRows, maxSeatRows, ErrorMessage = invalidSeatRow)]
+        public int Row { get; set; }
 
         [Required]
-        [Range(minSeatColms, maxSeatColms, ErrorMessage = invalidCountColumns)]
-        [Display(Name = "Count of columns")]
-        public int Columns { get; set; }
+        [RegularExpression(evaluateSeatColumn, ErrorMessage = invalidSeatColumn)]
+        public string Column { get; set; }
 
         [Required]
         [Display(Name = "Type of seat class")]
         public int SeatClass { get; set; }
     }
 }
+//string BookSeat(string airlineName, string flightId, int seatClass, int row, char column)
