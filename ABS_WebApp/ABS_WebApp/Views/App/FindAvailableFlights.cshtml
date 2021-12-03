@@ -20,7 +20,14 @@
                     <i class="fas fa-plane-departure"></i>
                     <label asp-for="Origin"></label>
                 </p>
-                <input type="text" asp-for="Origin" class="form-control" />
+
+                <select asp-for="Origin" class="form-control">
+                    <option></option>
+                    @foreach (var airport in Model.Airports)
+                    {
+                        <option value="@airport">@airport</option>
+                    }
+                </select>
                 <span asp-validation-for="Origin" class="text-danger font-weight-bold"></span>
             </div>
 
@@ -29,7 +36,13 @@
                     <i class="fas fa-plane-arrival d-inline"></i>
                     <label asp-for="Destination"></label>
                 </p>
-                <input type="text" asp-for="Destination" class="form-control" />
+                <select asp-for="Destination" class="form-control">
+                    <option></option>
+                    @foreach (var airport in Model.Airports)
+                    {
+                        <option value="@airport">@airport</option>
+                    }
+                </select>
                 <span asp-validation-for="Destination" class="text-danger font-weight-bold"></span>
             </div>
 

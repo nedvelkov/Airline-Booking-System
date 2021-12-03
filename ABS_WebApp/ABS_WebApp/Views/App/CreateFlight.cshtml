@@ -3,6 +3,12 @@
 @section Scripts {
     <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script>
+        $(document).ready(function () {
+            console.log('load');
+            console.log($('date').val);
+        });
+    </script>
 }
 
 @{
@@ -29,7 +35,14 @@
                     <i class="far fa-paper-plane"></i>
                     <label asp-for="AirlineName"></label>
                 </p>
-                <input type="text" asp-for="AirlineName" class="form-control" />
+                <select asp-for="AirlineName" class="form-control">
+                    <option></option>
+                    @foreach (var airline in Model.Airlines)
+                    {
+                        <option value="@airline">@airline</option>
+                    }
+                </select>
+
                 <span asp-validation-for="AirlineName" class="text-danger font-weight-bold"></span>
             </div>
 
@@ -38,7 +51,13 @@
                     <i class="fas fa-plane-departure"></i>
                     <label asp-for="Origin"></label>
                 </p>
-                <input type="text" asp-for="Origin" class="form-control" />
+                <select asp-for="Origin" class="form-control">
+                    <option></option>
+                    @foreach (var airport in Model.Airports)
+                    {
+                        <option value="@airport">@airport</option>
+                    }
+                </select>
                 <span asp-validation-for="Origin" class="text-danger font-weight-bold"></span>
             </div>
 
@@ -47,7 +66,13 @@
                     <i class="fas fa-plane-arrival d-inline"></i>
                     <label asp-for="Destination"></label>
                 </p>
-                <input type="text" asp-for="Destination" class="form-control" />
+                <select asp-for="Destination" class="form-control">
+                    <option></option>
+                    @foreach (var airport in Model.Airports)
+                    {
+                        <option value="@airport">@airport</option>
+                    }
+                </select>
                 <span asp-validation-for="Destination" class="text-danger font-weight-bold"></span>
             </div>
 
@@ -62,7 +87,7 @@
 
             <div class="form-group">
                 <button type="submit">Create flight</button>
-                <span class="text-success">@ViewBag.Success</span>
+                <span class="text-success">@TempData["Success"]</span>
             </div>
 
         </form>

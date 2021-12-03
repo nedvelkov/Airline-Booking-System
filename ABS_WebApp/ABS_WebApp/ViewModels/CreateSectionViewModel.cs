@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 
@@ -9,6 +10,12 @@ namespace ABS_WebApp.ViewModels
 {
     public class CreateSectionViewModel
     {
+        public CreateSectionViewModel()
+        {
+            Flights = new();
+            Airlines = new();
+        }
+
         [Required]
         [RegularExpression(evaluateFlightId, ErrorMessage = flightId)]
         [Display(Name = "Identification number of flight")]
@@ -32,5 +39,9 @@ namespace ABS_WebApp.ViewModels
         [Required]
         [Display(Name = "Type of seat class")]
         public int SeatClass { get; set; }
+
+        public List<string> Flights { get; set; }
+
+        public List<string> Airlines { get; set; }
     }
 }

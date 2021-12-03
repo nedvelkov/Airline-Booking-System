@@ -1,5 +1,34 @@
 ﻿@model DisplaySystemDetailsViewModel
 
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            console.log("ready");
+        });
+
+        $('.seats').hide();
+
+        $('#airportLabel').on("click", function () {
+            $('#airports').toggle();
+        });
+
+
+        $('#airlineLabel').on("click", function () {
+            $('#airlines').toggle();
+        });
+
+        $('.airlineTitle').click(function () {
+            let clicled = $(this);
+            console.log(clicled.text());
+           // clicled.children('ul').toggle();
+        })
+
+
+
+
+
+    </script>
+}
 
 @{
     ViewData["Title"] = "Display system details";
@@ -7,11 +36,38 @@
 
 <div class="col-md-6 offset-md-3">
     <div class="card card-body bg-light">
-        <ul>
-            @foreach (var item in Model.Details)
+        <label asp-for="@Model.AirportsTitle" id="airportLabel" class="font-weight-bold selectObj">@Model.AirportsTitle</label>
+        <ul id="airports">
+            @foreach (var airport in Model.AirporstList)
             {
-                <li>@item</li>
+                <li>@airport</li>
+
             }
         </ul>
+        <label id="airlineLabel" class="font-weight-bold selectObj">@Model.AirlinesTitle</label>
+        <div id="airlines">
+            @foreach (var airline in Model.AirlinesList)
+            {
+                <label class="airlineTitle selectObj">@airline.Title</label>
+                <ul class="flights">
+                    @foreach (var flight in airline.Flights)
+                    {
+                        <label class="flightTitle">@flight.Title</label>
+                        <ul class="sections">
+                            @foreach (var flightSection in flight.FlightSections)
+                            {
+                                <label>@flightSection.Title</label>
+                                <ul class="seats">
+                                    @foreach (var seat in flightSection.Seats)
+                                    {
+                                        <li>@seat.Number</li>
+                                    }
+                                </ul>
+                            }
+                        </ul>
+                    }
+                </ul>
+            }
+        </div>
     </div>
 </div>

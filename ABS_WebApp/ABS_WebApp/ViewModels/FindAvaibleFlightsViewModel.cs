@@ -8,7 +8,11 @@ namespace ABS_WebApp.ViewModels
 {
     public class FindAvaibleFlightsViewModel
     {
-        public FindAvaibleFlightsViewModel() => Flights = new List<string>();
+        public FindAvaibleFlightsViewModel()
+        {
+            Flights = new();
+            Airports = new();
+        }
 
         [Required]
         [RegularExpression(evaluateAirportName, ErrorMessage = airportName)]
@@ -21,5 +25,7 @@ namespace ABS_WebApp.ViewModels
         public string Destination { get; set; }
 
         public List<string> Flights { get; set; }
+
+        public List<string> Airports { get; set; }
     }
 }

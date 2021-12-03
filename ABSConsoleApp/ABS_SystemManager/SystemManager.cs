@@ -236,6 +236,10 @@
             return sb.ToString().Trim();
         }
 
+        public IReadOnlyList<string> ListAirlines => _airlines.Select(x => x.Key).ToList();
+        public IReadOnlyList<string> ListAirports => _airports.Select(x => x.Key).ToList();
+        public IReadOnlyList<string> ListFlights => _flights.Select(x => x.Key).ToList();
+
         private DateTime ValidateDate(int year, int month, int day)
         {
             DateTime date;

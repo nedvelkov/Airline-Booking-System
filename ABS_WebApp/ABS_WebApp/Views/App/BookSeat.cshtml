@@ -20,7 +20,13 @@
                     <i class="fas fa-passport d-inline"></i>
                     <label asp-for="Id"></label>
                 </p>
-                <input type="text" asp-for="Id" class="form-control" />
+                <select asp-for="Id" class="form-control">
+                    <option></option>
+                    @foreach (var flight in Model.Flights)
+                    {
+                        <option value="@flight">@flight</option>
+                    }
+                </select>
                 <span asp-validation-for="Id" class="text-danger font-weight-bold"></span>
             </div>
 
@@ -29,7 +35,13 @@
                     <i class="far fa-paper-plane"></i>
                     <label asp-for="AirlineName"></label>
                 </p>
-                <input type="text" asp-for="AirlineName" class="form-control" />
+                <select asp-for="AirlineName" class="form-control">
+                    <option></option>
+                    @foreach (var airline in Model.Airlines)
+                    {
+                        <option value="@airline">@airline</option>
+                    }
+                </select>
                 <span asp-validation-for="AirlineName" class="text-danger font-weight-bold"></span>
             </div>
 
@@ -59,7 +71,7 @@
 
             <div class="form-group">
                 <button type="submit">Book seat</button>
-                <span class="text-success">@ViewBag.Success</span>
+                <span class="text-success">@TempData["Success"]</span>
             </div>
 
         </form>

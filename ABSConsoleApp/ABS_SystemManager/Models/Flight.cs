@@ -32,7 +32,6 @@
         {
             var sb = new StringBuilder();
             sb.AppendLine(String.Format(flightToStringTitle, Id, Origin.Name, Destination.Name, Date.ToString(formatDateTime)));
-            sb.AppendLine(String.Format(flightSectionCount, _flightSections.Count));
             _flightSections.ToList().ForEach(x => sb.AppendLine(x.Value.ToString()));
 
             return sb.ToString().TrimEnd();

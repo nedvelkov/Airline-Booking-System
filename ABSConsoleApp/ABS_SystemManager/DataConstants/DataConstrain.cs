@@ -10,7 +10,7 @@
         public const string evaluateSeatColumn = "^[A-J]{1}$";
 
         //Airport
-        public const string airportToStringTitle = "Airport {0} is available for all airlines and flights";
+        public const string airportToStringTitle = "-AP Airport {0} is available for all airlines and flights";
 
         //Airline
         public const string airlineWithNoFlights = "is awaits offers for new destinations";
@@ -20,22 +20,22 @@
         /// String for first line of toString method.
         /// 0 - airline name, 1 - airline data.
         /// </summary>
-        public const string airlineToStringTitle = "Airline {0} {1}";
+        public const string airlineToStringTitle = "-AL Airline {0} {1}";
 
         //Flight
         /// <summary>
         /// String for first line of toSting method.
         /// 0 - flight id, 1 - origin, 2 - destination, 3 - date.
         /// </summary>
-        public const string flightToStringTitle = "Flight #{0} from {1} to {2}.Departure at {3}";
-        public const string flightSectionCount = "The flight has {0} section.";
+        public const string flightToStringTitle = "-FL Flight #{0} from {1} to {2}.Departure at {3}";
+        public const string flightSectionCount = "=FL The flight has {0} section.";
 
         //Flight section
         /// <summary>
         /// String for first line of toSting method.
         /// 0 - seat class, 1 - seats count.
         /// </summary>
-        public const string flightSectionToStringTitle = "Flight section {0} class with {1} seats";
+        public const string flightSectionToStringTitle = "-FS Flight section {0} class with {1} seats";
 
         //Seat
         public const int minSeatRows = 1;
@@ -57,8 +57,8 @@
         public const int valueForSeatColumn = 65;
 
         //System manager
-        public const string displayAirportsTitle= "Airports aviable {0}";
-        public const string displayAirlinesTitle= "Airlines aviable {0}";
+        public const string displayAirportsTitle= "=AP Airports aviable {0}";
+        public const string displayAirlinesTitle= "=AL Airlines aviable {0}";
 
         //DateTime formating
         public const string formatDateTime = "MM/dd/yyyy";

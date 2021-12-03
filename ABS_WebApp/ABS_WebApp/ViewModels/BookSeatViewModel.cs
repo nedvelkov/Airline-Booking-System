@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 using static ABS_SystemManager.DataConstants.DataConstrain;
 using static ABS_SystemManager.DataConstants.Error;
@@ -11,6 +9,12 @@ namespace ABS_WebApp.ViewModels
 {
     public class BookSeatViewModel
     {
+        public BookSeatViewModel()
+        {
+            Flights = new();
+            Airlines = new();
+        }
+
         [Required]
         [RegularExpression(evaluateFlightId, ErrorMessage = flightId)]
         [Display(Name = "Identification number of flight")]
@@ -32,6 +36,9 @@ namespace ABS_WebApp.ViewModels
         [Required]
         [Display(Name = "Type of seat class")]
         public int SeatClass { get; set; }
+
+        public List<string> Flights { get; set; }
+
+        public List<string> Airlines { get; set; }
     }
 }
-//string BookSeat(string airlineName, string flightId, int seatClass, int row, char column)
