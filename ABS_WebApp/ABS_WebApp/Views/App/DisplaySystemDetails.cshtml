@@ -7,6 +7,10 @@
         });
 
         $('.seats').hide();
+        $('.sections').hide();
+        $('.flights').hide();
+        $('#airports').hide();
+        $('#airlines').hide();
 
         $('#airportLabel').on("click", function () {
             $('#airports').toggle();
@@ -18,14 +22,16 @@
         });
 
         $('.airlineTitle').click(function () {
-            let clicled = $(this);
-            console.log(clicled.text());
-           // clicled.children('ul').toggle();
+            $(this).next('.flights').toggle();
         })
 
+        $('.flightTitle').click(function () {
+            $(this).next('.sections').toggle();
+        })
 
-
-
+        $('.flightSectionTitile').click(function () {
+            $(this).next('.seats').toggle();
+        })
 
     </script>
 }
@@ -48,21 +54,29 @@
         <div id="airlines">
             @foreach (var airline in Model.AirlinesList)
             {
-                <label class="airlineTitle selectObj">@airline.Title</label>
+                <h6 class="airlineTitle selectObj">@airline.Title</h6>
                 <ul class="flights">
                     @foreach (var flight in airline.Flights)
                     {
-                        <label class="flightTitle">@flight.Title</label>
+                        <li class="flightTitle selectObj">@flight.Title</li>
                         <ul class="sections">
                             @foreach (var flightSection in flight.FlightSections)
                             {
-                                <label>@flightSection.Title</label>
-                                <ul class="seats">
-                                    @foreach (var seat in flightSection.Seats)
+                                <li class="flightSectionTitile selectObj">@flightSection.Title</li>
+                                <div class="seats">
+                                    @for (int row = 0; row < flightSection.Seats.GetLength(0); row++)
                                     {
-                                        <li>@seat.Number</li>
+                                        <div class="row">
+                                            @for (int col = 0; col < flightSection.Seats.GetLength(1); col++)
+                                            {
+                                                <div class="col">
+                                                    <label>@flightSection.Seats[row,col].Number</label>
+                                                    <input type="checkbox" checked="@flightSection.Seats[row,col].Booked" disabled="disabled"/>
+                                                </div>
+                                            }
+                                        </div>
                                     }
-                                </ul>
+                                </div>
                             }
                         </ul>
                     }

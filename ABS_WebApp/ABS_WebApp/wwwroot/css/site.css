@@ -79,3 +79,8 @@ body {
     .selectObj:hover {
         text-decoration: underline;
     }
+
+input[type="checkbox"]:disabled {
+    background: #dddddd;
+    background-color:blue;
+}
