@@ -95,8 +95,44 @@ namespace ABS_WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                model.Flights = _manager.FindAvailableFlights(model.Origin, model.Destination).Split("\r\n").ToList();
+                var details = _manager.FindAvailableFlights(model.Origin, model.Destination).Split("\r\n").ToList();
+                if (details.First().Contains("-FL"))
+                {
+                    var listSeats = new List<string>();
+                    foreach (string line in details)
+                    {
+                        if (string.IsNullOrEmpty(line))
+                        {
+                            continue;
+                        }
+                        var code = line.Substring(0, 3);
+                        switch (code)
+                        {
+                            case "-FL":
+                                AddSeats(model.Flights, listSeats);
+                                var flight = new FlightViewModel();
+                                flight.Title = line.Remove(0, 3);
+                                model.Flights.Add(flight);
+                                break;
+                            case "-FS":
+                                AddSeats(model.Flights, listSeats);
+                                var flightSection = new FlightSectionViewModel();
+                                flightSection.Title = line.Remove(0, 3);
+                                var lastFlight = model.Flights.Last();
+                                lastFlight.FlightSections.Add(flightSection);
+                                break;
+                            default:
+                                listSeats.Add(line);
+                                break;
+                        }
+                    }
+                }
+                else
+                {
+                    model.Error = details.First();
+                }
             }
+            model.Airports = _manager.ListAirports.ToList();
             return View(model);
         }
 
@@ -213,9 +249,9 @@ namespace ABS_WebApp.Controllers
             {
                 return new SeatViewModel[0, 0];
             }
-            var number= lastSeat.Split('-', StringSplitOptions.RemoveEmptyEntries).First().Trim();
-           var rows = int.Parse(number.Substring(0, 3));
-           var columns = (int)number[3] - 64;
+            var number = lastSeat.Split('-', StringSplitOptions.RemoveEmptyEntries).First().Trim();
+            var rows = int.Parse(number.Substring(0, 3));
+            var columns = (int)number[3] - 64;
             var seatArray = new SeatViewModel[rows, columns];
             var index = 0;
             for (int row = 0; row < rows; row++)
@@ -225,7 +261,7 @@ namespace ABS_WebApp.Controllers
                     var line = seats[index];
                     var seat = new SeatViewModel();
                     seat.Booked = line.EndsWith("booked");
-                    seat.Number =line.Split('-', StringSplitOptions.RemoveEmptyEntries).First().Trim();
+                    seat.Number = line.Split('-', StringSplitOptions.RemoveEmptyEntries).First().Trim();
                     seatArray[row, col] = seat;
                     index++;
                 }
@@ -233,7 +269,7 @@ namespace ABS_WebApp.Controllers
             return seatArray;
         }
 
-        public void AddSeats(DisplaySystemDetailsViewModel model, List<string> seats)
+        private void AddSeats(DisplaySystemDetailsViewModel model, List<string> seats)
         {
             var lastAirline = model.AirlinesList.LastOrDefault();
             if (lastAirline == null)
@@ -241,6 +277,21 @@ namespace ABS_WebApp.Controllers
                 return;
             }
             var lastFlight = lastAirline.Flights.LastOrDefault();
+            if (lastFlight == null)
+            {
+                return;
+            }
+            var flightSection = lastFlight.FlightSections.LastOrDefault();
+            if (flightSection != null)
+            {
+                flightSection.Seats = GetSeats(seats);
+                seats.Clear();
+            }
+        }
+
+        private void AddSeats(List<FlightViewModel> flights, List<string> seats)
+        {
+            var lastFlight = flights.LastOrDefault();
             if (lastFlight == null)
             {
                 return;

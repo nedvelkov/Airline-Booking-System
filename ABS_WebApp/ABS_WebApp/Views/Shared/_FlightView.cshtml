@@ -1,0 +1,26 @@
+﻿@model IEnumerable<FlightViewModel>
+
+@foreach (var flight in Model)
+{
+    <li class="flightTitle selectObj">@flight.Title</li>
+    <ul class="sections">
+        @foreach (var flightSection in flight.FlightSections)
+        {
+            <li class="flightSectionTitile selectObj">@flightSection.Title</li>
+            <div class="seats">
+                @for (int row = 0; row < flightSection.Seats.GetLength(0); row++)
+                {
+                    <div class="row">
+                        @for (int col = 0; col < flightSection.Seats.GetLength(1); col++)
+                        {
+                        <div class="col">
+                            <label class="font-italic">@flightSection.Seats[row, col].Number</label>
+                            <input type="checkbox" checked="@flightSection.Seats[row,col].Booked" disabled="disabled" />
+                        </div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </ul>
+}

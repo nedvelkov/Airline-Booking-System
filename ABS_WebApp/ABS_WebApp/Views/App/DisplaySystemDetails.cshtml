@@ -2,37 +2,11 @@
 
 @section Scripts {
     <script>
-        $(document).ready(function () {
-            console.log("ready");
-        });
-
         $('.seats').hide();
         $('.sections').hide();
         $('.flights').hide();
         $('#airports').hide();
         $('#airlines').hide();
-
-        $('#airportLabel').on("click", function () {
-            $('#airports').toggle();
-        });
-
-
-        $('#airlineLabel').on("click", function () {
-            $('#airlines').toggle();
-        });
-
-        $('.airlineTitle').click(function () {
-            $(this).next('.flights').toggle();
-        })
-
-        $('.flightTitle').click(function () {
-            $(this).next('.sections').toggle();
-        })
-
-        $('.flightSectionTitile').click(function () {
-            $(this).next('.seats').toggle();
-        })
-
     </script>
 }
 
@@ -40,7 +14,7 @@
     ViewData["Title"] = "Display system details";
 }
 
-<div class="col-md-6 offset-md-3">
+<div class="col-md-6 offset-md-3" id="container">
     <div class="card card-body bg-light">
         <label asp-for="@Model.AirportsTitle" id="airportLabel" class="font-weight-bold selectObj">@Model.AirportsTitle</label>
         <ul id="airports">
@@ -56,30 +30,7 @@
             {
                 <h6 class="airlineTitle selectObj">@airline.Title</h6>
                 <ul class="flights">
-                    @foreach (var flight in airline.Flights)
-                    {
-                        <li class="flightTitle selectObj">@flight.Title</li>
-                        <ul class="sections">
-                            @foreach (var flightSection in flight.FlightSections)
-                            {
-                                <li class="flightSectionTitile selectObj">@flightSection.Title</li>
-                                <div class="seats">
-                                    @for (int row = 0; row < flightSection.Seats.GetLength(0); row++)
-                                    {
-                                        <div class="row">
-                                            @for (int col = 0; col < flightSection.Seats.GetLength(1); col++)
-                                            {
-                                                <div class="col">
-                                                    <label>@flightSection.Seats[row,col].Number</label>
-                                                    <input type="checkbox" checked="@flightSection.Seats[row,col].Booked" disabled="disabled"/>
-                                                </div>
-                                            }
-                                        </div>
-                                    }
-                                </div>
-                            }
-                        </ul>
-                    }
+                    @Html.Partial("_FlightView", airline.Flights)
                 </ul>
             }
         </div>

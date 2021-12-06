@@ -13,4 +13,10 @@
     <ProjectReference Include="..\..\ABSConsoleApp\ABS_SystemManager\ABS_SystemManager.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="wwwroot\js\site.js">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

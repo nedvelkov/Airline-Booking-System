@@ -1,4 +1,31 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿$(document).ready(function () {
+    $('#airportLabel').on("click", function () {
+        $('#airports').toggle();
+    });
 
-// Write your JavaScript code.
+    $('#airlineLabel').on("click", function () {
+        $('#airlines').toggle();
+    });
+
+    $('.airlineTitle').click(function () {
+        $(this).next('.flights').toggle();
+    })
+
+    $('.flightTitle').click(function () {
+        $(this).next('.sections').toggle();
+    })
+
+    $('.flightSectionTitile').click(function () {
+        let seats = $(this).next('.seats');
+        seats.toggle();
+        let allSeats = $('.seats').is(function () {
+            return $(this).is(':visible');
+        });
+        if (allSeats) {
+            $('#container').removeClass('col-md-6 offset-md-3');
+        } else {
+            $('#container').addClass('col-md-6 offset-md-3');
+        }
+    })
+});
+

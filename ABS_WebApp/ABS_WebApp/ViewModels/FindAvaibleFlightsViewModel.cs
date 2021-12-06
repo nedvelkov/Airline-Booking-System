@@ -24,8 +24,10 @@ namespace ABS_WebApp.ViewModels
         [Display(Name = "Destination airport")]
         public string Destination { get; set; }
 
-        public List<string> Flights { get; set; }
+        public string Error { get; set; }
 
         public List<string> Airports { get; set; }
+
+        public List<FlightViewModel> Flights { get; set; }
     }
 }

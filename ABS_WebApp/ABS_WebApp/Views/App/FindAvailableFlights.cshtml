@@ -3,6 +3,10 @@
 @section Scripts {
     <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script>
+        $('.seats').hide();
+        $('.sections').hide();
+    </script>
 }
 
 @{
@@ -52,14 +56,7 @@
             </div>
 
         </form>
-        @if (Model.Flights.Count > 0)
-        {
-            <ul>
-                @foreach (var flight in Model.Flights)
-                {
-                    <li>@flight</li>
-                }
-            </ul>
-        }
+        <span class="text-danger">@Model.Error</span>
+        @Html.Partial("_FlightView", Model.Flights)
     </div>
 </div>
