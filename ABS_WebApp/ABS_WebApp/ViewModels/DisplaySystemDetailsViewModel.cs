@@ -8,10 +8,7 @@ namespace ABS_WebApp.ViewModels
         {
             AirporstList = new();
             AirlinesList = new();
-            Details = new();
         }
-
-        public List<string>Details { get; set; }
         public string AirportsTitle { get; set; }
 
         public List<string> AirporstList { get; set; }

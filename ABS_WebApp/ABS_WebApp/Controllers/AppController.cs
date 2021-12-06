@@ -205,7 +205,6 @@ namespace ABS_WebApp.Controllers
                 }
             }
             AddSeats(model, listSeats);
-            model.Details = details;
             return View(model);
         }
 
