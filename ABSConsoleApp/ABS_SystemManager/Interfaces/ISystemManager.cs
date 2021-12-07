@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ABS_SystemManager.Interfaces
 {
@@ -9,6 +10,8 @@ namespace ABS_SystemManager.Interfaces
         public string CreateAirline(string name);
 
         public string CreateFlight(string airlineName, string origin, string destination, int year, int month, int day, string id);
+
+        public Task<string> CreateFlightAsync(string airlineName, string origin, string destination, int year, int month, int day, string id);
 
         public string CreateSection(string airlineName, string flightId, int rows, int colms, int seatClass);
 

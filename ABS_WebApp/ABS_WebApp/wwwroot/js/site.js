@@ -27,5 +27,13 @@
             $('#container').addClass('col-md-6 offset-md-3');
         }
     })
+
+    $('#result:contains("successfully")').removeClass('text-danger')
+        .addClass('text-success');
+
+    $('input').focusin(function () {
+        $('#result').empty();
+    })
+
 });
 

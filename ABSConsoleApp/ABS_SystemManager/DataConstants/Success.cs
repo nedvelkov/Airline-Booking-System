@@ -16,7 +16,7 @@
         public const string createFlightSection = "Section {0} class is created successfully for flight from {1} to {2} on airline {3}";
 
         //Seat
-        public const string bookedSeat = "Seat {0} in {1} class is booked for flight from {2} to {3} on airline {4}";
+        public const string bookedSeat = "Seat {0} in {1} class is successfully booked for flight from {2} to {3} on airline {4}";
 
     }
 }

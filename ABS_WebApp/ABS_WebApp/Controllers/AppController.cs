@@ -7,6 +7,7 @@ using ABS_WebApp.ViewModels;
 using ABS_SystemManager.Interfaces;
 using ABS_WebApp.Seeder;
 using static ABS_SystemManager.DataConstants.Success;
+using System.Diagnostics;
 
 namespace ABS_WebApp.Controllers
 {
@@ -29,7 +30,7 @@ namespace ABS_WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                TempData["Success"] = _manager.CreateAirport(model.Name);
+                TempData["Result"] =  _manager.CreateAirport(model.Name);
                 ModelState.Clear();
             }
             return View();
@@ -43,7 +44,7 @@ namespace ABS_WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                TempData["Success"] = _manager.CreateAirline(model.Name);
+                TempData["Result"] = _manager.CreateAirline(model.Name);
                 ModelState.Clear();
             }
             return View();
@@ -57,7 +58,7 @@ namespace ABS_WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                TempData["Success"] = _manager.CreateFlight(model.AirlineName,
+                TempData["Result"] = await _manager.CreateFlightAsync(model.AirlineName,
                                                         model.Origin,
                                                         model.Destination,
                                                         model.Date.Year,
@@ -77,7 +78,7 @@ namespace ABS_WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                TempData["Success"] = _manager.CreateSection(model.AirlineName,
+                TempData["Result"] = _manager.CreateSection(model.AirlineName,
                                                          model.Id,
                                                          model.Rows,
                                                          model.Columns,
@@ -144,7 +145,7 @@ namespace ABS_WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                TempData["Success"] = _manager.BookSeat(model.AirlineName,
+                TempData["Result"] = _manager.BookSeat(model.AirlineName,
                                                     model.Id,
                                                     model.SeatClass,
                                                     model.Row,
