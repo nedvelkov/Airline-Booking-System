@@ -22,8 +22,6 @@ namespace ABS_WebApp.ViewModels
         [Display(Name = "Identification number of flight :")]
         public string Id { get; set; }
 
-        public string IdHelp =>flightId;
-
         [Required]
         [RegularExpression(evaluateAirlineName, ErrorMessage = airlineName)]
         [Display(Name = "Airline name :")]

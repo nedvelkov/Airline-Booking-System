@@ -2,11 +2,11 @@
 
 @foreach (var flight in Model)
 {
-    <li class="flightTitle selectObj">@flight.Title</li>
+    <li class="flightTitle selectObj dropdown-toggle">@flight.Title</li>
     <ul class="sections">
         @foreach (var flightSection in flight.FlightSections)
         {
-            <li class="flightSectionTitile selectObj">@flightSection.Title</li>
+            <li class="flightSectionTitile selectObj dropdown-toggle">@flightSection.Title</li>
             <div class="seats">
                 @for (int row = 0; row < flightSection.Seats.GetLength(0); row++)
                 {

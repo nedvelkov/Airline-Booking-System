@@ -30,8 +30,6 @@ namespace ABS_WebApp.ViewModels
         [Display(Name = "Row :")]
         public int Row { get; set; }
 
-        public string RowHelp => seatRowHelp;
-
         [Required]
         [RegularExpression(evaluateSeatColumn, ErrorMessage = invalidSeatColumn)]
         [Display(Name = "Column :")]

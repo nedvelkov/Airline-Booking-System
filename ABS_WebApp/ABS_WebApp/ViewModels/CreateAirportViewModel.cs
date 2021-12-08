@@ -12,7 +12,5 @@ namespace ABS_WebApp.ViewModels
         [RegularExpression(evaluateAirportName, ErrorMessage = airportName)]
         [Display(Name = "Airport name :")]
         public string Name { get; set; }
-
-        public string NameHelp => airportName;
     }
 }

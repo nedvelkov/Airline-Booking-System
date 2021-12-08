@@ -13,7 +13,5 @@ namespace ABS_WebApp.ViewModels
         [Display(Name = "Airline name :")]
         public string Name { get; set; }
 
-        public string NameHelp => airlineName;
-
     }
 }

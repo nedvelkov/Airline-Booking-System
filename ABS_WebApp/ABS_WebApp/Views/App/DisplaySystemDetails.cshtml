@@ -16,7 +16,7 @@
 
 <div class="col-md-6 offset-md-3" id="container">
     <div class="card card-body bg-light">
-        <label asp-for="@Model.AirportsTitle" id="airportLabel" class="font-weight-bold selectObj">@Model.AirportsTitle</label>
+        <label asp-for="@Model.AirportsTitle" id="airportLabel" class="font-weight-bold selectObj"><i class="arrow-right"></i> @Model.AirportsTitle</label>
         <ul id="airports">
             @foreach (var airport in Model.AirporstList)
             {
@@ -24,11 +24,11 @@
 
             }
         </ul>
-        <label id="airlineLabel" class="font-weight-bold selectObj">@Model.AirlinesTitle</label>
+            <label id="airlineLabel" class="font-weight-bold selectObj"><i class="arrow-right"></i>@Model.AirlinesTitle</label>
         <div id="airlines">
             @foreach (var airline in Model.AirlinesList)
             {
-                <h6 class="airlineTitle selectObj">@airline.Title</h6>
+                <h6 class="airlineTitle selectObj"><i class="arrow-right"></i>@airline.Title</h6>
                 <ul class="flights">
                     <partial name="_FlightView" model="@airline.Flights">
                 </ul>

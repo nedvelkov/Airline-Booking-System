@@ -31,14 +31,10 @@ namespace ABS_WebApp.ViewModels
         [Display(Name = "Count or rows :")]
         public int Rows { get; set; }
 
-        public string RowHelp => seatRowHelp;
-
         [Required]
         [Range(minSeatColms, maxSeatColms, ErrorMessage = invalidCountColumns)]
         [Display(Name = "Count of columns :")]
         public int Columns { get; set; }
-
-        public string ColumnHelp => seatColumnHelp;
 
         [Required]
         [Display(Name = "Type of seat class :")]

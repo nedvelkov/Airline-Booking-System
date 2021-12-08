@@ -75,15 +75,11 @@ body {
 
 .selectObj {
     cursor: pointer;
+
 }
     .selectObj:hover {
         text-decoration: underline;
     }
-
-input[type="checkbox"]:disabled {
-    background: #dddddd;
-    background-color:blue;
-}
 
 .dropdownCss {
     position: relative;
@@ -101,4 +97,31 @@ input[type="checkbox"]:disabled {
 
 .dropdownCss:hover .dropdownCss-content {
     display: block;
+}
+
+
+.arrow-right {
+    display:inline-block;
+    width: 0;
+    height: 0;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 5px solid black;
+}
+    .arrow-right:active {
+        transform: rotate(90deg);
+        -webkit-transform: rotate(90deg);
+    }
+
+.left {
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+}
+
+.arrow-down {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid black;
 }

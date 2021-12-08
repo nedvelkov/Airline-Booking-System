@@ -1,5 +1,6 @@
 ﻿@model CreateAirportViewModel
 
+
 @section Scripts {
     <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
@@ -20,7 +21,7 @@
                 <input type="text" asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger font-weight-bold"></span>
                 <div class="dropdownCss-content">
-                    <p>@Model.NameHelp</p>
+                    <p>@airportName</p>
                 </div>
             </div>
 

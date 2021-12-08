@@ -1,5 +1,7 @@
 using ABS_SystemManager;
 using ABS_SystemManager.Interfaces;
+using ABS_WebApp.Services.Interfaces;
+using ABS_WebApp.Services.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,6 +28,10 @@ namespace ABS_WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<ISystemManager, SystemManager>();
+            services.AddTransient<IAirportService, AirportService>();
+            services.AddTransient<IAirlineService, AirlineService>();
+            services.AddTransient<IFlightService, FlightService>();
+            services.AddTransient<ISystemService, SystemService>();
             services.AddControllersWithViews();
         }
 

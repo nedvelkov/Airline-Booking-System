@@ -4,7 +4,8 @@
     });
 
     $('#airlineLabel').on("click", function () {
-        $('#airlines').toggle();
+       $('#airlineLabel').children('i').removeClass('.arrow-right').addClass('.arrow-down');
+       $('#airlines').toggle();
     });
 
     $('.airlineTitle').click(function () {

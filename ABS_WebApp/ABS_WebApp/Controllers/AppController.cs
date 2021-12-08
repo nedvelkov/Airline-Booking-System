@@ -6,45 +6,49 @@ using System.Threading.Tasks;
 using ABS_WebApp.ViewModels;
 using ABS_SystemManager.Interfaces;
 using ABS_WebApp.Seeder;
-using static ABS_SystemManager.DataConstants.Success;
-using System.Diagnostics;
+using ABS_WebApp.Services.Interfaces;
 
 namespace ABS_WebApp.Controllers
 {
     public class AppController : Controller
     {
-        private readonly ISystemManager _manager;
+        private readonly IAirlineService _airlineService;
+        private readonly IAirportService _airportService;
+        private readonly IFlightService _flightService;
+        private readonly ISystemService _systemService;
 
-        public AppController(ISystemManager manager)
+        public AppController(IAirlineService airlineService, IAirportService airportService, IFlightService flightService, ISystemService systemService)
         {
-            _manager = manager;
-            var seeder = new DataSeeder(_manager);
-            seeder.Seed();
+            _airlineService = airlineService;
+            _airportService = airportService;
+            _flightService = flightService;
+            _systemService = systemService;
+            _systemService.SeedData();
         }
 
         [HttpGet]
-        public async Task<IActionResult> CreateAirport() => View(new CreateAirportViewModel());
+        public async Task<IActionResult> CreateAirport() => View();
 
         [HttpPost]
         public async Task<IActionResult> CreateAirport(CreateAirportViewModel model)
         {
             if (ModelState.IsValid)
             {
-                TempData["Result"] =  _manager.CreateAirport(model.Name);
+                TempData["Result"] = await _airportService.CreateAirport(model.Name);
                 ModelState.Clear();
             }
             return View();
         }
 
         [HttpGet]
-        public async Task<IActionResult> CreateAirline() => View(new CreateAirlineViewModel());
+        public async Task<IActionResult> CreateAirline() => View();
 
         [HttpPost]
         public async Task<IActionResult> CreateAirline(CreateAirlineViewModel model)
         {
             if (ModelState.IsValid)
             {
-                TempData["Result"] = _manager.CreateAirline(model.Name);
+                TempData["Result"] = await _airlineService.CreateAirline(model.Name);
                 ModelState.Clear();
             }
             return View();
@@ -58,7 +62,7 @@ namespace ABS_WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                TempData["Result"] = await _manager.CreateFlightAsync(model.AirlineName,
+                TempData["Result"] = await _flightService.CreateFlight(model.AirlineName,
                                                         model.Origin,
                                                         model.Destination,
                                                         model.Date.Year,
@@ -78,11 +82,11 @@ namespace ABS_WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                TempData["Result"] = _manager.CreateSection(model.AirlineName,
-                                                         model.Id,
-                                                         model.Rows,
-                                                         model.Columns,
-                                                         model.SeatClass);
+                TempData["Result"] = await _flightService.CreateFlightSection(model.AirlineName,
+                                                                                model.Id,
+                                                                                model.Rows,
+                                                                                model.Columns,
+                                                                                model.SeatClass);
                 ModelState.Clear();
             }
             return View(GetCreateSectionViewModel());
@@ -96,7 +100,9 @@ namespace ABS_WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var details = _manager.FindAvailableFlights(model.Origin, model.Destination).Split("\r\n").ToList();
+                var data = await _flightService.FindAvailableFlights(model.Origin, model.Destination);
+                var details = data.Split("\r\n").ToList();
+
                 if (details.First().Contains("-FL"))
                 {
                     var listSeats = new List<string>();
@@ -133,7 +139,7 @@ namespace ABS_WebApp.Controllers
                     model.Error = details.First();
                 }
             }
-            model.Airports = _manager.ListAirports.ToList();
+            model.Airports = _airportService.Airports.ToList();
             return View(model);
         }
 
@@ -145,11 +151,11 @@ namespace ABS_WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                TempData["Result"] = _manager.BookSeat(model.AirlineName,
-                                                    model.Id,
-                                                    model.SeatClass,
-                                                    model.Row,
-                                                    model.Column[0]);
+                TempData["Result"] = await _flightService.BookSeat(model.AirlineName,
+                                                                    model.Id,
+                                                                    model.SeatClass,
+                                                                    model.Row,
+                                                                    model.Column[0]);
                 ModelState.Clear();
             }
             return View(GetBookSeatViewModel());
@@ -159,7 +165,8 @@ namespace ABS_WebApp.Controllers
         [HttpGet]
         public async Task<IActionResult> DisplaySystemDetails()
         {
-            var details = _manager.DisplaySystemDetails().Split("\r\n").ToList();
+            var data = await _systemService.Details();
+            var details = data.Split("\r\n").ToList();
             var model = new DisplaySystemDetailsViewModel();
             var listSeats = new List<string>();
             foreach (string line in details)
@@ -212,8 +219,8 @@ namespace ABS_WebApp.Controllers
         private CreateFlightViewModel GetFlightModel()
         {
             var model = new CreateFlightViewModel();
-            model.Airlines = _manager.ListAirlines.ToList();
-            model.Airports = _manager.ListAirports.ToList();
+            model.Airlines = _airlineService.Airlines.ToList();
+            model.Airports = _airportService.Airports.ToList();
             model.Date = DateTime.Now;
             model.Id = null;
             return model;
@@ -222,23 +229,23 @@ namespace ABS_WebApp.Controllers
         private FindAvaibleFlightsViewModel GetFindAvaibleFlightsViewModel()
         {
             var model = new FindAvaibleFlightsViewModel();
-            model.Airports = _manager.ListAirports.ToList();
+            model.Airports = _airportService.Airports.ToList();
             return model;
         }
 
         private BookSeatViewModel GetBookSeatViewModel()
         {
             var model = new BookSeatViewModel();
-            model.Airlines = _manager.ListAirlines.ToList();
-            model.Flights = _manager.ListFlights.ToList();
+            model.Airlines = _airlineService.Airlines.ToList();
+            model.Flights = _flightService.Flights.ToList();
             return model;
         }
 
         private CreateSectionViewModel GetCreateSectionViewModel()
         {
             var model = new CreateSectionViewModel();
-            model.Airlines = _manager.ListAirlines.ToList();
-            model.Flights = _manager.ListFlights.ToList();
+            model.Airlines = _airlineService.Airlines.ToList();
+            model.Flights = _flightService.Flights.ToList();
             return model;
         }
 
