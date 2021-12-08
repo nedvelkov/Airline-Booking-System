@@ -18,26 +18,30 @@ namespace ABS_WebApp.ViewModels
 
         [Required]
         [RegularExpression(evaluateFlightId, ErrorMessage = flightId)]
-        [Display(Name = "Identification number of flight")]
+        [Display(Name = "Identification number of flight :")]
         public string Id { get; set; }
 
         [Required]
         [RegularExpression(evaluateAirlineName, ErrorMessage = airlineName)]
-        [Display(Name = "Airline name")]
+        [Display(Name = "Airline name :")]
         public string AirlineName { get; set; }
 
         [Required]
-        [Range(minSeatRows,maxSeatRows,ErrorMessage = invalidCountRows)]
-        [Display(Name = "Count or rows")]
+        [Range(minSeatRows, maxSeatRows, ErrorMessage = invalidCountRows)]
+        [Display(Name = "Count or rows :")]
         public int Rows { get; set; }
+
+        public string RowHelp => seatRowHelp;
 
         [Required]
         [Range(minSeatColms, maxSeatColms, ErrorMessage = invalidCountColumns)]
-        [Display(Name = "Count of columns")]
+        [Display(Name = "Count of columns :")]
         public int Columns { get; set; }
 
+        public string ColumnHelp => seatColumnHelp;
+
         [Required]
-        [Display(Name = "Type of seat class")]
+        [Display(Name = "Type of seat class :")]
         public int SeatClass { get; set; }
 
         public List<string> Flights { get; set; }

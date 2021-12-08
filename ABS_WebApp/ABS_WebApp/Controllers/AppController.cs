@@ -23,7 +23,7 @@ namespace ABS_WebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> CreateAirport() => View();
+        public async Task<IActionResult> CreateAirport() => View(new CreateAirportViewModel());
 
         [HttpPost]
         public async Task<IActionResult> CreateAirport(CreateAirportViewModel model)
@@ -37,7 +37,7 @@ namespace ABS_WebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> CreateAirline() => View();
+        public async Task<IActionResult> CreateAirline() => View(new CreateAirlineViewModel());
 
         [HttpPost]
         public async Task<IActionResult> CreateAirline(CreateAirlineViewModel model)

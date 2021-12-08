@@ -45,6 +45,8 @@
         public const char firstSeatChar = 'A';
         public const char lastSeatChar = 'J';
         public const string seatNumber = "{0:D3}{1}";
+        public const string seatColumnHelp = "Seat column must be between 1 and 10";
+        public const string seatRowHelp = "Seat row must be between 1 and 100";
 
         /// <summary>
         /// This value plus count of column gives right column letter

@@ -19,27 +19,29 @@ namespace ABS_WebApp.ViewModels
 
         [Required]
         [RegularExpression(evaluateFlightId, ErrorMessage = flightId)]
-        [Display(Name = "Identification number of flight:")]
+        [Display(Name = "Identification number of flight :")]
         public string Id { get; set; }
+
+        public string IdHelp =>flightId;
 
         [Required]
         [RegularExpression(evaluateAirlineName, ErrorMessage = airlineName)]
-        [Display(Name = "Airline name:")]
+        [Display(Name = "Airline name :")]
         public string AirlineName { get; set; }
 
         [Required]
         [RegularExpression(evaluateAirportName, ErrorMessage = airportName)]
-        [Display(Name = "Origin airport:")]
+        [Display(Name = "Origin airport :")]
         public string Origin { get; set; }
 
         [Required]
         [RegularExpression(evaluateAirportName, ErrorMessage = airportName)]
-        [Display(Name = "Destination airport:")]
+        [Display(Name = "Destination airport :")]
         public string Destination { get; set; }
 
         [Required]
         [CompareDate(ErrorMessage = notValidDate)]
-        [Display(Name = "Date of flight:")]
+        [Display(Name = "Date of flight :")]
         [DataType(DataType.Date)]
         public DateTime Date { get; set; }
 

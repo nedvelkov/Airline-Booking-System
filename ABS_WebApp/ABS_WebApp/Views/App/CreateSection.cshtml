@@ -45,16 +45,22 @@
                 <span asp-validation-for="AirlineName" class="text-danger font-weight-bold"></span>
             </div>
 
-            <div class="form-group">
+            <div class="form-group dropdownCss">
                 <label asp-for="Rows"></label>
                 <input type="number" asp-for="Rows" class="form-control" />
                 <span asp-validation-for="Rows" class="text-danger font-weight-bold"></span>
+                <div class="dropdownCss-content">
+                    <p>@Model.RowHelp</p>
+                </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group dropdownCss">
                 <label asp-for="Columns"></label>
                 <input type="number" asp-for="Columns" class="form-control" />
                 <span asp-validation-for="Columns" class="text-danger font-weight-bold"></span>
+                <div class="dropdownCss-content">
+                    <p>@Model.ColumnHelp</p>
+                </div>
             </div>
 
             <div class="form-group">
