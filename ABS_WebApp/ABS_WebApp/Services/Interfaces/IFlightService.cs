@@ -13,6 +13,6 @@ namespace ABS_WebApp.Services.Interfaces
 
         public Task<string> FindAvailableFlights(string origin, string destination);
 
-        public IReadOnlyList<string> Flights { get; }
+        public Task<IReadOnlyList<string>> Flights { get; }
     }
 }

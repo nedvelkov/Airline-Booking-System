@@ -12,6 +12,7 @@ namespace ABS_WebApp.Seeder
             {
                 return;
             }
+
             manager.CreateAirport("SFA");
             manager.CreateAirport("PLD");
             manager.CreateAirport("VRN");

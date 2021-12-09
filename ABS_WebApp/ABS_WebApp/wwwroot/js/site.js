@@ -1,15 +1,23 @@
 ﻿$(document).ready(function () {
-    $('#airportLabel').on("click", function () {
-        $('#airports').toggle();
+    $('#airportLabel').on("click", function () {     
+        let airports = $('#airports');
+        airports.toggle();
+
+        changeArrow($(this), airports);
     });
 
     $('#airlineLabel').on("click", function () {
-       $('#airlineLabel').children('i').removeClass('.arrow-right').addClass('.arrow-down');
-       $('#airlines').toggle();
+        let airlines = $('#airlines');
+        airlines.toggle();
+        let arrow = $(this).children('i');
+
+        changeArrow($(this), airlines);
     });
 
     $('.airlineTitle').click(function () {
-        $(this).next('.flights').toggle();
+        let flights = $(this).next('.flights');
+        flights.toggle();
+        changeArrow($(this),flights);
     })
 
     $('.flightTitle').click(function () {
@@ -36,5 +44,17 @@
         $('#result').empty();
     })
 
+    function changeArrow(clickItem,element) {
+
+        let arrow = clickItem.children('i');
+
+        if (element.is(":visible")) {
+            arrow.removeClass('arrow-right');
+            arrow.addClass('arrow-down');
+        } else {
+            arrow.removeClass('arrow-down');
+            arrow.addClass('arrow-right');
+        }
+    }
 });
 

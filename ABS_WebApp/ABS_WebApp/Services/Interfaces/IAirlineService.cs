@@ -7,6 +7,6 @@ namespace ABS_WebApp.Services.Interfaces
     {
         public Task<string> CreateAirline(string name);
 
-        public IReadOnlyList<string> Airlines { get; }
+        public Task<IReadOnlyList<string>> Airlines { get; }
     }
 }

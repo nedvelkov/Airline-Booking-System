@@ -163,7 +163,7 @@
             var flightIds = originAirport.DeparturesFlights().Intersect(destinationAirport.ArrivalFlights()).ToList();
 
             var flights = _flights.Where(x => flightIds.Contains(x.Key)
-                                            && DateTime.Compare(x.Value.Date, DateTime.UtcNow.Date) > 0)
+                                            && DateTime.Compare(x.Value.Date, DateTime.Now.Date) > 0)
                                             .Select(x => x.Value)
                                             .ToList();
             flights.ForEach(f => sb.AppendLine(f.ToString()));
@@ -408,7 +408,7 @@
         /// <param name="message"></param>
         private void ValidateFlightDate(DateTime date, string message)
         {
-            var dateToCompare = _testDate != DateTime.MinValue ? _testDate : DateTime.UtcNow.Date;
+            var dateToCompare = _testDate != DateTime.MinValue ? _testDate : DateTime.Now.Date;
             if (DateTime.Compare(date.Date, dateToCompare) <= 0)
             {
                 throw new ArgumentException(message);

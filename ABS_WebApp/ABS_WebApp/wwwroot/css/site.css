@@ -119,9 +119,27 @@ body {
 }
 
 .arrow-down {
+    display: inline-block;
     width: 0;
     height: 0;
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
     border-top: 5px solid black;
+}
+
+.custom-checkbox input[type="checkbox"],
+.custom-checkbox .checked {
+    display: none;
+}
+
+    .custom-checkbox input[type="checkbox"]:checked ~ .checked {
+        display: inline-block;
+    }
+
+    .custom-checkbox input[type="checkbox"]:checked ~ .unchecked {
+        display: none;
+    }
+
+.noDot {
+    list-style-type: none;
 }

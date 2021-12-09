@@ -7,20 +7,24 @@
         @foreach (var flightSection in flight.FlightSections)
         {
             <li class="flightSectionTitile selectObj dropdown-toggle">@flightSection.Title</li>
-            <div class="seats">
+            <li class="seats noDot">
                 @for (int row = 0; row < flightSection.Seats.GetLength(0); row++)
                 {
                     <div class="row">
                         @for (int col = 0; col < flightSection.Seats.GetLength(1); col++)
                         {
-                        <div class="col">
-                            <label class="font-italic">@flightSection.Seats[row, col].Number</label>
-                            <input type="checkbox" checked="@flightSection.Seats[row,col].Booked" disabled="disabled" />
+                            <div class="col">
+                                <label class="font-italic custom-checkbox">
+                                    @flightSection.Seats[row, col].Number
+                                <input type="checkbox" checked="@flightSection.Seats[row,col].Booked" disabled="disabled" />
+                                <i class="far fa-user unchecked"></i>
+                                <i class="fas fa-user checked"></i>
+                            </label>
                         </div>
-                        }
+                    }
                     </div>
                 }
-            </div>
+            </li>
         }
     </ul>
 }

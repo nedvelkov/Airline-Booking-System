@@ -15,7 +15,7 @@ namespace ABS_WebApp.Services.Models
         public Task<string> CreateAirline(string name)
             => Task.FromResult(_manager.CreateAirline(name));
 
-        public IReadOnlyList<string> Airlines => _manager.ListAirlines;
+        public Task< IReadOnlyList<string>> Airlines => Task.FromResult(_manager.ListAirlines);
 
     }
 }
