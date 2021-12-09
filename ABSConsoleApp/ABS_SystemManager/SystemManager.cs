@@ -93,35 +93,6 @@
             return String.Format(Success.createFlight, origin, destination, airlineName);
         }
 
-        public async Task<string> CreateFlightAsync(string airlineName, string origin, string destination, int year, int month, int day, string id)
-        {
-            IAirline airline;
-            IAirport originAirport;
-            IAirport destinationAirport;
-            DateTime date;
-
-            try
-            {
-                airline = await Task.Run(() => GetItem(_airlines, airlineName, String.Format(Error.missingItem, "Airline", "name", airlineName)));
-                (originAirport, destinationAirport) = await Task.Run(() => ValidateFlightDestination(origin, destination));
-                date = await Task.Run(() => ValidateDate(year, month, day));
-
-                ValidateFlightDate(date, Error.notValidFlightDate);
-                ValidateString(id, DataConstrain.evaluateFlightId, Error.flightId);
-                ContainsItem(_flights, id, String.Format(Error.dublicateItem, "Flight", "id"));
-            }
-            catch (Exception a)
-            {
-                return a.Message;
-            }
-
-            var flight = await Task.Run(() => GetFlight(airline, originAirport, destinationAirport, date, id));
-
-            _flights.Add(id, flight);
-
-            return String.Format(Success.createFlight, origin, destination, airlineName);
-        }
-
         public string CreateSection(string airlineName, string flightId, int rows, int columns, int seatClass)
         {
             IFlight flight;
