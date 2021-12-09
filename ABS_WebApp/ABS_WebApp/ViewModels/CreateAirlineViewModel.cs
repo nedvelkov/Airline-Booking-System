@@ -10,7 +10,7 @@ namespace ABS_WebApp.ViewModels
     {
         [Required]
         [RegularExpression(evaluateAirlineName, ErrorMessage = airlineName)]
-        [Display(Name = "Airline name :")]
+        [Display(Name = "Airline name:")]
         public string Name { get; set; }
 
     }
