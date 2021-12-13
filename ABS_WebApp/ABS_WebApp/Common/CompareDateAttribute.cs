@@ -10,7 +10,7 @@ namespace ABS_WebApp.Common
         /// </summary>
         public string ComapreDate { get; set; }
 
-        public CompareDateAttribute() => ComapreDate = DateTime.UtcNow.ToString();
+        public CompareDateAttribute() => ComapreDate = DateTime.Now.ToString();
 
         public override bool IsValid(object value)
         {
