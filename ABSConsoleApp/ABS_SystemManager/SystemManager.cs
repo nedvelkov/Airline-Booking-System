@@ -9,9 +9,7 @@
 
     using ABS_SystemManager.Models;
     using Interfaces;
-
     using DataConstants;
-    using System.Threading.Tasks;
 
     public class SystemManager : ISystemManager
     {
@@ -238,7 +236,11 @@
         }
 
         public IReadOnlyList<string> ListAirlines => _airlines.Select(x => x.Key).ToList();
+
+        public IReadOnlyDictionary<string, string> AirlinesDictionary => _airlines.ToDictionary(x => x.Key, x => x.Value.ToString());
+
         public IReadOnlyList<string> ListAirports => _airports.Select(x => x.Key).ToList();
+        
         public IReadOnlyList<string> ListFlights => _flights.Select(x => x.Key).ToList();
 
         private DateTime ValidateDate(int year, int month, int day)
