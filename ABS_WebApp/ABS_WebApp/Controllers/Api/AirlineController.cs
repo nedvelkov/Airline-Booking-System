@@ -40,7 +40,13 @@ namespace ABS_WebApp.Controllers.Api
         [HttpPost]
         public async Task<ActionResult<string>> Post(CreateAirlineViewModel model)
         {
-            return Ok("Airline is created");
+            var list = await _airlineService.Airlines;
+            var airline = list.FirstOrDefault(x => x.Contains(model.Name));
+            if (airline != null)
+            {
+                return BadRequest("Airline with this name already exist");
+            }
+            return await _airlineService.CreateAirline(model.Name);
         }
 
     }

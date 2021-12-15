@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    $('#airportLabel').on("click", function () {     
+    $('#airportLabel').on("click", function () {
         let airports = $('#airports');
         airports.toggle();
 
@@ -17,7 +17,7 @@
     $('.airlineTitle').click(function () {
         let flights = $(this).next('.flights');
         flights.toggle();
-        changeArrow($(this),flights);
+        changeArrow($(this), flights);
     })
 
     $('.flightTitle').click(function () {
@@ -37,14 +37,15 @@
         }
     })
 
-    $('#result:contains("successfully")').removeClass('text-danger')
-        .addClass('text-success');
-
     $('input').focusin(function () {
         $('#result').empty();
     })
 
-    function changeArrow(clickItem,element) {
+    //TODO: Delete after code review
+    $('#result:contains("successfully")').removeClass('text-danger')
+        .addClass('text-success');
+
+    function changeArrow(clickItem, element) {
 
         let arrow = clickItem.children('i');
 
