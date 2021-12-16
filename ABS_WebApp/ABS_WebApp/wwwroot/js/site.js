@@ -41,7 +41,6 @@
         $('#result').empty();
     })
 
-    //TODO: Delete after code review
     $('#result:contains("successfully")').removeClass('text-danger')
         .addClass('text-success');
 

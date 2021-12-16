@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using ABS_WebApp.ViewModels;
 using ABS_WebApp.Services.Interfaces;
+using System.Diagnostics;
 
 namespace ABS_WebApp.Controllers
 {
@@ -130,7 +131,6 @@ namespace ABS_WebApp.Controllers
             return View(await GetBookSeatViewModel());
         }
 
-
         [HttpGet]
         public async Task<IActionResult> DisplaySystemDetails()
         {
@@ -140,6 +140,12 @@ namespace ABS_WebApp.Controllers
             ParseData(data, model);
 
             return View(model);
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
         private async Task<CreateFlightViewModel> GetFlightModel()
