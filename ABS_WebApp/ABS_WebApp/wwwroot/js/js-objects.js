@@ -29,3 +29,13 @@ function getSection() {
         "seatclass": getValue("SeatClass")
     }
 }
+
+function getSeat() {
+    return {
+        "id": getValue("Id"),
+        "airlinename": getValue("AirlineName"),
+        "row": getValue("Row"),
+        "column": getValue("Column"),
+        "seatclass": getValue("SeatClass")
+    }
+}

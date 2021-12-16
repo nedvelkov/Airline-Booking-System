@@ -3,6 +3,9 @@
 @section Scripts {
     <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+<script>
+   // bookSeat();
+</script>
 }
 
 @{
@@ -87,7 +90,7 @@
             <div class="form-group">
                 <button type="submit">Book seat</button>
             </div>
-            <span class="text-danger">@TempData["Result"]</span>
+            <span class="text-danger" id="result">@TempData["Result"]</span>
         </form>
         <div id="testData"></div>
     </div>

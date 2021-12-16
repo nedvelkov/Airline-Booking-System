@@ -29,3 +29,13 @@ function clearSectionForm() {
         "seatclass": setValue("SeatClass")
     }
 }
+
+function clearSeatForm() {
+    return {
+        "id": setValue("Id"),
+        "airlinename": setValue("AirlineName"),
+        "row": setValue("Row"),
+        "column": setValue("Column"),
+        "seatclass": setValue("SeatClass")
+    }
+}

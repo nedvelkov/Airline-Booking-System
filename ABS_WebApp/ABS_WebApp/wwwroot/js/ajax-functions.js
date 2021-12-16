@@ -51,7 +51,7 @@ function createFlight() {
 function createFlightSection() {
     $('form').submit(function () {
         event.preventDefault();
-        let getFlightModel = getSection();
+        let getSectionModel = getSection();
         let airlineName = getValue("AirlineName");
         let flightId = getValue("Id");
         let urlApi = "https://localhost:5001/api/airline/" + airlineName + "/flight/" + flightId + "/section";
@@ -60,10 +60,39 @@ function createFlightSection() {
             type: "POST",
             url: urlApi,
             contentType: 'application/json',
-            data: JSON.stringify(getFlightModel)
+            data: JSON.stringify(getSectionModel)
         })
             .done(function (data) {
                 clearSectionForm();
+                $('#result').text(data);
+            })
+            .fail(function (error) {
+                $('#result').text(error.responseText);
+            })
+            .always(function () {
+                setResult();
+            });
+    });
+}
+
+function bookSeat() {
+    $('form').submit(function () {
+        event.preventDefault();
+        let getSeatModel = getSeat();
+        let airlineName = getValue("AirlineName");
+        let flightId = getValue("Id");
+        let seatClass = getValue("SeatClass");
+        let urlApi = "https://localhost:5001/api/airline/" + airlineName + "/flight/" + flightId + "/section/"+seatClass+"/seat";
+        console.log(urlApi);
+        console.log(JSON.stringify(getSeatModel));
+        $.ajax({
+            type: "PUT",
+            url: urlApi,
+            contentType: 'application/json',
+            data: JSON.stringify(getSeatModel)
+        })
+            .done(function (data) {
+                clearSeatForm();
                 $('#result').text(data);
             })
             .fail(function (error) {

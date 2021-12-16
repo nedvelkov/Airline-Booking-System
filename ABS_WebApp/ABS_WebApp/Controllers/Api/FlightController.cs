@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+
 using ABS_WebApp.Services.Interfaces;
 using ABS_WebApp.ViewModels;
 
@@ -39,7 +40,7 @@ namespace ABS_WebApp.Controllers.Api
         [HttpPost]
         public async Task<ActionResult<string>> Post(CreateFlightViewModel model)
         {
-            return Ok();
+            return await _flightService.CreateFlight(model.AirlineName, model.Origin, model.Destination, model.Date.Year, model.Date.Month, model.Date.Day, model.Id);
         }
 
     }

@@ -1,10 +1,8 @@
-﻿using ABS_WebApp.Services.Interfaces;
-using ABS_WebApp.ViewModels;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
+using ABS_WebApp.Services.Interfaces;
+using ABS_WebApp.ViewModels;
 
 namespace ABS_WebApp.Controllers.Api
 {
@@ -20,8 +18,7 @@ namespace ABS_WebApp.Controllers.Api
         [HttpPost]
         public async Task<ActionResult<string>> Post(CreateSectionViewModel model)
         {
-            var result = await _flightService.CreateFlightSection(model.AirlineName, model.Id, model.Rows, model.Columns, model.SeatClass);
-            return result;
+            return await _flightService.CreateFlightSection(model.AirlineName, model.Id, model.Rows, model.Columns, model.SeatClass);
         }
     }
 }
