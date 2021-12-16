@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-using ABS_WebApp.Common;
-
-using static ABS_SystemManager.DataConstants.DataConstrain;
-using static ABS_SystemManager.DataConstants.Error;
+using static ABS_DataConstants.DataConstrain;
+using static ABS_DataConstants.Error;
 
 namespace ABS_WebApp.ViewModels
 {
@@ -38,7 +36,6 @@ namespace ABS_WebApp.ViewModels
         public string Destination { get; set; }
 
         [Required]
-        [CompareDate(ErrorMessage = notValidDate)]
         [Display(Name = "Date of flight:")]
         [DataType(DataType.Date)]
         public DateTime Date { get; set; }

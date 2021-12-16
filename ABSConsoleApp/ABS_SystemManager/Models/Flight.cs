@@ -1,28 +1,29 @@
-﻿namespace ABS_SystemManager.Models
-{
-    using System;
-    using System.Linq;
-    using System.Text;
-    using System.Collections.Generic;
+﻿using System;
+using System.Linq;
+using System.Text;
+using System.Collections.Generic;
 
-    using ABS_SystemManager.Interfaces;
-    using static DataConstants.DataConstrain;
+using ABS_SystemManager.Interfaces;
+using static ABS_DataConstants.DataConstrain;
+
+namespace ABS_SystemManager.Models
+{
 
     internal class Flight : IFlight
     {
         private Dictionary<SeatClass, IFlightSection> _flightSections;
 
-        public Flight() => _flightSections = new();
+        public Flight() => _flightSections = new Dictionary<SeatClass, IFlightSection>();
 
-        public string Id { get; init; }
+        public string Id { get; set; }
 
-        public DateTime Date { get; init; }
+        public DateTime Date { get; set; }
 
-        public IAirport Origin { get; init; }
+        public IAirport Origin { get; set; }
 
-        public IAirport Destination { get; init; }
+        public IAirport Destination { get; set; }
 
-        public IAirline Airline { get; init; }
+        public IAirline Airline { get; set; }
 
         public IReadOnlyDictionary<SeatClass, IFlightSection> FlightSections => _flightSections;
 

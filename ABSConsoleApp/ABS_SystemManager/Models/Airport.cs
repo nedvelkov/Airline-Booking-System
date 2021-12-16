@@ -1,10 +1,11 @@
-﻿namespace ABS_SystemManager.Models
-{
-    using System;
-    using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
-    using ABS_SystemManager.Interfaces;
-    using static ABS_SystemManager.DataConstants.DataConstrain;
+using ABS_SystemManager.Interfaces;
+using static ABS_DataConstants.DataConstrain;
+
+namespace ABS_SystemManager.Models
+{
 
     internal class Airport : IAirport
     {
@@ -12,11 +13,11 @@
         private List<string> _arriavalFlights;
         public Airport()
         {
-            _departuresFlights = new();
-            _arriavalFlights = new();
+            _departuresFlights = new List<string>();
+            _arriavalFlights = new List<string>();
         }
 
-        public string Name { get; init; }
+        public string Name { get; set; }
 
         public IReadOnlyList<string> DeparturesFlights() => _departuresFlights;
 

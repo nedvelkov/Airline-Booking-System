@@ -3,15 +3,12 @@
 using static ABS_DataConstants.DataConstrain;
 using static ABS_DataConstants.Error;
 
-
-namespace ABS_WebApp.ViewModels
+namespace ABS_WebAPI.ApiModels
 {
-    public class CreateAirlineViewModel
+    public class AirportRequestModel
     {
         [Required]
-        [RegularExpression(evaluateAirlineName, ErrorMessage = airlineName)]
-        [Display(Name = "Airline name:")]
+        [RegularExpression(evaluateAirportName, ErrorMessage = airportName)]
         public string Name { get; set; }
-
     }
 }

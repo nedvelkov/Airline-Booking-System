@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace ABS_SystemManager.Interfaces
 {
@@ -11,7 +10,7 @@ namespace ABS_SystemManager.Interfaces
 
         public string CreateFlight(string airlineName, string origin, string destination, int year, int month, int day, string id);
 
-        public string CreateSection(string airlineName, string flightId, int rows, int colms, int seatClass);
+        public string CreateSection(string airlineName, string flightId, int rows, int columns, int seatClass);
 
         public string FindAvailableFlights(string origin, string destination);
 
@@ -20,7 +19,7 @@ namespace ABS_SystemManager.Interfaces
         public string DisplaySystemDetails();
 
         public IReadOnlyList<string> ListAirlines { get; }
-        public IReadOnlyList<string> ListAirports  { get; }
-        public IReadOnlyList<string> ListFlights  { get; }
+        public IReadOnlyList<string> ListAirports { get; }
+        public IReadOnlyList<string> ListFlights { get; }
     }
 }

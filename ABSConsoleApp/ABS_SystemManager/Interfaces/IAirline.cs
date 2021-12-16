@@ -1,6 +1,7 @@
-﻿namespace ABS_SystemManager.Interfaces
+﻿using System.Collections.Generic;
+
+namespace ABS_SystemManager.Interfaces
 {
-    using System.Collections.Generic;
     internal interface IAirline
     {
         public string Name { get; }

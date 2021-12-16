@@ -1,16 +1,16 @@
-﻿namespace ABS_SystemManager
+﻿using System;
+using System.Linq;
+using System.Text;
+using System.Globalization;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+
+using ABS_SystemManager.Models;
+using ABS_SystemManager.Interfaces;
+using ABS_DataConstants;
+
+namespace ABS_SystemManager
 {
-    using System;
-    using System.Linq;
-    using System.Text;
-    using System.Globalization;
-    using System.Collections.Generic;
-    using System.Text.RegularExpressions;
-
-    using ABS_SystemManager.Models;
-    using Interfaces;
-    using DataConstants;
-
     public class SystemManager : ISystemManager
     {
         private Dictionary<string, IAirline> _airlines;
@@ -21,9 +21,9 @@
 
         public SystemManager()
         {
-            _airlines = new();
-            _airports = new();
-            _flights = new();
+            _airlines = new Dictionary<string, IAirline>();
+            _airports = new Dictionary<string, IAirport>();
+            _flights = new Dictionary<string, IFlight>();
         }
 
         public string CreateAirport(string name)
@@ -240,7 +240,7 @@
         public IReadOnlyDictionary<string, string> AirlinesDictionary => _airlines.ToDictionary(x => x.Key, x => x.Value.ToString());
 
         public IReadOnlyList<string> ListAirports => _airports.Select(x => x.Key).ToList();
-        
+
         public IReadOnlyList<string> ListFlights => _flights.Select(x => x.Key).ToList();
 
         private DateTime ValidateDate(int year, int month, int day)

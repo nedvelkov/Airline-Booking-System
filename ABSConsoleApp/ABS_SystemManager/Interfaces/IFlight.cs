@@ -1,8 +1,8 @@
-﻿namespace ABS_SystemManager.Interfaces
-{
-    using System;
-    using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
+namespace ABS_SystemManager.Interfaces
+{
     internal interface IFlight
     {
         public string Id { get; }

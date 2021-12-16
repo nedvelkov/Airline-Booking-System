@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ABS_WebApp.Common
+namespace ABS_WebAPI.Common
 {
     public class CompareDateAttribute : ValidationAttribute
     {

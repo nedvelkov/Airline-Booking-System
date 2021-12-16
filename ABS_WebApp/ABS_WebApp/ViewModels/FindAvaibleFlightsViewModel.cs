@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-using static ABS_SystemManager.DataConstants.DataConstrain;
-using static ABS_SystemManager.DataConstants.Error;
+using static ABS_DataConstants.DataConstrain;
+using static ABS_DataConstants.Error;
 
 namespace ABS_WebApp.ViewModels
 {

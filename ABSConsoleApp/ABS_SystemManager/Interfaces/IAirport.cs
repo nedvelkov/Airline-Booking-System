@@ -1,7 +1,7 @@
-﻿namespace ABS_SystemManager.Interfaces
-{
+﻿using System.Collections.Generic;
 
-    using System.Collections.Generic;
+namespace ABS_SystemManager.Interfaces
+{
 
     internal interface IAirport
     {

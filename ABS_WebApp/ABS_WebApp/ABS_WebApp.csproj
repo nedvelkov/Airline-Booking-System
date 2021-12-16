@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ABSConsoleApp\ABS_SystemManager\ABS_SystemManager.csproj" />
+    <ProjectReference Include="..\ABS_DataConstants\ABS_DataConstants.csproj" />
   </ItemGroup>
 
   <ItemGroup>

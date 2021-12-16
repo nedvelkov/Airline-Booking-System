@@ -1,4 +1,4 @@
-﻿namespace ABS_SystemManager.DataConstants
+﻿namespace ABS_DataConstants
 {
     public static class Error
     {

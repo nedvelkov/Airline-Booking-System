@@ -1,19 +1,19 @@
-﻿namespace ABS_SystemManager.Models
-{
-    using System;
-    using System.Linq;
-    using System.Text;
+﻿using System;
+using System.Linq;
+using System.Text;
 
-    using ABS_SystemManager.Interfaces;
-    using static ABS_SystemManager.DataConstants.DataConstrain;
+using ABS_SystemManager.Interfaces;
+using static ABS_DataConstants.DataConstrain;
+
+namespace ABS_SystemManager.Models
+{
 
     internal class FlightSection : IFlightSection
     {
-        //TODO: Change Dictionary<ISeatNumber, ISeat> _seats to [,] _seats!!!
 
         private ISeat[,] _seats;
 
-        public SeatClass SeatClass { get; init; }
+        public SeatClass SeatClass { get; set; }
 
         public ISeat[,] Seats => _seats;
 

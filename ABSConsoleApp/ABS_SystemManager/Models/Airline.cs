@@ -1,19 +1,20 @@
-﻿namespace ABS_SystemManager.Models
-{
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using ABS_SystemManager.Interfaces;
-    using System.Text;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Text;
 
-    using DataConstants;
+using ABS_SystemManager.Interfaces;
+using ABS_DataConstants;
+
+namespace ABS_SystemManager.Models
+{
 
     internal class Airline : IAirline
     {
         private Dictionary<string, IFlight> _flights;
 
-        public Airline() => _flights = new();
-        public string Name { get; init; }
+        public Airline() => _flights = new Dictionary<string, IFlight>();
+        public string Name { get; set; }
 
         public IReadOnlyDictionary<string, IFlight> Flights => _flights;
 

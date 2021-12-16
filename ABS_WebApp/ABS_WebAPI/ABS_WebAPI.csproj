@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ABSConsoleApp\ABS_SystemManager\ABS_SystemManager.csproj" />
+    <ProjectReference Include="..\ABS_DataConstants\ABS_DataConstants.csproj" />
+  </ItemGroup>
+
+
+</Project>

@@ -4,8 +4,4 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\ABS_WebApp\ABS_DataConstants\ABS_DataConstants.csproj" />
-  </ItemGroup>
-
 </Project>
