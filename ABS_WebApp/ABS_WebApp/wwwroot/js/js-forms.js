@@ -19,6 +19,7 @@ function clearFlightForm() {
         "date": setValue("Date")
     }
 }
+
 function clearSectionForm() {
     return {
         "id": setValue("Id"),

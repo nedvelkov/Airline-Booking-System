@@ -2,6 +2,7 @@
     $('form').submit(function () {
         event.preventDefault();
         let arilineModel = getAirline();
+
         $.ajax({
             type: "POST",
             url: "https://localhost:5001/api/airline",
@@ -26,8 +27,8 @@ function createFlight() {
         event.preventDefault();
         let getFlightModel = getFlight();
         let airlineName = getValue("AirlineName");
-        let urlFlightApi = "https:localhost:5001/api/airline/" + airlineName + "/flight";
-        console.log(urlFlightApi);
+        let urlFlightApi = "https://localhost:5001/api/airline/" + airlineName + "/flight";
+        
         $.ajax({
             type: "POST",
             url: urlFlightApi,
@@ -37,7 +38,33 @@ function createFlight() {
             .done(function (data) {
                 clearFlightForm();
                 $('#result').text(data);
+            })
+            .fail(function (error) {
+                $('#result').text(error.responseText);
+            })
+            .always(function () {
                 setResult();
+            });
+    });
+}
+
+function createFlightSection() {
+    $('form').submit(function () {
+        event.preventDefault();
+        let getFlightModel = getSection();
+        let airlineName = getValue("AirlineName");
+        let flightId = getValue("Id");
+        let urlApi = "https://localhost:5001/api/airline/" + airlineName + "/flight/" + flightId + "/section";
+        
+        $.ajax({
+            type: "POST",
+            url: urlApi,
+            contentType: 'application/json',
+            data: JSON.stringify(getFlightModel)
+        })
+            .done(function (data) {
+                clearSectionForm();
+                $('#result').text(data);
             })
             .fail(function (error) {
                 $('#result').text(error.responseText);
