@@ -14,6 +14,10 @@ namespace ABS_WebAPI.ApiModels
         public string Id { get; set; }
 
         [Required]
+        [RegularExpression(evaluateAirlineName, ErrorMessage = airlineName)]
+        public string AirlineName { get; set; }
+
+        [Required]
         [RegularExpression(evaluateAirportName, ErrorMessage = airportName)]
         public string Origin { get; set; }
 

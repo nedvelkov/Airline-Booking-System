@@ -38,6 +38,7 @@ namespace ABS_WebApp.ViewModels
 
         [Required]
         [Display(Name = "Type of seat class:")]
+        [Range(1, 3, ErrorMessage = invalidSeatClass)]
         public int SeatClass { get; set; }
 
         public List<string> Flights { get; set; }

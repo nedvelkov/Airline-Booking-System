@@ -6,7 +6,7 @@ using static ABS_DataConstants.Error;
 
 namespace ABS_WebAPI.ApiModels
 {
-    public class SectionRequestModel
+    public class BookSeatRequestModel
     {
         [Required]
         [RegularExpression(evaluateFlightId, ErrorMessage = flightId)]
@@ -17,12 +17,12 @@ namespace ABS_WebAPI.ApiModels
         public string AirlineName { get; set; }
 
         [Required]
-        [Range(minSeatRows, maxSeatRows, ErrorMessage = invalidCountRows)]
-        public int Rows { get; set; }
+        [Range(minSeatRows, maxSeatRows, ErrorMessage = invalidSeatRow)]
+        public int Row { get; set; }
 
         [Required]
-        [Range(minSeatColms, maxSeatColms, ErrorMessage = invalidCountColumns)]
-        public int Columns { get; set; }
+        [RegularExpression(evaluateSeatColumn, ErrorMessage = invalidSeatColumn)]
+        public char Column { get; set; }
 
         [Required]
         [Range(1, 3, ErrorMessage = invalidSeatClass)]

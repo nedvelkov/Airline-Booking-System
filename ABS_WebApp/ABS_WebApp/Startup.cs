@@ -1,5 +1,4 @@
-using ABS_SystemManager;
-using ABS_SystemManager.Interfaces;
+using ABS_WebApp.Services;
 using ABS_WebApp.Services.Interfaces;
 using ABS_WebApp.Services.Models;
 using Microsoft.AspNetCore.Builder;
@@ -27,6 +26,7 @@ namespace ABS_WebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpClient<WebApiService>();
             services.AddTransient<IAirportService, AirportService>();
             services.AddTransient<IAirlineService, AirlineService>();
             services.AddTransient<IFlightService, FlightService>();

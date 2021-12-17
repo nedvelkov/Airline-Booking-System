@@ -19,7 +19,6 @@ namespace ABS_WebAPI.Controllers
         public IEnumerable<string> Get() => _airlineService.GetAirlines();
 
         [HttpPost]
-
         public string Post(AirlineRequestModel airline) => _airlineService.CreateAirline(airline.Name);
 
     }

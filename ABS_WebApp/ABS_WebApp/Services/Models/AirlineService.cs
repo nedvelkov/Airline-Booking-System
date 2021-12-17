@@ -1,21 +1,29 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
-using ABS_SystemManager.Interfaces;
 using ABS_WebApp.Services.Interfaces;
+using ABS_WebApp.Services.RequestModels;
 
 namespace ABS_WebApp.Services.Models
 {
     public class AirlineService : IAirlineService
     {
-        private readonly ISystemManager _manager;
+        private readonly WebApiService _webApiService;
 
-        public AirlineService(ISystemManager manager) => _manager = manager;
+        public AirlineService(WebApiService webApiService) => _webApiService = webApiService;
 
-        public Task<string> CreateAirline(string name)
-            => Task.FromResult(_manager.CreateAirline(name));
+        public async Task<string> CreateAirline(string name)
+        {
+            var airline = new AirlaneRequestModel() { Name = name };
+            return await _webApiService.CreateAirline(airline);
+        }
 
-        public Task< IReadOnlyList<string>> Airlines => Task.FromResult(_manager.ListAirlines);
 
+        public async Task<IReadOnlyList<string>> Airlines()
+        {
+            var result = await _webApiService.GetAirlines();
+            return result.ToList();
+        }
     }
 }

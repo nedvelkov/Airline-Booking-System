@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-using static ABS_SystemManager.DataConstants.DataConstrain;
-using static ABS_SystemManager.DataConstants.Error;
+using static ABS_DataConstants.DataConstrain;
+using static ABS_DataConstants.Error;
 
 namespace ABS_WebApp.ViewModels
 {
@@ -37,6 +37,7 @@ namespace ABS_WebApp.ViewModels
 
         [Required]
         [Display(Name = "Type of seat class:")]
+        [Range(1,3,ErrorMessage =invalidSeatClass)]
         public int SeatClass { get; set; }
 
         public List<string> Flights { get; set; }

@@ -27,7 +27,6 @@ namespace ABS_WebApp.Controllers
             _airportService = airportService;
             _flightService = flightService;
             _systemService = systemService;
-            _systemService.SeedData();
         }
 
         [HttpGet]
@@ -108,7 +107,7 @@ namespace ABS_WebApp.Controllers
 
                 ParseData(data, model);
             }
-            var dataAirports = await _airportService.Airports;
+            var dataAirports = await _airportService.Airports();
             model.Airports = dataAirports.ToList();
             return View(model);
         }
@@ -151,9 +150,9 @@ namespace ABS_WebApp.Controllers
         private async Task<CreateFlightViewModel> GetFlightModel()
         {
             var model = new CreateFlightViewModel();
-            var dataAirlines = await _airlineService.Airlines;
+            var dataAirlines = await _airlineService.Airlines();
             model.Airlines = dataAirlines.ToList();
-            var dataAirports = await _airportService.Airports;
+            var dataAirports = await _airportService.Airports();
             model.Airports = dataAirports.ToList();
             model.Date = DateTime.Now;
             model.Id = string.Empty;
@@ -163,7 +162,7 @@ namespace ABS_WebApp.Controllers
         private async Task<FindAvaibleFlightsViewModel> GetFindAvaibleFlightsViewModel()
         {
             var model = new FindAvaibleFlightsViewModel();
-            var dataAirports = await _airportService.Airports;
+            var dataAirports = await _airportService.Airports();
             model.Airports = dataAirports.ToList();
             return model;
         }
@@ -171,20 +170,20 @@ namespace ABS_WebApp.Controllers
         private async Task<BookSeatViewModel> GetBookSeatViewModel()
         {
             var model = new BookSeatViewModel();
-            var dataAirlines = await _airlineService.Airlines;
+            var dataAirlines = await _airlineService.Airlines();
             model.Airlines = dataAirlines.ToList();
-            var dataFlights = await _flightService.Flights;
-            model.Flights = dataFlights.ToList();
+           // var dataFlights = await _flightService.Flights();
+          //  model.Flights = dataFlights.ToList();
             return model;
         }
 
         private async Task<CreateSectionViewModel> GetCreateSectionViewModel()
         {
             var model = new CreateSectionViewModel();
-            var dataAirlines = await _airlineService.Airlines;
+            var dataAirlines = await _airlineService.Airlines();
             model.Airlines = dataAirlines.ToList();
-            var dataFlights = await _flightService.Flights;
-            model.Flights = dataFlights.ToList();
+          //  var dataFlights = await _flightService.Flights;
+          //  model.Flights = dataFlights.ToList();
             return model;
         }
 
