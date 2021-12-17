@@ -172,8 +172,8 @@ namespace ABS_WebApp.Controllers
             var model = new BookSeatViewModel();
             var dataAirlines = await _airlineService.Airlines();
             model.Airlines = dataAirlines.ToList();
-           // var dataFlights = await _flightService.Flights();
-          //  model.Flights = dataFlights.ToList();
+            var dataFlights = await _flightService.Flights();
+            model.Flights = dataFlights.ToList();
             return model;
         }
 
@@ -182,8 +182,8 @@ namespace ABS_WebApp.Controllers
             var model = new CreateSectionViewModel();
             var dataAirlines = await _airlineService.Airlines();
             model.Airlines = dataAirlines.ToList();
-          //  var dataFlights = await _flightService.Flights;
-          //  model.Flights = dataFlights.ToList();
+            var dataFlights = await _flightService.Flights();
+            model.Flights = dataFlights.ToList();
             return model;
         }
 
