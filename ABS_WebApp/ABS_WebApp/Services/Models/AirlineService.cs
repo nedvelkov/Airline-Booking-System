@@ -19,7 +19,6 @@ namespace ABS_WebApp.Services.Models
             return await _webApiService.CreateAirline(airline);
         }
 
-
         public async Task<IReadOnlyList<string>> Airlines()
         {
             var result = await _webApiService.GetAirlines();

@@ -1,10 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 
 using ABS_WebApp.Services.Interfaces;
 using ABS_WebApp.Services.RequestModels;
-using System;
-using System.Linq;
 
 namespace ABS_WebApp.Services.Models
 {
@@ -22,7 +22,7 @@ namespace ABS_WebApp.Services.Models
 
         public async Task<string> CreateFlight(string airlineName, string origin, string destination, int year, int month, int day, string id)
         {
-            var flight = new FlightRequestModel() { AirlineName = airlineName, Origin = origin, Destination = destination, Date = new DateTime(year, month, day), Id = id };
+            var flight = new FlightRequestModel() { AirlineName = airlineName, Origin = origin, Destination = destination, DateOfFlight = new DateTime(year, month, day), Id = id };
             return await _webApiService.CreateFlight(flight);
         }
 

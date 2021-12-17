@@ -2,7 +2,7 @@
 
 namespace ABS_WebApp.Services.RequestModels
 {
-    public class FlightRequestModel
+    public class FlightErrorModel
     {
         public string Id { get; set; }
 
@@ -12,6 +12,6 @@ namespace ABS_WebApp.Services.RequestModels
 
         public string Destination { get; set; }
 
-        public DateTime DateOfFlight { get; set; }
+        public string DateOfFlight { get; set; }
     }
 }

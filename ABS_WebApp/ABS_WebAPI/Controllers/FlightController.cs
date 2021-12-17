@@ -25,7 +25,7 @@ namespace ABS_WebAPI.Controllers
 
         [HttpPost]
         public string Post(FlightRequestModel flight)
-            => _flightService.CreateFlight(flight.AirlineName, flight.Origin, flight.Destination, flight.Date.Year, flight.Date.Month, flight.Date.Day, flight.Id);
+            => _flightService.CreateFlight(flight.AirlineName, flight.Origin, flight.Destination, flight.DateOfFlight.Year, flight.DateOfFlight.Month, flight.DateOfFlight.Day, flight.Id);
 
     }
 }

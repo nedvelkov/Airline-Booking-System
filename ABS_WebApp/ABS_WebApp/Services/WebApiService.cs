@@ -1,15 +1,15 @@
-﻿using ABS_WebApp.ViewModels;
-using Microsoft.Extensions.Configuration;
+﻿using System;
+using System.Text;
 using System.Text.Json;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text;
 using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
+using Microsoft.Extensions.Configuration;
+
 using ABS_WebApp.Services.RequestModels;
+
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ABS_WebApp.Services
 {
@@ -94,15 +94,28 @@ namespace ABS_WebApp.Services
 
         public async Task<string> CreateFlight(FlightRequestModel flight)
         {
-            var flightJson = new StringContent(
-                JsonSerializer.Serialize(flight),
-                Encoding.UTF8,
-                Application.Json);
-            using var httpResponseMessage = await _httpClient.PostAsync("/api/flight", flightJson);
+            try
+            {
 
-            httpResponseMessage.EnsureSuccessStatusCode();
+                var flightJson = new StringContent(
+                    JsonSerializer.Serialize(flight),
+                    Encoding.UTF8,
+                    Application.Json);
+                using var httpResponseMessage = await _httpClient.PostAsync("/api/flight", flightJson);
+                
+                if (!httpResponseMessage.IsSuccessStatusCode)
+                {
+                   var errors= await httpResponseMessage.Content.ReadFromJsonAsync<ErroHttpModel<FlightErrorModel>>();
+                    return null;
+                }
 
-            return await httpResponseMessage.Content.ReadAsStringAsync();
+                return await httpResponseMessage.Content.ReadAsStringAsync();
+            }
+            catch (Exception ex)
+            {
+
+                return ex.Message;
+            }
         }
 
         #endregion
