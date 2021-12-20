@@ -88,6 +88,9 @@
         public const string flightApi = "/api/flight";
         public const string findFlightApi = "/api/aviableflights";
 
+        //Cashing options
+
+        public const int expirationSeconds = 10;
 
     }
 }

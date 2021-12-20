@@ -21,6 +21,7 @@ namespace ABS_WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHttpClient<WebApiService>();
+            services.AddMemoryCache();
             services.AddTransient<IAirportService, AirportService>();
             services.AddTransient<IAirlineService, AirlineService>();
             services.AddTransient<IFlightService, FlightService>();

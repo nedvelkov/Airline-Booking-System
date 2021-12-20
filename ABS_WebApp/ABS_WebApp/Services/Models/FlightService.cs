@@ -5,14 +5,22 @@ using System.Collections.Generic;
 
 using ABS_WebApp.Services.Interfaces;
 using ABS_WebApp.Services.RequestModels;
+using Microsoft.Extensions.Caching.Memory;
+using static ABS_DataConstants.DataConstrain;
+
 
 namespace ABS_WebApp.Services.Models
 {
     public class FlightService : IFlightService
     {
         private readonly WebApiService _webApiService;
+        private readonly IMemoryCache _cache;
 
-        public FlightService(WebApiService webApiService) => _webApiService = webApiService;
+        public FlightService(WebApiService webApiService, IMemoryCache cache)
+        {
+            _webApiService = webApiService;
+            _cache = cache;
+        }
 
         public async Task<string> BookSeat(string airlineName, string flightId, int seatClass, int row, char column)
         {
@@ -40,7 +48,18 @@ namespace ABS_WebApp.Services.Models
 
         public async Task<IReadOnlyList<string>> Flights()
         {
-            var result = await _webApiService.GetFlights();
+
+            IEnumerable<string> result;
+
+            if (!_cache.TryGetValue(nameof(Flights), out result))
+            {
+                var data = await _webApiService.GetFlights();
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromSeconds(expirationSeconds));
+                _cache.Set(nameof(Flights), data, cacheEntryOptions);
+                return data.ToList();
+            }
+
             return result.ToList();
         }
 
