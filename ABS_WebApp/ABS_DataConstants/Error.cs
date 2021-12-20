@@ -22,5 +22,8 @@
         //Seat
         public const string INVALID_SEAT_ROW = "Invalid seat row";
         public const string INVALID_SEAT_COLUMN = "Invalid seat column";
+
+        //Date
+        public const string INVALID_DATE = "Date is not valid";
     }
 }

@@ -18,45 +18,45 @@
             <div class="form-group">
                 <p class="mb-0">
                     <i class="fas fa-passport d-inline"></i>
-                    <label asp-for="Id"></label>
+                    <label asp-for=@Model.Seat.Id></label>
                 </p>
-                <select asp-for="Id" class="form-control">
+                <select asp-for=@Model.Seat.Id class="form-control">
                     <option></option>
                     @foreach (var flight in Model.Flights)
                     {
                         <option value="@flight">@flight</option>
                     }
                 </select>
-                <span asp-validation-for="Id" class="text-danger font-weight-bold"></span>
+                <span asp-validation-for=@Model.Seat.Id class="text-danger font-weight-bold"></span>
             </div>
 
             <div class="form-group">
                 <p class="mb-0">
                     <i class="far fa-paper-plane"></i>
-                    <label asp-for="AirlineName"></label>
+                    <label asp-for=@Model.Seat.AirlineName></label>
                 </p>
-                <select asp-for="AirlineName" class="form-control">
+                <select asp-for=@Model.Seat.AirlineName class="form-control">
                     <option></option>
                     @foreach (var airline in Model.Airlines)
                     {
                         <option value="@airline">@airline</option>
                     }
                 </select>
-                <span asp-validation-for="AirlineName" class="text-danger font-weight-bold"></span>
+                <span asp-validation-for=@Model.Seat.AirlineName class="text-danger font-weight-bold"></span>
             </div>
 
             <div class="form-group dropdownCss">
-                <label asp-for="Row"></label>
-                <input type="number" asp-for="Row" class="form-control" />
-                <span asp-validation-for="Row" class="text-danger font-weight-bold"></span>
+                <label asp-for=@Model.Seat.Row></label>
+                <input type="number" asp-for=@Model.Seat.Row class="form-control" />
+                <span asp-validation-for=@Model.Seat.Row class="text-danger font-weight-bold"></span>
                 <div class="dropdownCss-content">
                     <p>@SEAT_ROW_TOOlTIP</p>
                 </div>
             </div>
 
             <div class="form-group">
-                <label asp-for="Column"></label>
-                <select asp-for="Column" class="form-control">
+                <label asp-for=@Model.Seat.Column></label>
+                <select asp-for=@Model.Seat.Column class="form-control">
                     <option></option>
                     <option value='A'>A</option>
                     <option value='B'>B</option>
@@ -69,18 +69,18 @@
                     <option value='I'>I</option>
                     <option value='J'>J</option>
                 </select>
-                <span asp-validation-for="Column" class="text-danger font-weight-bold"></span>
+                <span asp-validation-for=@Model.Seat.Column class="text-danger font-weight-bold"></span>
             </div>
 
             <div class="form-group dropdownCss">
-                <label asp-for="SeatClass"></label>
-                <select asp-for="SeatClass" class="form-control">
+                <label asp-for=@Model.Seat.SeatClass></label>
+                <select asp-for=@Model.Seat.SeatClass class="form-control">
                     <option></option>
                     <option value="1">First class</option>
                     <option value="2">Business class</option>
                     <option value="3">Economy class</option>
                 </select>
-                <span asp-validation-for="SeatClass" class="text-danger font-weight-bold"></span>
+                <span asp-validation-for=@Model.Seat.SeatClass class="text-danger font-weight-bold"></span>
             </div>
 
 

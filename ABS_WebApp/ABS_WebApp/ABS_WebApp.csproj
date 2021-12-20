@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ABS_DataConstants\ABS_DataConstants.csproj" />
+    <ProjectReference Include="..\ABS_Models\ABS_Models.csproj" />
   </ItemGroup>
 
   <ItemGroup>

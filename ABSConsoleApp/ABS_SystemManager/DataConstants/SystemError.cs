@@ -17,7 +17,6 @@
         public const string BOOEKD_SEAT = "This seat is already booked";
 
         //Date
-        public const string INVALID_DATE = "Date is not valid";
         public const string INVALID_DATE_OF_DEPARTURE_FLIGHT = "Enter valid date for flight departure";
     }
 }

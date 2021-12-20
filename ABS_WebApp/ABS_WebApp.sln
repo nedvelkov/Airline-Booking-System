@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ABS_WebApp", "ABS_WebApp\AB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ABS_SystemManager", "..\ABSConsoleApp\ABS_SystemManager\ABS_SystemManager.csproj", "{8BE6186B-007C-407D-AF38-1F6F0CA085A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABS_WebAPI", "ABS_WebAPI\ABS_WebAPI.csproj", "{C0B2E223-C8C3-4972-9482-5E8662B600E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ABS_WebAPI", "ABS_WebAPI\ABS_WebAPI.csproj", "{C0B2E223-C8C3-4972-9482-5E8662B600E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABS_DataConstants", "ABS_DataConstants\ABS_DataConstants.csproj", "{472A25C7-33C7-4F2E-AB39-582993756B81}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ABS_DataConstants", "ABS_DataConstants\ABS_DataConstants.csproj", "{472A25C7-33C7-4F2E-AB39-582993756B81}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ABS_Models", "ABS_Models\ABS_Models.csproj", "{0D6A69B4-5F44-4851-8B84-3D2299EAB7EB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{472A25C7-33C7-4F2E-AB39-582993756B81}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{472A25C7-33C7-4F2E-AB39-582993756B81}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{472A25C7-33C7-4F2E-AB39-582993756B81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D6A69B4-5F44-4851-8B84-3D2299EAB7EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D6A69B4-5F44-4851-8B84-3D2299EAB7EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D6A69B4-5F44-4851-8B84-3D2299EAB7EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D6A69B4-5F44-4851-8B84-3D2299EAB7EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

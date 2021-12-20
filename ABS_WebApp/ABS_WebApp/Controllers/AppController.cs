@@ -120,11 +120,11 @@ namespace ABS_WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                TempData["Result"] = await _flightService.BookSeat(model.AirlineName,
-                                                                    model.Id,
-                                                                    model.SeatClass,
-                                                                    model.Row,
-                                                                    model.Column);
+                TempData["Result"] = await _flightService.BookSeat(model.Seat.AirlineName,
+                                                                    model.Seat.Id,
+                                                                    model.Seat.SeatClass,
+                                                                    model.Seat.Row,
+                                                                    model.Seat.Column);
                 ModelState.Clear();
             }
             return View(await GetBookSeatViewModel());
