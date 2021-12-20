@@ -3,40 +3,24 @@
     public static class Error
     {
         //Common
-        public const string dublicateItem = "{0} with this {1} already exist";
-        public const string missingItem = "{0} with {1} {2} don't exist";
-
+        public const string DUBLICATE_ITEM = "{0} with this {1} already exist";
+        public const string MISSING_ITEM = "{0} with {1} {2} don't exist";
 
         //Airport
-        public const string airportName = "Airport name must be 3 upper letters";
+        public const string AIRPORT_TOOLTIP = "Airport name must be 3 upper letters";
 
         //Airlane
-        public const string airlineName = "Name of airline must have only letters and length between 1 and 5 characters";
-        public const string invalidFlightId = "Airline {0} don't have flight with id {1}";
+        public const string AIRLINE_TOOLTIP = "Name of airline must have only letters and length between 1 and 5 characters";
 
         //Flight
-        public const string flightId = "Flight id must be with numbers and letters only";
-        public const string wrongDestination = "Destionation must be different from origin";
-        public const string noFlights = "There is no flight from {0} to {1}, at this time";
-        public const string departedFlight = "Flight is already departed";
+        public const string FLIGHT_TOOLTIP = "Flight id must be with numbers and letters only";
 
         //SeatClass
-        public const string invalidSeatClass = "Seat class is not valid";
-        public const string invalidSeatCount = "{0} of seat must be between {1} and {2}";
+        public const string INVALID_SEAT_CLASS = "Seat class is not valid";
+        public const string INVALID_COUNT_OF_SEATS = "{0} of seat must be between {1} and {2}";
 
         //Seat
-        public const string wrongSeatNumber = "Seat with this number doesn't exist";
-        public const string bookedSeat = "This seat is already booked";
-        public const string invalidCount = "{0} of seat must be between {1} and {2}";
-        public const string invalidCountRows = "Rows of seat must be between 1 and 100";
-        public const string invalidCountColumns = "Columns of seat must be between 1 and 10";
-
-        //SeatNumber
-        public const string invalidSeatRow = "Invalid seat row";
-        public const string invalidSeatColumn = "Invalid seat column";
-
-        //Date
-        public const string notValidDate = "Date is not valid";
-        public const string notValidFlightDate = "Enter valid date for flight departure";
+        public const string INVALID_SEAT_ROW = "Invalid seat row";
+        public const string INVALID_SEAT_COLUMN = "Invalid seat column";
     }
 }

@@ -8,7 +8,7 @@ namespace ABS_WebAPI.ApiModels
     public class AirlineRequestModel
     {
         [Required]
-        [RegularExpression(evaluateAirlineName, ErrorMessage = airlineName)]
+        [RegularExpression(EVALUATE_AIRLINE_NAME, ErrorMessage = AIRLINE_TOOLTIP)]
         public string Name { get; set; }
     }
 }

@@ -7,7 +7,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace ABS_WebAPI.Controllers
 {
-    [Route(sectionApi)]
+    [Route(SECTION_API_PATH)]
     [ApiController]
     public class SectionController : ControllerBase
     {

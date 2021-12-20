@@ -8,7 +8,7 @@ using static ABS_DataConstants.DataConstrain;
 
 namespace ABS_WebAPI.Controllers
 {
-    [Route(flightApi)]
+    [Route(FLIGHT_API_PATH)]
     [ApiController]
     public class FlightController : ControllerBase
     {
@@ -20,7 +20,7 @@ namespace ABS_WebAPI.Controllers
         public IEnumerable<string> Get() => _flightService.GetFlights();
 
         [HttpGet]
-        [Route(findFlightApi)]
+        [Route(FIND_FLIGHT_API_PATH)]
         public string GetAviableFlights(AviableFlightsRequestModel flightsRequestModel)
             => _flightService.FindAvailableFlights(flightsRequestModel.Origin, flightsRequestModel.Destination);
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 using ABS_SystemManager.Interfaces;
-using static ABS_DataConstants.DataConstrain;
+using static ABS_SystemManager.DataConstants.SystemDataConstrain;
 
 namespace ABS_SystemManager.Models
 {
@@ -52,7 +52,7 @@ namespace ABS_SystemManager.Models
 
         public override string ToString()
         {
-            return String.Format(airportToStringTitle, Name);
+            return String.Format(AIRPORT_TO_STRING_TITLE, Name);
         }
 
     }

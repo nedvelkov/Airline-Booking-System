@@ -4,7 +4,7 @@ using static ABS_DataConstants.DataConstrain;
 
 namespace ABS_WebAPI.Controllers
 {
-    [Route(systemApi)]
+    [Route(SUSTEM_API_PATH)]
     [ApiController]
     public class SystemController:ControllerBase
     {

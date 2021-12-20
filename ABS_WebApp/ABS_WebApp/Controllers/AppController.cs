@@ -124,7 +124,7 @@ namespace ABS_WebApp.Controllers
                                                                     model.Id,
                                                                     model.SeatClass,
                                                                     model.Row,
-                                                                    model.Column[0]);
+                                                                    model.Column);
                 ModelState.Clear();
             }
             return View(await GetBookSeatViewModel());

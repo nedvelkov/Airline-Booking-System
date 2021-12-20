@@ -7,7 +7,7 @@ using static ABS_DataConstants.DataConstrain;
 
 namespace ABS_WebAPI.Controllers
 {
-    [Route(airportApi)]
+    [Route(AIRPORT_API_PATH)]
     [ApiController]
     public class AirportController:ControllerBase
     {

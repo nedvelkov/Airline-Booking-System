@@ -4,7 +4,7 @@ using System.Text;
 using System.Collections.Generic;
 
 using ABS_SystemManager.Interfaces;
-using static ABS_DataConstants.DataConstrain;
+using static ABS_SystemManager.DataConstants.SystemDataConstrain;
 
 namespace ABS_SystemManager.Models
 {
@@ -32,7 +32,7 @@ namespace ABS_SystemManager.Models
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.AppendLine(String.Format(flightToStringTitle, Id, Origin.Name, Destination.Name, Date.ToString(formatDateTime)));
+            sb.AppendLine(String.Format(FLIGHT_TO_STRING_TITLE, Id, Origin.Name, Destination.Name, Date.ToString(FORMAT_FOR_DATE_TIME)));
             _flightSections.ToList().ForEach(x => sb.AppendLine(x.Value.ToString()));
 
             return sb.ToString().TrimEnd();

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 
 using ABS_SystemManager.Interfaces;
-using ABS_DataConstants;
+using static ABS_SystemManager.DataConstants.SystemDataConstrain;
 
 namespace ABS_SystemManager.Models
 {
@@ -23,9 +23,9 @@ namespace ABS_SystemManager.Models
         public override string ToString()
         {
             var sb = new StringBuilder();
-            var airlineData = Flights.Count > 0 ? String.Format(DataConstrain.airlineWithFlights, Flights.Count) : DataConstrain.airlineWithNoFlights;
+            var airlineData = Flights.Count > 0 ? String.Format(AIRLINE_WITH_FLIGHTS_TO_STRING, Flights.Count) : AIRLINE_WITH_NO_FLIGHT_TO_STRING;
 
-            sb.AppendLine(String.Format(DataConstrain.airlineToStringTitle, Name, airlineData));
+            sb.AppendLine(String.Format(AIRLINE_TO_STRING_TITILE, Name, airlineData));
 
             if (_flights.Count > 0)
             {

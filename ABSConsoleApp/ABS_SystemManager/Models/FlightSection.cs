@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text;
 
 using ABS_SystemManager.Interfaces;
-using static ABS_DataConstants.DataConstrain;
+using static ABS_SystemManager.DataConstants.SystemDataConstrain;
 
 namespace ABS_SystemManager.Models
 {
@@ -30,7 +30,7 @@ namespace ABS_SystemManager.Models
         public override string ToString()
         {
             var sb = new StringBuilder();
-            sb.AppendLine(String.Format(flightSectionToStringTitle, SeatClass, _seats.Length));
+            sb.AppendLine(String.Format(FLIGHT_SECTION_TO_STRING_TITLE, SeatClass, _seats.Length));
             var listOfSeats = _seats.Cast<ISeat>().ToList();
             listOfSeats.ForEach(x => sb.AppendLine(x.ToString()));
 

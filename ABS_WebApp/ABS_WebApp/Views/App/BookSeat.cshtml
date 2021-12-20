@@ -50,7 +50,7 @@
                 <input type="number" asp-for="Row" class="form-control" />
                 <span asp-validation-for="Row" class="text-danger font-weight-bold"></span>
                 <div class="dropdownCss-content">
-                    <p>@seatRowHelp</p>
+                    <p>@SEAT_ROW_TOOlTIP</p>
                 </div>
             </div>
 
@@ -58,16 +58,16 @@
                 <label asp-for="Column"></label>
                 <select asp-for="Column" class="form-control">
                     <option></option>
-                    <option value="A">A</option>
-                    <option value="B">B</option>
-                    <option value="C">C</option>
-                    <option value="D">D</option>
-                    <option value="E">E</option>
-                    <option value="F">F</option>
-                    <option value="G">G</option>
-                    <option value="H">H</option>
-                    <option value="I">I</option>
-                    <option value="J">J</option>
+                    <option value='A'>A</option>
+                    <option value='B'>B</option>
+                    <option value='C'>C</option>
+                    <option value='D'>D</option>
+                    <option value='E'>E</option>
+                    <option value='F'>F</option>
+                    <option value='G'>G</option>
+                    <option value='H'>H</option>
+                    <option value='I'>I</option>
+                    <option value='J'>J</option>
                 </select>
                 <span asp-validation-for="Column" class="text-danger font-weight-bold"></span>
             </div>

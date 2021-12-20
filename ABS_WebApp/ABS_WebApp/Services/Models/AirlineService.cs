@@ -36,7 +36,7 @@ namespace ABS_WebApp.Services.Models
             {
                 var data = await _webApiService.GetAirlines();
                 var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    .SetSlidingExpiration(TimeSpan.FromSeconds(expirationSeconds));
+                    .SetSlidingExpiration(TimeSpan.FromSeconds(CACHE_EXPIRATION_IN_SECONDS));
                 _cache.Set(nameof(Airlines), data, cacheEntryOptions);
                 return data.ToList();
             }

@@ -8,6 +8,9 @@ using System.Text.RegularExpressions;
 using ABS_SystemManager.Models;
 using ABS_SystemManager.Interfaces;
 using ABS_DataConstants;
+using static ABS_SystemManager.DataConstants.Success;
+using static ABS_SystemManager.DataConstants.SystemDataConstrain;
+using static ABS_SystemManager.DataConstants.SystemError;
 
 namespace ABS_SystemManager
 {
@@ -30,8 +33,8 @@ namespace ABS_SystemManager
         {
             try
             {
-                ValidateString(name, DataConstrain.evaluateAirportName, Error.airportName);
-                ContainsItem(_airports, name, String.Format(Error.dublicateItem, "Airport", "name"));
+                ValidateString(name, DataConstrain.EVALUATE_AIRPORT_NAME, Error.AIRPORT_TOOLTIP);
+                ContainsItem(_airports, name, String.Format(Error.DUBLICATE_ITEM, "Airport", "name"));
             }
             catch (Exception a)
             {
@@ -41,15 +44,15 @@ namespace ABS_SystemManager
 
             _airports.Add(name, new Airport() { Name = name });
 
-            return String.Format(Success.createdAirport, name);
+            return String.Format(SUCCESSFUL_CREATED_AIRPORT, name);
         }
 
         public string CreateAirline(string name)
         {
             try
             {
-                ValidateString(name, DataConstrain.evaluateAirlineName, Error.airlineName);
-                ContainsItem(_airlines, name, String.Format(Error.dublicateItem, "Airline", "name"));
+                ValidateString(name, DataConstrain.EVALUATE_AIRLINE_NAME, Error.AIRLINE_TOOLTIP);
+                ContainsItem(_airlines, name, String.Format(Error.DUBLICATE_ITEM, "Airline", "name"));
             }
             catch (Exception a)
             {
@@ -59,7 +62,7 @@ namespace ABS_SystemManager
 
             _airlines.Add(name, new Airline() { Name = name });
 
-            return String.Format(Success.createdAirline, name);
+            return String.Format(SUCCESSFUL_CREATED_AIRLINE, name);
         }
 
         public string CreateFlight(string airlineName, string origin, string destination, int year, int month, int day, string id)
@@ -71,13 +74,13 @@ namespace ABS_SystemManager
 
             try
             {
-                airline = GetItem(_airlines, airlineName, String.Format(Error.missingItem, "Airline", "name", airlineName));
+                airline = GetItem(_airlines, airlineName, String.Format(Error.MISSING_ITEM, "Airline", "name", airlineName));
                 (originAirport, destinationAirport) = ValidateFlightDestination(origin, destination);
                 date = ValidateDate(year, month, day);
 
-                ValidateFlightDate(date, Error.notValidFlightDate);
-                ValidateString(id, DataConstrain.evaluateFlightId, Error.flightId);
-                ContainsItem(_flights, id, String.Format(Error.dublicateItem, "Flight", "id"));
+                ValidateFlightDate(date, INVALID_DATE_OF_DEPARTURE_FLIGHT);
+                ValidateString(id, DataConstrain.EVALUATE_FLIGHT_ID, Error.FLIGHT_TOOLTIP);
+                ContainsItem(_flights, id, String.Format(Error.DUBLICATE_ITEM, "Flight", "id"));
             }
             catch (Exception a)
             {
@@ -88,7 +91,7 @@ namespace ABS_SystemManager
 
             _flights.Add(id, flight);
 
-            return String.Format(Success.createFlight, origin, destination, airlineName);
+            return String.Format(SUCCESSFUL_CREATED_FLIGHT, origin, destination, airlineName);
         }
 
         public string CreateSection(string airlineName, string flightId, int rows, int columns, int seatClass)
@@ -102,7 +105,7 @@ namespace ABS_SystemManager
 
                 flightSection = CreateFlightSection(rows, columns, seatClass);
 
-                ContainsItem(flight.FlightSections, (SeatClass)seatClass, String.Format(Error.dublicateItem, "Flight section", "name"));
+                ContainsItem(flight.FlightSections, (SeatClass)seatClass, String.Format(Error.DUBLICATE_ITEM, "Flight section", "name"));
             }
             catch (Exception a)
             {
@@ -111,7 +114,7 @@ namespace ABS_SystemManager
 
             flight.AddFlightSection(flightSection);
 
-            return String.Format(Success.createFlightSection, (SeatClass)seatClass, flight.Origin.Name, flight.Destination.Name, airlineName);
+            return String.Format(SUCCESSFUL_CREATED_FLIGHT_SECTION, (SeatClass)seatClass, flight.Origin.Name, flight.Destination.Name, airlineName);
         }
 
         public string FindAvailableFlights(string origin, string destination)
@@ -137,7 +140,7 @@ namespace ABS_SystemManager
                                             .ToList();
             flights.ForEach(f => sb.AppendLine(f.ToString()));
 
-            return flights.Count > 0 ? sb.ToString() : String.Format(Error.noFlights, origin, destination);
+            return flights.Count > 0 ? sb.ToString() : String.Format(NO_AVIABLE_FLIGHTS, origin, destination);
 
         }
 
@@ -183,7 +186,7 @@ namespace ABS_SystemManager
                                             .ToList();
             flights.ForEach(f => sb.AppendLine(f.ToString()));
 
-            return flights.Count > 0 ? sb.ToString() : String.Format(Error.noFlights, origin, destination);
+            return flights.Count > 0 ? sb.ToString() : String.Format(NO_AVIABLE_FLIGHTS, origin, destination);
         }
         #endregion
 
@@ -201,7 +204,7 @@ namespace ABS_SystemManager
 
                 flightSection = GetFlightSection(flight, seatClass);
                 arrayRow = row - 1;
-                arrayColumn = (int)column - DataConstrain.valueForSeatColumn;
+                arrayColumn = (int)column - INITIAL_VALUE_FOR_SEAT_COLUMN_CHAR;
 
                 CheckIfSeatIsValid(arrayRow, arrayColumn, flightSection);
 
@@ -214,19 +217,19 @@ namespace ABS_SystemManager
 
             flightSection.BookSeat(arrayRow, arrayColumn);
 
-            return String.Format(Success.bookedSeat, String.Format(DataConstrain.seatNumber, row, column), (SeatClass)seatClass, flight.Origin.Name, flight.Destination.Name, airlineName);
+            return String.Format(SUCCESSFUL_BOOKED_SEAT, String.Format(SEAT_NUMBER_TO_STRING, row, column), (SeatClass)seatClass, flight.Origin.Name, flight.Destination.Name, airlineName);
 
         }
 
         public string DisplaySystemDetails()
         {
             var sb = new StringBuilder();
-            sb.AppendLine(String.Format(DataConstrain.displayAirportsTitle, _airports.Count));
+            sb.AppendLine(String.Format(DISPLAY_AIRPORTS_TITLE, _airports.Count));
             if (_airports.Count > 0)
             {
                 _airports.Select(x => x.Value).ToList().ForEach(x => sb.AppendLine(x.ToString()));
             }
-            sb.AppendLine(String.Format(DataConstrain.displayAirlinesTitle, _airlines.Count));
+            sb.AppendLine(String.Format(DISPLAY_AIRLINES_TITLE, _airlines.Count));
             if (_airlines.Count > 0)
             {
                 _airlines.Select(x => x.Value).ToList().ForEach(x => sb.AppendLine(x.ToString()));
@@ -249,7 +252,7 @@ namespace ABS_SystemManager
             var validDate = DateTime.TryParse($"{month}/{day}/{year}", CultureInfo.InvariantCulture, DateTimeStyles.None, out date);
             if (!validDate)
             {
-                throw new ArgumentException(Error.notValidDate);
+                throw new ArgumentException(INVALID_DATE);
             }
             return date;
         }
@@ -350,10 +353,10 @@ namespace ABS_SystemManager
         {
             if (origin == destination)
             {
-                throw new ArgumentException(Error.wrongDestination);
+                throw new ArgumentException(WRONG_DESTINATION);
             }
-            var originAirport = GetItem(_airports, origin, String.Format(Error.missingItem, "Airport", "name", origin));
-            var destinationAirport = GetItem(_airports, destination, String.Format(Error.missingItem, "Airport", "name", destination));
+            var originAirport = GetItem(_airports, origin, String.Format(Error.MISSING_ITEM, "Airport", "name", origin));
+            var destinationAirport = GetItem(_airports, destination, String.Format(Error.MISSING_ITEM, "Airport", "name", destination));
             return new Tuple<IAirport, IAirport>(originAirport, destinationAirport);
         }
 
@@ -365,12 +368,12 @@ namespace ABS_SystemManager
         /// <param name="airline"></param>
         private IFlight AirlaneGotFlight(string flightId, string airline)
         {
-            var flight = GetItem(_flights, flightId, String.Format(Error.missingItem, "Flight", "id", flightId));
+            var flight = GetItem(_flights, flightId, String.Format(Error.MISSING_ITEM, "Flight", "id", flightId));
             if (flight.Airline.Name != airline)
             {
-                throw new ArgumentException(String.Format(Error.invalidFlightId, airline, flight.Id));
+                throw new ArgumentException(String.Format(MISSING_FLIGHT_FROM_AIRLINE, airline, flight.Id));
             }
-            ValidateFlightDate(flight.Date, Error.departedFlight);
+            ValidateFlightDate(flight.Date, DEPARTED_FLIGHT);
             return flight;
         }
 
@@ -394,8 +397,8 @@ namespace ABS_SystemManager
             var seatClassEnum = GetSeatClass(seatClass);
             var flightSection = new FlightSection() { SeatClass = seatClassEnum };
 
-            ValidateCountOfSeats(rows, "Rows", DataConstrain.minSeatRows, DataConstrain.maxSeatRows);
-            ValidateCountOfSeats(colms, "Columns", DataConstrain.minSeatColms, DataConstrain.maxSeatColms);
+            ValidateCountOfSeats(rows, "Rows", DataConstrain.MIN_SEAT_ROWS, DataConstrain.MAX_SEAT_ROWS);
+            ValidateCountOfSeats(colms, "Columns", DataConstrain.MIN_SEAT_COLUMNS, DataConstrain.MAX_SEAT_COLUMNS);
             var seats = SeatCollection(rows, colms);
 
             flightSection.AddSeats(seats);
@@ -408,7 +411,7 @@ namespace ABS_SystemManager
             var seat = flightSection.Seats[row, column];
             if (seat.Booked)
             {
-                throw new ArgumentException(Error.bookedSeat);
+                throw new ArgumentException(BOOEKD_SEAT);
             }
         }
 
@@ -419,12 +422,12 @@ namespace ABS_SystemManager
 
             if (row < 0 || row >= rows)
             {
-                throw new ArgumentException(Error.invalidSeatRow);
+                throw new ArgumentException(Error.INVALID_SEAT_ROW);
             }
 
             if (column < 0 || column >= columns)
             {
-                throw new ArgumentException(Error.invalidSeatColumn);
+                throw new ArgumentException(Error.INVALID_SEAT_COLUMN);
             }
         }
 
@@ -437,14 +440,14 @@ namespace ABS_SystemManager
         private IFlightSection GetFlightSection(IFlight flight, int seatClass)
         {
             var seatClassEnum = GetSeatClass(seatClass);
-            return GetItem(flight.FlightSections, seatClassEnum, String.Format(Error.missingItem, "Section", "name", seatClassEnum.ToString()));
+            return GetItem(flight.FlightSections, seatClassEnum, String.Format(Error.MISSING_ITEM, "Section", "name", seatClassEnum.ToString()));
         }
 
         private void ValidateCountOfSeats(int value, string @type, int min, int max)
         {
             if (value < min || value > max)
             {
-                throw new ArgumentException(String.Format(Error.invalidCount, type, min, max));
+                throw new ArgumentException(String.Format(INVALID_SEAT_COUNT, type, min, max));
             }
         }
 
@@ -455,7 +458,7 @@ namespace ABS_SystemManager
             {
                 for (int column = 0; column < columns; column++)
                 {
-                    var columnCharAsInt = column + DataConstrain.initialValueForSeatColumn;
+                    var columnCharAsInt = column + INITIAL_VALUE_FOR_SEAT_COLUMN_CHAR;
                     var seat = new Seat()
                     {
                         Row = row + 1,
@@ -470,13 +473,13 @@ namespace ABS_SystemManager
 
         private void ValidateSeatNumber(int row, char column)
         {
-            if (row < DataConstrain.minSeatRows || row > DataConstrain.maxSeatRows)
+            if (row < DataConstrain.MIN_SEAT_ROWS || row > DataConstrain.MAX_SEAT_ROWS)
             {
-                throw new ArgumentException(Error.invalidSeatRow);
+                throw new ArgumentException(Error.INVALID_SEAT_ROW);
             }
-            if (column < DataConstrain.firstSeatChar || column > DataConstrain.lastSeatChar)
+            if (column < FIRST_SEAT_COLUMN_AS_CHAR || column > LAST_SEAT_COLUMN_AS_CHAR)
             {
-                throw new ArgumentException(Error.invalidSeatColumn);
+                throw new ArgumentException(Error.INVALID_SEAT_COLUMN);
             }
         }
 

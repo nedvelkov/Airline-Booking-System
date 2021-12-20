@@ -1,7 +1,7 @@
 ﻿using System;
 
 using ABS_SystemManager.Interfaces;
-using static ABS_DataConstants.DataConstrain;
+using static ABS_SystemManager.DataConstants.SystemDataConstrain;
 
 namespace ABS_SystemManager.Models
 {
@@ -19,7 +19,7 @@ namespace ABS_SystemManager.Models
         public override string ToString()
         {
             var seatIsBooked = Booked ? "booked" : "free";
-            var text = $" {String.Format(seatNumber, Row, Column)} - {seatIsBooked}";
+            var text = $" {String.Format(SEAT_NUMBER_TO_STRING, Row, Column)} - {seatIsBooked}";
             return text;
         }
     }

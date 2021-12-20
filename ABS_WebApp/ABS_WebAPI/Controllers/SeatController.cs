@@ -6,7 +6,7 @@ using static ABS_DataConstants.DataConstrain;
 
 namespace ABS_WebAPI.Controllers
 {
-    [Route(seatApi)]
+    [Route(SEAT_API_PATH)]
     [ApiController]
     public class SeatController:ControllerBase
     {

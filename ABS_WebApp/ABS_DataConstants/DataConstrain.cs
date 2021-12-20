@@ -3,94 +3,30 @@
     public static class DataConstrain
     {
         //Regex expresion
-
-        public const string evaluateAirportName = "^[A-Z]{3}$";
-        public const string evaluateAirlineName = "^[a-zA-Z]{1,5}$";
-        public const string evaluateFlightId = "^[a-zA-Z0-9]+$";
-        public const string evaluateSeatColumn = "^[A-J]{1}$";
-
-        //Airport
-        public const string airportToStringTitle = "-AP Airport {0} is available for all airlines and flights";
-
-        //Airline
-        public const string airlineWithNoFlights = "is awaits offers for new destinations";
-        public const string airlineWithFlights = "offers flights to over {0} destinations";
-
-        /// <summary>
-        /// String for first line of toString method.
-        /// 0 - airline name, 1 - airline data.
-        /// </summary>
-        public const string airlineToStringTitle = "-AL Airline {0} {1}";
-
-        //Flight
-        /// <summary>
-        /// String for first line of toSting method.
-        /// 0 - flight id, 1 - origin, 2 - destination, 3 - date.
-        /// </summary>
-        public const string flightToStringTitle = "-FL Flight #{0} from {1} to {2}.Departure at {3}";
-        public const string flightSectionCount = "=FL The flight has {0} section.";
-
-        //Flight section
-        /// <summary>
-        /// String for first line of toSting method.
-        /// 0 - seat class, 1 - seats count.
-        /// </summary>
-        public const string flightSectionToStringTitle = "-FS Flight section {0} class with {1} seats";
+        public const string EVALUATE_AIRPORT_NAME = "^[A-Z]{3}$";
+        public const string EVALUATE_AIRLINE_NAME = "^[a-zA-Z]{1,5}$";
+        public const string EVALUATE_FLIGHT_ID = "^[a-zA-Z0-9]+$";
+        public const string EVALUATE_SEAT_COLUMN = "^[A-J]{1}$";
 
         //Seat
-        public const int minSeatRows = 1;
-        public const int minSeatColms = 1;
-        public const int maxSeatRows = 100;
-        public const int maxSeatColms = 10;
-        public const char firstSeatChar = 'A';
-        public const char lastSeatChar = 'J';
-        public const string seatNumber = "{0:D3}{1}";
-        public const string seatColumnHelp = "Seat column must be between 1 and 10";
-        public const string seatRowHelp = "Seat row must be between 1 and 100";
-
-        /// <summary>
-        /// This value plus count of column gives right column letter
-        /// </summary>
-        public const int initialValueForSeatColumn = 65;
-
-        /// <summary>
-        /// This value minus letter of column as integer gives right column possition in array.
-        /// /// </summary>
-        public const int valueForSeatColumn = 65;
-
-        //System manager
-        public const string displayAirportsTitle= "=AP Airports aviable {0}";
-        public const string displayAirlinesTitle= "=AL Airlines aviable {0}";
-
-        //DateTime formating
-        public const string formatDateTime = "MM/dd/yyyy";
-
-        //Engine constants
-        public const string helpCommand = "Create object command: -create\r\n" +
-                                            "Find flight command: -find\r\n" +
-                                            "Book seat command: -book\r\n" +
-                                            "Display system detail command: -details\r\n" +
-                                            "Helm menu command: --help\r\n" +
-                                            "Go to main menu command: --main\r\n" +
-                                            "Close program command: --exit\r\n" +
-                                            "Cansel current operation and return main menu press \"esc\" button";
-
-        public const int breakVoid = -257;
-        public const string titleConsole = "ABS - Airline Bookig System";
-        public const string returnToMainMenu = "Do you want to return in main menu (Y/N): ";
+        public const int MIN_SEAT_ROWS = 1;
+        public const int MIN_SEAT_COLUMNS = 1;
+        public const int MAX_SEAT_ROWS = 100;
+        public const int MAX_SEAT_COLUMNS = 10;
+        public const string SEAT_COLUMN_TOOLTIP = "Seat column must be between 1 and 10";
+        public const string SEAT_ROW_TOOlTIP = "Seat row must be between 1 and 100";
 
         //Api Urls
-        public const string systemApi = "/api/system";
-        public const string airportApi = "/api/airport";
-        public const string airlineApi = "/api/airline";
-        public const string seatApi = "/api/seat";
-        public const string sectionApi = "/api/section";
-        public const string flightApi = "/api/flight";
-        public const string findFlightApi = "/api/aviableflights";
+        public const string SUSTEM_API_PATH = "/api/system";
+        public const string AIRPORT_API_PATH = "/api/airport";
+        public const string AIRLINE_API_PATH = "/api/airline";
+        public const string SEAT_API_PATH = "/api/seat";
+        public const string SECTION_API_PATH = "/api/section";
+        public const string FLIGHT_API_PATH = "/api/flight";
+        public const string FIND_FLIGHT_API_PATH = "/api/aviableflights";
 
         //Cashing options
-
-        public const int expirationSeconds = 10;
+        public const int CACHE_EXPIRATION_IN_SECONDS = 10;
 
     }
 }

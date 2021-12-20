@@ -9,7 +9,7 @@ namespace ABS_WebApp.ViewModels
     public class CreateAirportViewModel
     {
         [Required]
-        [RegularExpression(evaluateAirportName, ErrorMessage = airportName)]
+        [RegularExpression(EVALUATE_AIRPORT_NAME, ErrorMessage = AIRPORT_TOOLTIP)]
         [Display(Name = "Airport name:")]
         public string Name { get; set; }
     }

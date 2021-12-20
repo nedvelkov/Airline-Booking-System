@@ -10,24 +10,24 @@ namespace ABS_WebAPI.ApiModels
     public class FlightRequestModel
     {
         [Required]
-        [RegularExpression(evaluateFlightId, ErrorMessage = flightId)]
+        [RegularExpression(EVALUATE_FLIGHT_ID, ErrorMessage = FLIGHT_TOOLTIP)]
         public string Id { get; set; }
 
         [Required]
-        [RegularExpression(evaluateAirlineName, ErrorMessage = airlineName)]
+        [RegularExpression(EVALUATE_AIRLINE_NAME, ErrorMessage = AIRLINE_TOOLTIP)]
         public string AirlineName { get; set; }
 
         [Required]
-        [RegularExpression(evaluateAirportName, ErrorMessage = airportName)]
+        [RegularExpression(EVALUATE_AIRPORT_NAME, ErrorMessage = AIRPORT_TOOLTIP)]
         public string Origin { get; set; }
 
         [Required]
-        [RegularExpression(evaluateAirportName, ErrorMessage = airportName)]
+        [RegularExpression(EVALUATE_AIRPORT_NAME, ErrorMessage = AIRPORT_TOOLTIP)]
         public string Destination { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
-        [CompareDate(ErrorMessage = notValidDate)]
+        [CompareDate(ErrorMessage = INVALID_DATE)]
         public DateTime DateOfFlight { get; set; }
     }
 }

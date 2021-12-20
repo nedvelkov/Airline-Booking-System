@@ -29,7 +29,7 @@ namespace ABS_WebApp.Services
         #region Airport
 
         public async Task<IEnumerable<string>> GetAirports()
-            => await _httpClient.GetFromJsonAsync<IEnumerable<string>>(airportApi);
+            => await _httpClient.GetFromJsonAsync<IEnumerable<string>>(AIRPORT_API_PATH);
 
         public async Task<string> CreateAirport(AirportRequestModel airport)
         {
@@ -39,7 +39,7 @@ namespace ABS_WebApp.Services
                     JsonSerializer.Serialize(airport),
                     Encoding.UTF8,
                     Application.Json);
-                using var httpResponseMessage = await _httpClient.PostAsync(airportApi, airportJson);
+                using var httpResponseMessage = await _httpClient.PostAsync(AIRPORT_API_PATH, airportJson);
 
                 if (!httpResponseMessage.IsSuccessStatusCode)
                 {
@@ -60,7 +60,7 @@ namespace ABS_WebApp.Services
         #region Airline
 
         public async Task<IEnumerable<string>> GetAirlines()
-            => await _httpClient.GetFromJsonAsync<IEnumerable<string>>(airlineApi);
+            => await _httpClient.GetFromJsonAsync<IEnumerable<string>>(AIRLINE_API_PATH);
 
         public async Task<string> CreateAirline(AirlaneRequestModel airlie)
         {
@@ -70,7 +70,7 @@ namespace ABS_WebApp.Services
                     JsonSerializer.Serialize(airlie),
                     Encoding.UTF8,
                     Application.Json);
-                using var httpResponseMessage = await _httpClient.PostAsync(airlineApi, airlineJson);
+                using var httpResponseMessage = await _httpClient.PostAsync(AIRLINE_API_PATH, airlineJson);
 
                 if (!httpResponseMessage.IsSuccessStatusCode)
                 {
@@ -92,7 +92,7 @@ namespace ABS_WebApp.Services
         #region Flight
 
         public async Task<IEnumerable<string>> GetFlights()
-            => await _httpClient.GetFromJsonAsync<IEnumerable<string>>(flightApi);
+            => await _httpClient.GetFromJsonAsync<IEnumerable<string>>(FLIGHT_API_PATH);
 
         public async Task<string> GetAviableFlights(FindFlightRequestModel model)
         {
@@ -102,7 +102,7 @@ namespace ABS_WebApp.Services
                     JsonSerializer.Serialize(model),
                     Encoding.UTF8,
                     Application.Json);
-                var newUrl = _webApiUrl + findFlightApi;
+                var newUrl = _webApiUrl + FIND_FLIGHT_API_PATH;
 
                 var request = new HttpRequestMessage
                 {
@@ -134,7 +134,7 @@ namespace ABS_WebApp.Services
                     JsonSerializer.Serialize(flight),
                     Encoding.UTF8,
                     Application.Json);
-                using var httpResponseMessage = await _httpClient.PostAsync(flightApi, flightJson);
+                using var httpResponseMessage = await _httpClient.PostAsync(FLIGHT_API_PATH, flightJson);
 
                 if (!httpResponseMessage.IsSuccessStatusCode)
                 {
@@ -158,7 +158,7 @@ namespace ABS_WebApp.Services
         {
             try
             {
-                var response = await _httpClient.GetAsync(systemApi);
+                var response = await _httpClient.GetAsync(SUSTEM_API_PATH);
 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -186,7 +186,7 @@ namespace ABS_WebApp.Services
                     JsonSerializer.Serialize(section),
                     Encoding.UTF8,
                     Application.Json);
-                using var httpResponseMessage = await _httpClient.PostAsync(sectionApi, sectionJson);
+                using var httpResponseMessage = await _httpClient.PostAsync(SECTION_API_PATH, sectionJson);
 
                 if (!httpResponseMessage.IsSuccessStatusCode)
                 {
@@ -213,7 +213,7 @@ namespace ABS_WebApp.Services
                     JsonSerializer.Serialize(seat),
                     Encoding.UTF8,
                     Application.Json);
-                using var httpResponseMessage = await _httpClient.PutAsync(seatApi, seatJson);
+                using var httpResponseMessage = await _httpClient.PutAsync(SEAT_API_PATH, seatJson);
 
                 if (!httpResponseMessage.IsSuccessStatusCode)
                 {

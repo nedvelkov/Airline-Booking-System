@@ -8,11 +8,11 @@ namespace ABS_WebAPI.ApiModels
     public class AviableFlightsRequestModel
     {
         [Required]
-        [RegularExpression(evaluateAirportName, ErrorMessage = airportName)]
+        [RegularExpression(EVALUATE_AIRPORT_NAME, ErrorMessage = AIRPORT_TOOLTIP)]
         public string Origin { get; set; }
 
         [Required]
-        [RegularExpression(evaluateAirportName, ErrorMessage = airportName)]
+        [RegularExpression(EVALUATE_AIRPORT_NAME, ErrorMessage = AIRPORT_TOOLTIP)]
         public string Destination { get; set; }
     }
 }

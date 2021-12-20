@@ -9,7 +9,7 @@ namespace ABS_WebApp.ViewModels
     public class CreateAirlineViewModel
     {
         [Required]
-        [RegularExpression(evaluateAirlineName, ErrorMessage = airlineName)]
+        [RegularExpression(EVALUATE_AIRLINE_NAME, ErrorMessage = AIRLINE_TOOLTIP)]
         [Display(Name = "Airline name:")]
         public string Name { get; set; }
 

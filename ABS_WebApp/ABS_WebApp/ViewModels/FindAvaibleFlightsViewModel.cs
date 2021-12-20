@@ -15,12 +15,12 @@ namespace ABS_WebApp.ViewModels
         }
 
         [Required]
-        [RegularExpression(evaluateAirportName, ErrorMessage = airportName)]
+        [RegularExpression(EVALUATE_AIRPORT_NAME, ErrorMessage = AIRPORT_TOOLTIP)]
         [Display(Name = "Origin airport:")]
         public string Origin { get; set; }
 
         [Required]
-        [RegularExpression(evaluateAirportName, ErrorMessage = airportName)]
+        [RegularExpression(EVALUATE_AIRPORT_NAME, ErrorMessage = AIRPORT_TOOLTIP)]
         [Display(Name = "Destination airport:")]
         public string Destination { get; set; }
 
