@@ -79,5 +79,15 @@
         public const string titleConsole = "ABS - Airline Bookig System";
         public const string returnToMainMenu = "Do you want to return in main menu (Y/N): ";
 
+        //Api Urls
+        public const string systemApi = "/api/system";
+        public const string airportApi = "/api/airport";
+        public const string airlineApi = "/api/airline";
+        public const string seatApi = "/api/seat";
+        public const string sectionApi = "/api/section";
+        public const string flightApi = "/api/flight";
+        public const string findFlightApi = "/api/aviableflights";
+
+
     }
 }

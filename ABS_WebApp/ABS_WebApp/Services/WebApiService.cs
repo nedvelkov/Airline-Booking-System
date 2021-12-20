@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 
 using ABS_WebApp.Services.RequestModels;
+using static ABS_DataConstants.DataConstrain;
 
 using static System.Net.Mime.MediaTypeNames;
 
@@ -28,18 +29,29 @@ namespace ABS_WebApp.Services
         #region Airport
 
         public async Task<IEnumerable<string>> GetAirports()
-            => await _httpClient.GetFromJsonAsync<IEnumerable<string>>("/api/airport");
+            => await _httpClient.GetFromJsonAsync<IEnumerable<string>>(airportApi);
 
         public async Task<string> CreateAirport(AirportRequestModel airport)
         {
-            var airportJson = new StringContent(
-                JsonSerializer.Serialize(airport),
-                Encoding.UTF8,
-                Application.Json);
-            using var httpResponseMessage = await _httpClient.PostAsync("/api/airport", airportJson);
+            try
+            {
+                var airportJson = new StringContent(
+                    JsonSerializer.Serialize(airport),
+                    Encoding.UTF8,
+                    Application.Json);
+                using var httpResponseMessage = await _httpClient.PostAsync(airportApi, airportJson);
 
-            httpResponseMessage.EnsureSuccessStatusCode();
-            return await httpResponseMessage.Content.ReadAsStringAsync();
+                if (!httpResponseMessage.IsSuccessStatusCode)
+                {
+                    return await GetErrorsFromHttpResponse(httpResponseMessage);
+                }
+
+                return await httpResponseMessage.Content.ReadAsStringAsync();
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
 
         }
 
@@ -48,18 +60,30 @@ namespace ABS_WebApp.Services
         #region Airline
 
         public async Task<IEnumerable<string>> GetAirlines()
-            => await _httpClient.GetFromJsonAsync<IEnumerable<string>>("/api/airline");
+            => await _httpClient.GetFromJsonAsync<IEnumerable<string>>(airlineApi);
 
         public async Task<string> CreateAirline(AirlaneRequestModel airlie)
         {
-            var airlineJson = new StringContent(
-                JsonSerializer.Serialize(airlie),
-                Encoding.UTF8,
-                Application.Json);
-            using var httpResponseMessage = await _httpClient.PostAsync("/api/airline", airlineJson);
+            try
+            {
+                var airlineJson = new StringContent(
+                    JsonSerializer.Serialize(airlie),
+                    Encoding.UTF8,
+                    Application.Json);
+                using var httpResponseMessage = await _httpClient.PostAsync(airlineApi, airlineJson);
 
-            httpResponseMessage.EnsureSuccessStatusCode();
-            return await httpResponseMessage.Content.ReadAsStringAsync();
+                if (!httpResponseMessage.IsSuccessStatusCode)
+                {
+                    return await GetErrorsFromHttpResponse(httpResponseMessage);
+                }
+
+                return await httpResponseMessage.Content.ReadAsStringAsync();
+
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
 
         }
 
@@ -68,45 +92,53 @@ namespace ABS_WebApp.Services
         #region Flight
 
         public async Task<IEnumerable<string>> GetFlights()
-            => await _httpClient.GetFromJsonAsync<IEnumerable<string>>("/api/flight");
+            => await _httpClient.GetFromJsonAsync<IEnumerable<string>>(flightApi);
 
         public async Task<string> GetAviableFlights(FindFlightRequestModel model)
         {
-            var modelAsJson = new StringContent(
-                JsonSerializer.Serialize(model),
-                Encoding.UTF8,
-                Application.Json);
-            var newUrl = _webApiUrl + "/api/aviableflights";
-
-            var request = new HttpRequestMessage
+            try
             {
-                Method = HttpMethod.Get,
-                RequestUri = new Uri(newUrl),
-                Content = modelAsJson
-            };
+                var modelAsJson = new StringContent(
+                    JsonSerializer.Serialize(model),
+                    Encoding.UTF8,
+                    Application.Json);
+                var newUrl = _webApiUrl + findFlightApi;
 
-            using var httpResponseMessage = await _httpClient.SendAsync(request);
+                var request = new HttpRequestMessage
+                {
+                    Method = HttpMethod.Get,
+                    RequestUri = new Uri(newUrl),
+                    Content = modelAsJson
+                };
 
-            httpResponseMessage.EnsureSuccessStatusCode();
+                using var httpResponseMessage = await _httpClient.SendAsync(request);
 
-            return await httpResponseMessage.Content.ReadAsStringAsync();
+                if (!httpResponseMessage.IsSuccessStatusCode)
+                {
+                    return await GetErrorsFromHttpResponse(httpResponseMessage);
+                }
+
+                return await httpResponseMessage.Content.ReadAsStringAsync();
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
         }
 
         public async Task<string> CreateFlight(FlightRequestModel flight)
         {
             try
             {
-
                 var flightJson = new StringContent(
                     JsonSerializer.Serialize(flight),
                     Encoding.UTF8,
                     Application.Json);
-                using var httpResponseMessage = await _httpClient.PostAsync("/api/flight", flightJson);
-                
+                using var httpResponseMessage = await _httpClient.PostAsync(flightApi, flightJson);
+
                 if (!httpResponseMessage.IsSuccessStatusCode)
                 {
-                   var errors= await httpResponseMessage.Content.ReadFromJsonAsync<ErroHttpModel<FlightErrorModel>>();
-                    return null;
+                    return await GetErrorsFromHttpResponse(httpResponseMessage);
                 }
 
                 return await httpResponseMessage.Content.ReadAsStringAsync();
@@ -124,9 +156,22 @@ namespace ABS_WebApp.Services
 
         public async Task<string> GetSystemDetails()
         {
-            var response = await _httpClient.GetAsync("/api/system");
-            var content = await response.Content.ReadAsStringAsync();
-            return content;
+            try
+            {
+                var response = await _httpClient.GetAsync(systemApi);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return await GetErrorsFromHttpResponse(response);
+                }
+
+                var content = await response.Content.ReadAsStringAsync();
+                return content;
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
         }
 
         #endregion
@@ -135,15 +180,25 @@ namespace ABS_WebApp.Services
 
         public async Task<string> CreateSection(SectionRequestModel section)
         {
-            var sectionJson = new StringContent(
-                JsonSerializer.Serialize(section),
-                Encoding.UTF8,
-                Application.Json);
-            using var httpResponseMessage = await _httpClient.PostAsync("/api/section", sectionJson);
+            try
+            {
+                var sectionJson = new StringContent(
+                    JsonSerializer.Serialize(section),
+                    Encoding.UTF8,
+                    Application.Json);
+                using var httpResponseMessage = await _httpClient.PostAsync(sectionApi, sectionJson);
 
-            httpResponseMessage.EnsureSuccessStatusCode();
+                if (!httpResponseMessage.IsSuccessStatusCode)
+                {
+                    return await GetErrorsFromHttpResponse(httpResponseMessage);
+                }
 
-            return await httpResponseMessage.Content.ReadAsStringAsync();
+                return await httpResponseMessage.Content.ReadAsStringAsync();
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
         }
 
         #endregion
@@ -152,17 +207,38 @@ namespace ABS_WebApp.Services
 
         public async Task<string> BookSeat(BookSeatRequestModel seat)
         {
-            var seatJson = new StringContent(
-                JsonSerializer.Serialize(seat),
-                Encoding.UTF8,
-                Application.Json);
-            using var httpResponseMessage = await _httpClient.PutAsync("/api/seat", seatJson);
+            try
+            {
+                var seatJson = new StringContent(
+                    JsonSerializer.Serialize(seat),
+                    Encoding.UTF8,
+                    Application.Json);
+                using var httpResponseMessage = await _httpClient.PutAsync(seatApi, seatJson);
 
-            httpResponseMessage.EnsureSuccessStatusCode();
+                if (!httpResponseMessage.IsSuccessStatusCode)
+                {
+                    return await GetErrorsFromHttpResponse(httpResponseMessage);
+                }
 
-            return await httpResponseMessage.Content.ReadAsStringAsync();
+                return await httpResponseMessage.Content.ReadAsStringAsync();
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
         }
 
         #endregion
+
+        private async Task<string> GetErrorsFromHttpResponse(HttpResponseMessage httpResponseMessage)
+        {
+            var reposnse = await httpResponseMessage.Content.ReadFromJsonAsync<ErrorHttpModel>();
+            var sb = new StringBuilder();
+            foreach (var error in reposnse.Errors)
+            {
+                sb.AppendLine(error.Value[0]);
+            }
+            return sb.ToString().Trim();
+        }
     }
 }

@@ -3,10 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 
 using ABS_WebAPI.ApiModels;
 using ABS_WebAPI.Services.Interfaces;
+using static ABS_DataConstants.DataConstrain;
 
 namespace ABS_WebAPI.Controllers
 {
-    [Route("/api/[controller]")]
+    [Route(airlineApi)]
     [ApiController]
     public class AirlineController : ControllerBase
     {

@@ -4,10 +4,11 @@ using System.Collections.Generic;
 using ABS_WebAPI.ApiModels;
 using ABS_WebAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using static ABS_DataConstants.DataConstrain;
 
 namespace ABS_WebAPI.Controllers
 {
-    [Route("/api/[controller]")]
+    [Route(flightApi)]
     [ApiController]
     public class FlightController : ControllerBase
     {
@@ -19,7 +20,7 @@ namespace ABS_WebAPI.Controllers
         public IEnumerable<string> Get() => _flightService.GetFlights();
 
         [HttpGet]
-        [Route("/api/aviableflights")]
+        [Route(findFlightApi)]
         public string GetAviableFlights(AviableFlightsRequestModel flightsRequestModel)
             => _flightService.FindAvailableFlights(flightsRequestModel.Origin, flightsRequestModel.Destination);
 

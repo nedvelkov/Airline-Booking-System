@@ -1,6 +1,8 @@
-﻿namespace ABS_WebApp.Services
+﻿using System.Collections.Generic;
+
+namespace ABS_WebApp.Services
 {
-    public class ErroHttpModel<T>
+    public class ErrorHttpModel
     {
         public string Type { get; set; }
 
@@ -10,6 +12,6 @@
 
         public string TraceId { get; set; }
 
-        public T Errors { get; set; }
+        public Dictionary<string,string[]> Errors { get; set; }
     }
 }

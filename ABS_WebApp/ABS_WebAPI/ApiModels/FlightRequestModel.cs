@@ -27,7 +27,7 @@ namespace ABS_WebAPI.ApiModels
 
         [Required]
         [DataType(DataType.Date)]
-      //  [CompareDate(ErrorMessage = notValidDate)]
+        [CompareDate(ErrorMessage = notValidDate)]
         public DateTime DateOfFlight { get; set; }
     }
 }
