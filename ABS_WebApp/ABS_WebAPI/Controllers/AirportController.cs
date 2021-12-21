@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 
-using ABS_WebAPI.ApiModels;
+using ABS_Models;
 using ABS_WebAPI.Services.Interfaces;
 using static ABS_DataConstants.DataConstrain;
 
@@ -19,6 +19,6 @@ namespace ABS_WebAPI.Controllers
         public IEnumerable<string> Get() => _airportService.GetAiports();
 
         [HttpPost]
-        public string Post(AirportRequestModel airport) => _airportService.CreateAirport(airport.Name);
+        public string Post(AirportModel airport) => _airportService.CreateAirport(airport.Name);
     }
 }

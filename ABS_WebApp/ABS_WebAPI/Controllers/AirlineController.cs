@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 
-using ABS_WebAPI.ApiModels;
+using ABS_Models;
 using ABS_WebAPI.Services.Interfaces;
 using static ABS_DataConstants.DataConstrain;
 
@@ -20,7 +20,7 @@ namespace ABS_WebAPI.Controllers
         public IEnumerable<string> Get() => _airlineService.GetAirlines();
 
         [HttpPost]
-        public string Post(AirlineRequestModel airline) => _airlineService.CreateAirline(airline.Name);
+        public string Post(AirlineModel airline) => _airlineService.CreateAirline(airline.Name);
 
     }
 }

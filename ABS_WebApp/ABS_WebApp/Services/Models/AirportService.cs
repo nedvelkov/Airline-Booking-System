@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using ABS_WebApp.Services.Interfaces;
-using ABS_WebApp.Services.RequestModels;
 using Microsoft.Extensions.Caching.Memory;
 using static ABS_DataConstants.DataConstrain;
+using ABS_Models;
 
 namespace ABS_WebApp.Services.Models
 {
@@ -21,11 +21,7 @@ namespace ABS_WebApp.Services.Models
             _cache = cache;
         }
 
-        public async Task<string> CreateAirport(string name)
-        {
-            var airport = new AirportRequestModel { Name = name };
-            return await _webApiService.CreateAirport(airport);
-        }
+        public async Task<string> CreateAirport(AirportModel airport) => await _webApiService.CreateAirport(airport);
 
         public async Task< IReadOnlyList<string>> Airports()
         {
@@ -42,6 +38,5 @@ namespace ABS_WebApp.Services.Models
 
             return result.ToList();
         }
-
     }
 }

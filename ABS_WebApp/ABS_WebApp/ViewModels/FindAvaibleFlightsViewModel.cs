@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
-using static ABS_DataConstants.DataConstrain;
-using static ABS_DataConstants.Error;
+using ABS_Models;
+using ABS_WebApp.ViewModels.DisplayObjectModels;
+
 
 namespace ABS_WebApp.ViewModels
 {
@@ -12,17 +12,10 @@ namespace ABS_WebApp.ViewModels
         {
             Flights = new();
             Airports = new();
+            Flight = new AviableFlightsModel();
         }
 
-        [Required]
-        [RegularExpression(EVALUATE_AIRPORT_NAME, ErrorMessage = AIRPORT_TOOLTIP)]
-        [Display(Name = "Origin airport:")]
-        public string Origin { get; set; }
-
-        [Required]
-        [RegularExpression(EVALUATE_AIRPORT_NAME, ErrorMessage = AIRPORT_TOOLTIP)]
-        [Display(Name = "Destination airport:")]
-        public string Destination { get; set; }
+        public AviableFlightsModel Flight { get; set; }
 
         public string Error { get; set; }
 

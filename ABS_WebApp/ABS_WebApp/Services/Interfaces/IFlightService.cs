@@ -1,17 +1,19 @@
 ﻿using System.Threading.Tasks;
 using System.Collections.Generic;
 
+using ABS_Models;
+
 namespace ABS_WebApp.Services.Interfaces
 {
     public interface IFlightService
     {
-        public Task<string> CreateFlight(string airlineName, string origin, string destination, int year, int month, int day, string id);
+        public Task<string> CreateFlight(FlightModel flight);
 
-        public Task<string> CreateFlightSection(string airlineName, string flightId, int rows, int columns, int seatClass);
+        public Task<string> CreateFlightSection(FlightSectionModel flightSection);
 
-        public Task<string> BookSeat(string airlineName, string flightId, int seatClass, int row, char column);
+        public Task<string> BookSeat(BookSeatModel seat);
 
-        public Task<string> FindAvailableFlights(string origin, string destination);
+        public Task<string> FindAvailableFlights(AviableFlightsModel flight);
 
         public Task<IReadOnlyList<string>> Flights();
     }

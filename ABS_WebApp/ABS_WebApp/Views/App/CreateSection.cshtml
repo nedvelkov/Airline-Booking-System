@@ -18,60 +18,60 @@
             <div class="form-group">
                 <p class="mb-0">
                     <i class="fas fa-passport d-inline"></i>
-                    <label asp-for="Id"></label>
+                    <label asp-for=@Model.FlightSection.Id></label>
                 </p>
-                <select asp-for="Id" class="form-control">
+                <select asp-for=@Model.FlightSection.Id class="form-control">
                     <option></option>
                     @foreach (var flight in Model.Flights)
                     {
                         <option value="@flight">@flight</option>
                     }
                 </select>
-                <span asp-validation-for="Id" class="text-danger font-weight-bold"></span>
+                <span asp-validation-for=@Model.FlightSection.Id class="text-danger font-weight-bold"></span>
             </div>
 
             <div class="form-group">
                 <p class="mb-0">
                     <i class="far fa-paper-plane"></i>
-                    <label asp-for="AirlineName"></label>
+                    <label asp-for=@Model.FlightSection.AirlineName></label>
                 </p>
-                <select asp-for="AirlineName" class="form-control">
+                <select asp-for=@Model.FlightSection.AirlineName class="form-control">
                     <option></option>
                     @foreach (var airline in Model.Airlines)
                     {
                         <option value="@airline">@airline</option>
                     }
                 </select>
-                <span asp-validation-for="AirlineName" class="text-danger font-weight-bold"></span>
+                <span asp-validation-for=@Model.FlightSection.AirlineName class="text-danger font-weight-bold"></span>
             </div>
 
             <div class="form-group dropdownCss">
-                <label asp-for="Rows"></label>
-                <input type="number" asp-for="Rows" class="form-control" />
-                <span asp-validation-for="Rows" class="text-danger font-weight-bold"></span>
+                <label asp-for=@Model.FlightSection.Rows></label>
+                <input type="number" asp-for=@Model.FlightSection.Rows class="form-control" />
+                <span asp-validation-for=@Model.FlightSection.Rows class="text-danger font-weight-bold"></span>
                 <div class="dropdownCss-content">
                     <p>@SEAT_ROW_TOOlTIP</p>
                 </div>
             </div>
 
             <div class="form-group dropdownCss">
-                <label asp-for="Columns"></label>
-                <input type="number" asp-for="Columns" class="form-control" />
-                <span asp-validation-for="Columns" class="text-danger font-weight-bold"></span>
+                <label asp-for=@Model.FlightSection.Columns></label>
+                <input type="number" asp-for=@Model.FlightSection.Columns class="form-control" />
+                <span asp-validation-for=@Model.FlightSection.Columns class="text-danger font-weight-bold"></span>
                 <div class="dropdownCss-content">
                     <p>@SEAT_COLUMN_TOOLTIP</p>
                 </div>
             </div>
 
             <div class="form-group">
-                <label asp-for="SeatClass"></label>
-                <select asp-for="SeatClass" class="form-control">
+                <label asp-for=@Model.FlightSection.SeatClass></label>
+                <select asp-for=@Model.FlightSection.SeatClass class="form-control">
                     <option></option>
                     <option value="1">First class</option>
                     <option value="2">Business class</option>
                     <option value="3">Economy class</option>
                 </select>
-                <span asp-validation-for="SeatClass" class="text-danger font-weight-bold"></span>
+                <span asp-validation-for=@Model.FlightSection.SeatClass class="text-danger font-weight-bold"></span>
             </div>
 
 

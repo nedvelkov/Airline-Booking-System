@@ -6,7 +6,7 @@ using static ABS_DataConstants.Error;
 
 namespace ABS_Models
 {
-    public class FlightSectiontModel
+    public class FlightSectionModel
     {
         [Required]
         [RegularExpression(EVALUATE_FLIGHT_ID, ErrorMessage = FLIGHT_TOOLTIP)]

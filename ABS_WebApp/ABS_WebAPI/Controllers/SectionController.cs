@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-using ABS_WebAPI.ApiModels;
+using ABS_Models;
 using ABS_WebAPI.Services.Interfaces;
 using static ABS_DataConstants.DataConstrain;
 using Microsoft.Extensions.Caching.Memory;
@@ -16,7 +16,7 @@ namespace ABS_WebAPI.Controllers
         public SectionController(ISectionService sectionService) => _sectionService = sectionService;
 
         [HttpPost]
-        public string Post(SectionRequestModel section)
+        public string Post(FlightSectionModel section)
             => _sectionService.CreateFlightSection(section.AirlineName, section.Id, section.Rows, section.Columns, section.SeatClass);
     }
 }

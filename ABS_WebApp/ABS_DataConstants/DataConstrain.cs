@@ -18,11 +18,11 @@
 
         //Api Urls
         public const string SUSTEM_API_PATH = "/api/system";
-        public const string AIRPORT_API_PATH = "/api/airport";
-        public const string AIRLINE_API_PATH = "/api/airline";
-        public const string SEAT_API_PATH = "/api/seat";
-        public const string SECTION_API_PATH = "/api/section";
-        public const string FLIGHT_API_PATH = "/api/flight";
+        public const string AIRPORT_API_PATH = "/api/airports";
+        public const string AIRLINE_API_PATH = "/api/airlines";
+        public const string SEAT_API_PATH = "/api/seats";
+        public const string SECTION_API_PATH = "/api/sections";
+        public const string FLIGHT_API_PATH = "/api/flights";
         public const string FIND_FLIGHT_API_PATH = "/api/aviableflights";
 
         //Cashing options

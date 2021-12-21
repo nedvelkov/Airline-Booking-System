@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using ABS_WebAPI.ApiModels;
+using ABS_Models;
 using ABS_WebAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using static ABS_DataConstants.DataConstrain;
@@ -21,11 +21,11 @@ namespace ABS_WebAPI.Controllers
 
         [HttpGet]
         [Route(FIND_FLIGHT_API_PATH)]
-        public string GetAviableFlights(AviableFlightsRequestModel flightsRequestModel)
+        public string GetAviableFlights(AviableFlightsModel flightsRequestModel)
             => _flightService.FindAvailableFlights(flightsRequestModel.Origin, flightsRequestModel.Destination);
 
         [HttpPost]
-        public string Post(FlightRequestModel flight)
+        public string Post(FlightModel flight)
             => _flightService.CreateFlight(flight.AirlineName, flight.Origin, flight.Destination, flight.DateOfFlight.Year, flight.DateOfFlight.Month, flight.DateOfFlight.Day, flight.Id);
 
     }

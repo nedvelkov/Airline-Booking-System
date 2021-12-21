@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using ABS_WebApp.ViewModels;
 using ABS_WebApp.Services.Interfaces;
 using System.Diagnostics;
+using ABS_Models;
+using ABS_WebApp.ViewModels.DisplayObjectModels;
 
 namespace ABS_WebApp.Controllers
 {
@@ -33,11 +35,11 @@ namespace ABS_WebApp.Controllers
         public IActionResult CreateAirport() => View();
 
         [HttpPost]
-        public async Task<IActionResult> CreateAirport(CreateAirportViewModel model)
+        public async Task<IActionResult> CreateAirport(AirportModel model)
         {
             if (ModelState.IsValid)
             {
-                TempData["Result"] = await _airportService.CreateAirport(model.Name);
+                TempData["Result"] = await _airportService.CreateAirport(model);
                 ModelState.Clear();
             }
             return View();
@@ -47,11 +49,11 @@ namespace ABS_WebApp.Controllers
         public IActionResult CreateAirline() => View();
 
         [HttpPost]
-        public async Task<IActionResult> CreateAirline(CreateAirlineViewModel model)
+        public async Task<IActionResult> CreateAirline(AirlineModel model)
         {
             if (ModelState.IsValid)
             {
-                TempData["Result"] = await _airlineService.CreateAirline(model.Name);
+                TempData["Result"] = await _airlineService.CreateAirline(model);
                 ModelState.Clear();
             }
             return View();
@@ -65,13 +67,7 @@ namespace ABS_WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                TempData["Result"] = await _flightService.CreateFlight(model.AirlineName,
-                                                        model.Origin,
-                                                        model.Destination,
-                                                        model.Date.Year,
-                                                        model.Date.Month,
-                                                        model.Date.Day,
-                                                        model.Id);
+                TempData["Result"] = await _flightService.CreateFlight(model.Flight);
                 ModelState.Clear();
             }
             return View(await GetFlightModel());
@@ -85,11 +81,7 @@ namespace ABS_WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                TempData["Result"] = await _flightService.CreateFlightSection(model.AirlineName,
-                                                                                model.Id,
-                                                                                model.Rows,
-                                                                                model.Columns,
-                                                                                model.SeatClass);
+                TempData["Result"] = await _flightService.CreateFlightSection(model.FlightSection);
                 ModelState.Clear();
             }
             return View(await GetCreateSectionViewModel());
@@ -103,7 +95,7 @@ namespace ABS_WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var data = await _flightService.FindAvailableFlights(model.Origin, model.Destination);
+                var data = await _flightService.FindAvailableFlights(model.Flight);
 
                 ParseData(data, model);
             }
@@ -120,11 +112,7 @@ namespace ABS_WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                TempData["Result"] = await _flightService.BookSeat(model.Seat.AirlineName,
-                                                                    model.Seat.Id,
-                                                                    model.Seat.SeatClass,
-                                                                    model.Seat.Row,
-                                                                    model.Seat.Column);
+                TempData["Result"] = await _flightService.BookSeat(model.Seat);
                 ModelState.Clear();
             }
             return View(await GetBookSeatViewModel());
@@ -154,8 +142,8 @@ namespace ABS_WebApp.Controllers
             model.Airlines = dataAirlines.ToList();
             var dataAirports = await _airportService.Airports();
             model.Airports = dataAirports.ToList();
-            model.Date = DateTime.Now;
-            model.Id = string.Empty;
+            model.Flight.DateOfFlight = DateTime.Now;
+            model.Flight.Id = string.Empty;
             return model;
         }
 

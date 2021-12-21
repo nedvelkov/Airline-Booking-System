@@ -10,6 +10,7 @@ namespace ABS_WebApp.ViewModels
         {
             Flights = new();
             Airlines = new();
+            Seat = new BookSeatModel();
         }
 
         public BookSeatModel Seat { get; set; }

@@ -18,10 +18,10 @@
             <div class="form-group dropdownCss">
                 <p class="mb-0">
                     <i class="fas fa-passport d-inline"></i>
-                    <label asp-for="Id"></label>
+                    <label asp-for=@Model.Flight.Id></label>
                 </p>
-                <input type="text" asp-for="Id" class="form-control" />
-                <span asp-validation-for="Id" class="text-danger font-weight-bold"></span>
+                <input type="text" asp-for=@Model.Flight.Id class="form-control" />
+                <span asp-validation-for=@Model.Flight.Id class="text-danger font-weight-bold"></span>
                 <div class="dropdownCss-content">
                     <p>@FLIGHT_TOOLTIP</p>
                 </div>
@@ -30,9 +30,9 @@
             <div class="form-group">
                 <p class="mb-0">
                     <i class="far fa-paper-plane"></i>
-                    <label asp-for="AirlineName"></label>
+                    <label asp-for=@Model.Flight.AirlineName></label>
                 </p>
-                <select asp-for="AirlineName" class="form-control">
+                <select asp-for=@Model.Flight.AirlineName class="form-control">
                     <option></option>
                     @foreach (var airline in Model.Airlines)
                     {
@@ -40,46 +40,46 @@
                     }
                 </select>
 
-                <span asp-validation-for="AirlineName" class="text-danger font-weight-bold"></span>
+                <span asp-validation-for=@Model.Flight.AirlineName class="text-danger font-weight-bold"></span>
             </div>
 
             <div class="form-group">
                 <p class="mb-0">
                     <i class="fas fa-plane-departure"></i>
-                    <label asp-for="Origin"></label>
+                    <label asp-for=@Model.Flight.Origin></label>
                 </p>
-                <select asp-for="Origin" class="form-control">
+                <select asp-for=@Model.Flight.Origin class="form-control">
                     <option></option>
                     @foreach (var airport in Model.Airports)
                     {
                         <option value="@airport">@airport</option>
                     }
                 </select>
-                <span asp-validation-for="Origin" class="text-danger font-weight-bold"></span>
+                <span asp-validation-for=@Model.Flight.Origin class="text-danger font-weight-bold"></span>
             </div>
 
             <div class="form-group">
                 <p class="mb-0">
                     <i class="fas fa-plane-arrival d-inline"></i>
-                    <label asp-for="Destination"></label>
+                    <label asp-for=@Model.Flight.Destination></label>
                 </p>
-                <select asp-for="Destination" class="form-control">
+                <select asp-for=@Model.Flight.Destination class="form-control">
                     <option></option>
                     @foreach (var airport in Model.Airports)
                     {
                         <option value="@airport">@airport</option>
                     }
                 </select>
-                <span asp-validation-for="Destination" class="text-danger font-weight-bold"></span>
+                <span asp-validation-for=@Model.Flight.Destination class="text-danger font-weight-bold"></span>
             </div>
 
             <div class="form-group">
                 <p class="mb-0">
                     <i class="far fa-calendar-alt"></i>
-                    <label asp-for="Date" class="control-label"></label>
+                    <label asp-for=@Model.Flight.DateOfFlight class="control-label"></label>
                 </p>
-                <input asp-for="Date" class="form-control" />
-                <span asp-validation-for="Date" class="text-danger font-weight-bold"></span>
+                <input asp-for=@Model.Flight.DateOfFlight class="form-control" />
+                <span asp-validation-for=@Model.Flight.DateOfFlight class="text-danger font-weight-bold"></span>
             </div>
 
             <div class="form-group">

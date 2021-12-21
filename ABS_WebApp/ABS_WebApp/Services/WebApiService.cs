@@ -7,7 +7,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 
-using ABS_WebApp.Services.RequestModels;
+using ABS_Models;
 using static ABS_DataConstants.DataConstrain;
 
 using static System.Net.Mime.MediaTypeNames;
@@ -31,7 +31,7 @@ namespace ABS_WebApp.Services
         public async Task<IEnumerable<string>> GetAirports()
             => await _httpClient.GetFromJsonAsync<IEnumerable<string>>(AIRPORT_API_PATH);
 
-        public async Task<string> CreateAirport(AirportRequestModel airport)
+        public async Task<string> CreateAirport(AirportModel airport)
         {
             try
             {
@@ -62,7 +62,7 @@ namespace ABS_WebApp.Services
         public async Task<IEnumerable<string>> GetAirlines()
             => await _httpClient.GetFromJsonAsync<IEnumerable<string>>(AIRLINE_API_PATH);
 
-        public async Task<string> CreateAirline(AirlaneRequestModel airlie)
+        public async Task<string> CreateAirline(AirlineModel airlie)
         {
             try
             {
@@ -94,12 +94,12 @@ namespace ABS_WebApp.Services
         public async Task<IEnumerable<string>> GetFlights()
             => await _httpClient.GetFromJsonAsync<IEnumerable<string>>(FLIGHT_API_PATH);
 
-        public async Task<string> GetAviableFlights(FindFlightRequestModel model)
+        public async Task<string> GetAviableFlights(AviableFlightsModel flight)
         {
             try
             {
                 var modelAsJson = new StringContent(
-                    JsonSerializer.Serialize(model),
+                    JsonSerializer.Serialize(flight),
                     Encoding.UTF8,
                     Application.Json);
                 var newUrl = _webApiUrl + FIND_FLIGHT_API_PATH;
@@ -126,7 +126,7 @@ namespace ABS_WebApp.Services
             }
         }
 
-        public async Task<string> CreateFlight(FlightRequestModel flight)
+        public async Task<string> CreateFlight(FlightModel flight)
         {
             try
             {
@@ -178,7 +178,7 @@ namespace ABS_WebApp.Services
 
         #region Section
 
-        public async Task<string> CreateSection(SectionRequestModel section)
+        public async Task<string> CreateSection(FlightSectionModel section)
         {
             try
             {
@@ -205,7 +205,7 @@ namespace ABS_WebApp.Services
 
         #region Seat
 
-        public async Task<string> BookSeat(BookSeatRequestModel seat)
+        public async Task<string> BookSeat(BookSeatModel seat)
         {
             try
             {

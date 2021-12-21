@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ABS_WebApp.ViewModels
+namespace ABS_WebApp.ViewModels.DisplayObjectModels
 {
     public class AirlineViewModel
     {
