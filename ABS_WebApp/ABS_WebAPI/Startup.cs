@@ -29,6 +29,7 @@ namespace ABS_WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddResponseCaching();
             services.AddSingleton<ISystemManager, SystemManager>();
             services.AddTransient<IAirportService, AirportService>();
             services.AddTransient<IAirlineService, AirlineService>();
@@ -36,7 +37,11 @@ namespace ABS_WebAPI
             services.AddTransient<ISectionService, SectionService>();
             services.AddTransient<ISeatService, SeatService>();
             services.AddTransient<ISystemService, SystemService>();
-            services.AddControllers();
+            services.AddControllers(setupAction =>
+            {
+                setupAction.ReturnHttpNotAcceptable = true;
+
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +53,8 @@ namespace ABS_WebAPI
             }
 
             app.UseHttpsRedirection();
+
+            app.UseResponseCaching();
 
             app.UseRouting();
 

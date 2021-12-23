@@ -26,7 +26,10 @@
         public const string FIND_FLIGHT_API_PATH = "/api/aviableflights";
 
         //Cashing options
-        public const int CACHE_EXPIRATION_IN_SECONDS = 10;
+        public const int PRIVATE_CACHE_EXPIRATION_IN_SECONDS = 10;
+        public const int SHARED_CACHE_EXPIRATION_IN_SECONDS = 100;
 
+        //Successfull operation
+        public const string SUCCESSFULL_OPERATION = "successfully";
     }
 }

@@ -1,26 +1,18 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
 using ABS_WebApp.Services.Interfaces;
-using Microsoft.Extensions.Caching.Memory;
 using ABS_Models;
 
-using static ABS_DataConstants.DataConstrain;
 
 namespace ABS_WebApp.Services.Models
 {
     public class FlightService : IFlightService
     {
         private readonly WebApiService _webApiService;
-        private readonly IMemoryCache _cache;
 
-        public FlightService(WebApiService webApiService, IMemoryCache cache)
-        {
-            _webApiService = webApiService;
-            _cache = cache;
-        }
+        public FlightService(WebApiService webApiService) => _webApiService = webApiService;
 
         public async Task<string> BookSeat(BookSeatModel seat) => await _webApiService.BookSeat(seat);
 
@@ -32,18 +24,7 @@ namespace ABS_WebApp.Services.Models
 
         public async Task<IReadOnlyList<string>> Flights()
         {
-
-            IEnumerable<string> result;
-
-            if (!_cache.TryGetValue(nameof(Flights), out result))
-            {
-                var data = await _webApiService.GetFlights();
-                var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    .SetSlidingExpiration(TimeSpan.FromSeconds(CACHE_EXPIRATION_IN_SECONDS));
-                _cache.Set(nameof(Flights), data, cacheEntryOptions);
-                return data.ToList();
-            }
-
+            IEnumerable<string> result = await _webApiService.GetFlights();
             return result.ToList();
         }
 
