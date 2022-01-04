@@ -17,5 +17,8 @@
         //Seat
         public const string SUCCESSFUL_BOOKED_SEAT = "Seat {0} in {1} class is successfully booked for flight from {2} to {3} on airline {4}";
 
+        //User
+        public const string SUCCESSFUL_CREATED_USER = "User is added successfully";
+        public const string SUCCESSFUL_LOF_IN_USER = "User {0} is log in successfully";
     }
 }

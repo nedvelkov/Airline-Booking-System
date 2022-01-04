@@ -125,7 +125,6 @@ namespace ABS_WebApp.Controllers
             var model = new DisplaySystemDetailsViewModel();
 
             ParseData(data, model);
-
             return View(model);
         }
 

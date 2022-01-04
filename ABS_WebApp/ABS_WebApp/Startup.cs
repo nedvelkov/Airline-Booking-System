@@ -25,6 +25,7 @@ namespace ABS_WebApp
             services.AddTransient<IAirlineService, AirlineService>();
             services.AddTransient<IFlightService, FlightService>();
             services.AddTransient<ISystemService, SystemService>();
+            services.AddTransient<IAccountService, AccountService>();
             services.AddControllersWithViews();
         }
 

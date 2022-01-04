@@ -12,6 +12,7 @@ using static ABS_DataConstants.DataConstrain;
 
 using static System.Net.Mime.MediaTypeNames;
 using System.Net.Http.Headers;
+using ABS_WebApp.ViewModels;
 
 namespace ABS_WebApp.Services
 {
@@ -232,6 +233,37 @@ namespace ABS_WebApp.Services
                 return ex.Message;
             }
         }
+
+        #endregion
+
+        #region User
+
+        public async Task<Tuple<bool,string>> CreateUser(RegisterModel registerModel)
+        {
+            try
+            {
+                var registertJson = new StringContent(
+                    JsonSerializer.Serialize(registerModel),
+                    Encoding.UTF8,
+                    Application.Json);
+                using var httpResponseMessage = await _httpClient.PostAsync(ACCOUNT_API_PATH, registertJson);
+
+
+                if (!httpResponseMessage.IsSuccessStatusCode)
+                {
+                    var error= await GetErrorsFromHttpResponse(httpResponseMessage);
+                    return new Tuple<bool, string>(false, error);
+                }
+
+                return new Tuple<bool, string>(true, null);
+            }
+            catch (Exception ex)
+            {
+                return new Tuple<bool, string>(false, ex.Message);
+
+            }
+        }
+
 
         #endregion
 

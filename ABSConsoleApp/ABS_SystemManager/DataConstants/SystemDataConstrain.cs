@@ -2,6 +2,9 @@
 {
     public static class SystemDataConstrain
     {
+        //Regex
+        public const string EVALUATE_EMAIL = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+
         //Airport
         public const string AIRPORT_TO_STRING_TITLE = "-AP Airport {0} is available for all airlines and flights";
 

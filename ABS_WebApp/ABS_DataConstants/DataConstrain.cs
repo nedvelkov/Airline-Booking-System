@@ -8,6 +8,7 @@
         public const string EVALUATE_FLIGHT_ID = "^[a-zA-Z0-9]+$";
         public const string EVALUATE_SEAT_COLUMN = "^[A-J]{1}$";
         public const string EVALUATE_PASSWORD = "^[a-zA-Z0-9]{8,}$";
+        public const string EVALUATE_USERNAME = "^[a-zA-Z]{1,}$";
 
         //Seat
         public const int MIN_SEAT_ROWS = 1;
@@ -25,6 +26,7 @@
         public const string SECTION_API_PATH = "/api/sections";
         public const string FLIGHT_API_PATH = "/api/flights";
         public const string FIND_FLIGHT_API_PATH = "/api/aviableflights";
+        public const string ACCOUNT_API_PATH = "/api/accounts";
 
         //Cashing options
         public const int PRIVATE_CACHE_EXPIRATION_IN_SECONDS = 10;

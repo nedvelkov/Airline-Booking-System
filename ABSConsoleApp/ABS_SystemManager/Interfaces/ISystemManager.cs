@@ -18,8 +18,14 @@ namespace ABS_SystemManager.Interfaces
 
         public string DisplaySystemDetails();
 
+        public string CreateUser(string firstName, string lastName, string email, string password, int role);
+
+        public string LogInUser(string email, string password);
+
         public IReadOnlyList<string> ListAirlines { get; }
+
         public IReadOnlyList<string> ListAirports { get; }
+        
         public IReadOnlyList<string> ListFlights { get; }
     }
 }

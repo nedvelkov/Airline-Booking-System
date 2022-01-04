@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 using ABS_SystemManager.Models;
 using ABS_SystemManager.Interfaces;
-using ABS_DataConstants;
+using static ABS_DataConstants.DataConstrain;
 using static ABS_SystemManager.DataConstants.Success;
 using static ABS_SystemManager.DataConstants.SystemDataConstrain;
 using static ABS_SystemManager.DataConstants.SystemError;
@@ -20,6 +20,7 @@ namespace ABS_SystemManager
         private Dictionary<string, IAirline> _airlines;
         private Dictionary<string, IAirport> _airports;
         private Dictionary<string, IFlight> _flights;
+        private Dictionary<string, AbsUser> _users;
 
         private DateTime _testDate;
 
@@ -28,14 +29,15 @@ namespace ABS_SystemManager
             _airlines = new Dictionary<string, IAirline>();
             _airports = new Dictionary<string, IAirport>();
             _flights = new Dictionary<string, IFlight>();
+            _users = new Dictionary<string, AbsUser>();
         }
 
         public string CreateAirport(string name)
         {
             try
             {
-                ValidateString(name, DataConstrain.EVALUATE_AIRPORT_NAME, Error.AIRPORT_TOOLTIP);
-                ContainsItem(_airports, name, String.Format(Error.DUBLICATE_ITEM, "Airport", "name"));
+                ValidateString(name, EVALUATE_AIRPORT_NAME, AIRPORT_TOOLTIP);
+                ContainsItem(_airports, name, String.Format(DUBLICATE_ITEM, "Airport", "name"));
             }
             catch (Exception a)
             {
@@ -52,8 +54,8 @@ namespace ABS_SystemManager
         {
             try
             {
-                ValidateString(name, DataConstrain.EVALUATE_AIRLINE_NAME, Error.AIRLINE_TOOLTIP);
-                ContainsItem(_airlines, name, String.Format(Error.DUBLICATE_ITEM, "Airline", "name"));
+                ValidateString(name, EVALUATE_AIRLINE_NAME, AIRLINE_TOOLTIP);
+                ContainsItem(_airlines, name, String.Format(DUBLICATE_ITEM, "Airline", "name"));
             }
             catch (Exception a)
             {
@@ -75,13 +77,13 @@ namespace ABS_SystemManager
 
             try
             {
-                airline = GetItem(_airlines, airlineName, String.Format(Error.MISSING_ITEM, "Airline", "name", airlineName));
+                airline = GetItem(_airlines, airlineName, String.Format(MISSING_ITEM, "Airline", "name", airlineName));
                 (originAirport, destinationAirport) = ValidateFlightDestination(origin, destination);
                 date = ValidateDate(year, month, day);
 
                 ValidateFlightDate(date, INVALID_DATE_OF_DEPARTURE_FLIGHT);
-                ValidateString(id, DataConstrain.EVALUATE_FLIGHT_ID, Error.FLIGHT_TOOLTIP);
-                ContainsItem(_flights, id, String.Format(Error.DUBLICATE_ITEM, "Flight", "id"));
+                ValidateString(id, EVALUATE_FLIGHT_ID, FLIGHT_TOOLTIP);
+                ContainsItem(_flights, id, String.Format(DUBLICATE_ITEM, "Flight", "id"));
             }
             catch (Exception a)
             {
@@ -106,7 +108,7 @@ namespace ABS_SystemManager
 
                 flightSection = CreateFlightSection(rows, columns, seatClass);
 
-                ContainsItem(flight.FlightSections, (SeatClass)seatClass, String.Format(Error.DUBLICATE_ITEM, "Flight section", "name"));
+                ContainsItem(flight.FlightSections, (SeatClass)seatClass, String.Format(DUBLICATE_ITEM, "Flight section", "name"));
             }
             catch (Exception a)
             {
@@ -239,6 +241,57 @@ namespace ABS_SystemManager
             return sb.ToString().Trim();
         }
 
+        public string CreateUser(string firstName, string lastName, string email, string password, int role)
+        {
+            Roles userRole;
+            try
+            {
+                ValidateString(firstName, EVALUATE_USERNAME, USERNAME_TOOLTIP);
+                ValidateString(lastName, EVALUATE_USERNAME, USERNAME_TOOLTIP);
+                ValidateString(email, EVALUATE_EMAIL, INVALID_EMAIL);
+                userRole = GetEnum<Roles>(role);
+
+                ContainsItem(_users, email, EXISTING_EMAIL);
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+            var user = new AbsUser()
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                Email = email,
+                Password = password,
+                Role = userRole
+            };
+
+            _users.Add(email, user);
+
+            return SUCCESSFUL_CREATED_USER;
+        }
+
+        public string LogInUser(string email, string password)
+        {
+            AbsUser user;
+            try
+            {
+                ValidateString(email, EVALUATE_EMAIL, INVALID_EMAIL);
+                user = GetItem(_users, email, string.Format(MISSING_EMAIL, email));
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+
+            if (user.Password == password)
+            {
+                return string.Format(SUCCESSFUL_LOF_IN_USER, email);
+            }
+
+            return PASSWORD_DO_NOT_MATCH;
+        }
+
         public IReadOnlyList<string> ListAirlines => _airlines.Select(x => x.Key).ToList();
 
         public IReadOnlyDictionary<string, string> AirlinesDictionary => _airlines.ToDictionary(x => x.Key, x => x.Value.ToString());
@@ -356,8 +409,8 @@ namespace ABS_SystemManager
             {
                 throw new ArgumentException(WRONG_DESTINATION);
             }
-            var originAirport = GetItem(_airports, origin, String.Format(Error.MISSING_ITEM, "Airport", "name", origin));
-            var destinationAirport = GetItem(_airports, destination, String.Format(Error.MISSING_ITEM, "Airport", "name", destination));
+            var originAirport = GetItem(_airports, origin, String.Format(MISSING_ITEM, "Airport", "name", origin));
+            var destinationAirport = GetItem(_airports, destination, String.Format(MISSING_ITEM, "Airport", "name", destination));
             return new Tuple<IAirport, IAirport>(originAirport, destinationAirport);
         }
 
@@ -369,7 +422,7 @@ namespace ABS_SystemManager
         /// <param name="airline"></param>
         private IFlight AirlaneGotFlight(string flightId, string airline)
         {
-            var flight = GetItem(_flights, flightId, String.Format(Error.MISSING_ITEM, "Flight", "id", flightId));
+            var flight = GetItem(_flights, flightId, String.Format(MISSING_ITEM, "Flight", "id", flightId));
             if (flight.Airline.Name != airline)
             {
                 throw new ArgumentException(String.Format(MISSING_FLIGHT_FROM_AIRLINE, airline, flight.Id));
@@ -395,11 +448,11 @@ namespace ABS_SystemManager
         private IFlightSection CreateFlightSection(int rows, int colms, int seatClass)
         {
 
-            var seatClassEnum = GetSeatClass(seatClass);
+            var seatClassEnum = GetEnum<SeatClass>(seatClass);
             var flightSection = new FlightSection() { SeatClass = seatClassEnum };
 
-            ValidateCountOfSeats(rows, "Rows", DataConstrain.MIN_SEAT_ROWS, DataConstrain.MAX_SEAT_ROWS);
-            ValidateCountOfSeats(colms, "Columns", DataConstrain.MIN_SEAT_COLUMNS, DataConstrain.MAX_SEAT_COLUMNS);
+            ValidateCountOfSeats(rows, "Rows", MIN_SEAT_ROWS, MAX_SEAT_ROWS);
+            ValidateCountOfSeats(colms, "Columns", MIN_SEAT_COLUMNS, MAX_SEAT_COLUMNS);
             var seats = SeatCollection(rows, colms);
 
             flightSection.AddSeats(seats);
@@ -423,25 +476,25 @@ namespace ABS_SystemManager
 
             if (row < 0 || row >= rows)
             {
-                throw new ArgumentException(Error.INVALID_SEAT_ROW);
+                throw new ArgumentException(INVALID_SEAT_ROW);
             }
 
             if (column < 0 || column >= columns)
             {
-                throw new ArgumentException(Error.INVALID_SEAT_COLUMN);
+                throw new ArgumentException(INVALID_SEAT_COLUMN);
             }
         }
 
-        private SeatClass GetSeatClass(int value)
+        private T GetEnum<T>(object value)
         {
-            var seatClass = (SeatClass)value;
-            return Enum.IsDefined(typeof(SeatClass), value) ? seatClass : throw new InvalidCastException("Seat class is not valid");
+            var seatClass = (T)value;
+            return Enum.IsDefined(typeof(T), value) ? seatClass : throw new InvalidCastException("Seat class is not valid");
         }
 
         private IFlightSection GetFlightSection(IFlight flight, int seatClass)
         {
-            var seatClassEnum = GetSeatClass(seatClass);
-            return GetItem(flight.FlightSections, seatClassEnum, String.Format(Error.MISSING_ITEM, "Section", "name", seatClassEnum.ToString()));
+            var seatClassEnum = GetEnum<SeatClass>(seatClass);
+            return GetItem(flight.FlightSections, seatClassEnum, String.Format(MISSING_ITEM, "Section", "name", seatClassEnum.ToString()));
         }
 
         private void ValidateCountOfSeats(int value, string @type, int min, int max)
@@ -470,18 +523,6 @@ namespace ABS_SystemManager
             }
 
             return seats;
-        }
-
-        private void ValidateSeatNumber(int row, char column)
-        {
-            if (row < DataConstrain.MIN_SEAT_ROWS || row > DataConstrain.MAX_SEAT_ROWS)
-            {
-                throw new ArgumentException(Error.INVALID_SEAT_ROW);
-            }
-            if (column < FIRST_SEAT_COLUMN_AS_CHAR || column > LAST_SEAT_COLUMN_AS_CHAR)
-            {
-                throw new ArgumentException(Error.INVALID_SEAT_COLUMN);
-            }
         }
 
         private IFlight GetFlight(IAirline airline, IAirport originAirport, IAirport destinationAirport, DateTime date, string id)

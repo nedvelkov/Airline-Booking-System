@@ -28,5 +28,8 @@
 
         //Password
         public const string PASSWORD_TOOLTIP = "Password must be atleast 8 symbols. Password must constains least: 1 upper letter, 1 small letter and 1 number";
+
+        //Username
+        public const string USERNAME_TOOLTIP = "Name must constains only letters";
     }
 }

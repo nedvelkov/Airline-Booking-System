@@ -6,8 +6,9 @@ namespace ABS_WebApp.ViewModels
     public class LoginViewModel
     {
         [Required]
-        [Display(Name ="User name:")]
-        public string UserName { get; set; }
+        [EmailAddress]
+        [Display(Name = "Email adress:")]
+        public string Email { get; set; }
 
         [Required]
         [Display(Name = "Password:")]

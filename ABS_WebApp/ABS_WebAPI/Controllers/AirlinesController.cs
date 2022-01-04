@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using ABS_Models;
 using ABS_WebAPI.Services.Interfaces;
 using static ABS_DataConstants.DataConstrain;
-using Microsoft.AspNetCore.Authorization;
 
 namespace ABS_WebAPI.Controllers
 {
@@ -24,7 +23,6 @@ namespace ABS_WebAPI.Controllers
         [HttpPost]
         public ActionResult<string> Post(AirlineModel airline)
         {
-
             var result = _airlineService.CreateAirline(airline.Name);
             if (result.Contains(SUCCESSFULL_OPERATION))
             {

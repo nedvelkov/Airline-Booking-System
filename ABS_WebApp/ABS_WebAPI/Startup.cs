@@ -31,6 +31,7 @@ namespace ABS_WebAPI
         {
             services.AddResponseCaching();
             services.AddSingleton<ISystemManager, SystemManager>();
+            services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<IAirportService, AirportService>();
             services.AddTransient<IAirlineService, AirlineService>();
             services.AddTransient<IFlightService, FlightService>();

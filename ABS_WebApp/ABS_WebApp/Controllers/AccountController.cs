@@ -1,4 +1,6 @@
-﻿using ABS_WebApp.ViewModels;
+﻿using ABS_Models;
+using ABS_WebApp.Services.Interfaces;
+using ABS_WebApp.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -10,11 +12,11 @@ namespace ABS_WebApp.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly ILogger<AccountController> _logger;
+        private readonly IAccountService _accountService;
 
-        public AccountController(ILogger<AccountController> logger)
+        public AccountController(IAccountService accountService)
         {
-            _logger = logger;
+            _accountService = accountService;
         }
 
         public IActionResult Login()
@@ -36,13 +38,20 @@ namespace ABS_WebApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult Register(RegisterViewModel model)
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
+            string error = "";
             if (ModelState.IsValid)
             {
                 //TODO: register user
-                return RedirectToAction("DisplaySystemDetails", "App");
+               var result= await _accountService.CreateUser(model);
+                if (result.Item1)
+                {
+                    return RedirectToAction(nameof(Login));
+                }
+                error = result.Item2;
             }
+            ModelState.AddModelError("", error);
             return View(model);
         }
 
