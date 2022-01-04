@@ -25,5 +25,8 @@
 
         //Date
         public const string INVALID_DATE = "Date is not valid";
+
+        //Password
+        public const string PASSWORD_TOOLTIP = "Password must be atleast 8 symbols. Password must constains least: 1 upper letter, 1 small letter and 1 number";
     }
 }

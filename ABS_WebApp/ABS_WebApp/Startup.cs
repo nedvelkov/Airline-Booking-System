@@ -44,6 +44,7 @@ namespace ABS_WebApp
             app.UseHttpsRedirection()
                .UseStaticFiles()
                .UseRouting()
+               .UseAuthentication()
                .UseAuthorization()
                .UseEndpoints(endpoints =>
                 {

@@ -7,6 +7,7 @@
         public const string EVALUATE_AIRLINE_NAME = "^[a-zA-Z]{1,5}$";
         public const string EVALUATE_FLIGHT_ID = "^[a-zA-Z0-9]+$";
         public const string EVALUATE_SEAT_COLUMN = "^[A-J]{1}$";
+        public const string EVALUATE_PASSWORD = "^[a-zA-Z0-9]{8,}$";
 
         //Seat
         public const int MIN_SEAT_ROWS = 1;
