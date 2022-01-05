@@ -13,17 +13,22 @@ using static ABS_DataConstants.DataConstrain;
 using static System.Net.Mime.MediaTypeNames;
 using System.Net.Http.Headers;
 using ABS_WebApp.ViewModels;
+using ABS_WebApp.Services.Interfaces;
+using System.Linq;
+using System.Net;
 
 namespace ABS_WebApp.Services
 {
     public class WebApiService
     {
         private readonly HttpClient _httpClient;
+        private readonly ICookieContainerAccessor _accessor;
         private readonly string _webApiUrl;
 
-        public WebApiService(HttpClient httpClient, IConfiguration configuration)
+        public WebApiService(HttpClient httpClient, IConfiguration configuration, ICookieContainerAccessor accessor)
         {
             _httpClient = httpClient;
+            _accessor = accessor;
             _webApiUrl = configuration["WebApiUrl"];
             _httpClient.BaseAddress = new Uri(_webApiUrl);
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -42,7 +47,20 @@ namespace ABS_WebApp.Services
                     JsonSerializer.Serialize(airport),
                     Encoding.UTF8,
                     Application.Json);
-                using var httpResponseMessage = await _httpClient.PostAsync(AIRPORT_API_PATH, airportJson);
+                var newUrl = _webApiUrl + AIRPORT_API_PATH;
+
+                var cookieContainer = _accessor.CookieContainer;
+
+                var request = new HttpRequestMessage
+                {
+                    Method = HttpMethod.Post,
+                    RequestUri = new Uri(newUrl),
+                    Content = airportJson
+                };
+
+                using var httpResponseMessage = await _httpClient.SendAsync(request);
+
+                //using var httpResponseMessage = await _httpClient.PostAsync(AIRPORT_API_PATH, airportJson);
 
                 if (!httpResponseMessage.IsSuccessStatusCode)
                 {
@@ -238,7 +256,7 @@ namespace ABS_WebApp.Services
 
         #region User
 
-        public async Task<Tuple<bool,string>> CreateUser(RegisterModel registerModel)
+        public async Task<Tuple<bool,string>> RegisterUser(RegisterModel registerModel)
         {
             try
             {
@@ -246,7 +264,7 @@ namespace ABS_WebApp.Services
                     JsonSerializer.Serialize(registerModel),
                     Encoding.UTF8,
                     Application.Json);
-                using var httpResponseMessage = await _httpClient.PostAsync(ACCOUNT_API_PATH, registertJson);
+                using var httpResponseMessage = await _httpClient.PostAsync(ACCOUNT_API_PATH+"/"+USER_REGISTER, registertJson);
 
 
                 if (!httpResponseMessage.IsSuccessStatusCode)
@@ -264,6 +282,34 @@ namespace ABS_WebApp.Services
             }
         }
 
+        public async Task<string> LoginUser(LoginModel loginModel)
+        {
+            try
+            {
+                var loginJson = new StringContent(
+                    JsonSerializer.Serialize(loginModel),
+                    Encoding.UTF8,
+                    Application.Json);
+                using var httpResponseMessage = await _httpClient.PostAsync(ACCOUNT_API_PATH + "/" + USER_LOGIN, loginJson);
+
+
+                if (!httpResponseMessage.IsSuccessStatusCode)
+                {
+                    var error = await GetErrorsFromHttpResponse(httpResponseMessage);
+                    return error;
+                }
+                var cookieContainer = _accessor.CookieContainer;
+                var authCookie = cookieContainer.GetCookies(new Uri(_webApiUrl))
+                                                .Cast<Cookie>()
+                                                .Single(cookie => cookie.Name == COOKIE_TOKEN_NAME);
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
 
         #endregion
 

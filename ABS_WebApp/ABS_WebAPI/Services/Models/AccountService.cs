@@ -11,6 +11,6 @@ namespace ABS_WebAPI.Services.Models
         public AccountService(ISystemManager systemManger) => _systemManger = systemManger;
         public string CreateUser(string firstName, string lastName, string email, string password, int role)
             => _systemManger.CreateUser(firstName, lastName, email, password, role);
-        public string LogInUser(string email, string password) => _systemManger.LogInUser(email, password);
+        public string LoginUser(string email, string password) => _systemManger.LoginUser(email, password);
     }
 }

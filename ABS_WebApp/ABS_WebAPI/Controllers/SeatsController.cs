@@ -3,11 +3,13 @@
 using ABS_Models;
 using ABS_WebAPI.Services.Interfaces;
 using static ABS_DataConstants.DataConstrain;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ABS_WebAPI.Controllers
 {
     [Route(SEAT_API_PATH)]
     [ApiController]
+    [Authorize(AuthenticationSchemes =COOKIE_SHEME_NAME)]
     public class SeatsController : ControllerBase
     {
         private readonly ISeatService _seatService;

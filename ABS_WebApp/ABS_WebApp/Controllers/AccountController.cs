@@ -25,9 +25,20 @@ namespace ABS_WebApp.Controllers
             {
                 return RedirectToAction("DisplaySystemDetails", "App");
             }
+
             return View();
         }
 
+        [HttpPost]
+        public IActionResult Login(LoginModel loginModel)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("DisplaySystemDetails", "App");
+            }
+            var result= _accountService.LoginUser(loginModel);
+            return View();
+        }
         public IActionResult Register()
         {
             if (User.Identity.IsAuthenticated)

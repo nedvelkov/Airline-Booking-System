@@ -19,6 +19,6 @@
 
         //User
         public const string SUCCESSFUL_CREATED_USER = "User is added successfully";
-        public const string SUCCESSFUL_LOF_IN_USER = "User {0} is log in successfully";
+        public const string SUCCESSFUL_LOGIN_USER = "User {0} is log in successfully";
     }
 }

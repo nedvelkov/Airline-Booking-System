@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using ABS_Models;
 using ABS_WebApp.ViewModels;
 
 namespace ABS_WebApp.Services.Interfaces
@@ -8,7 +9,7 @@ namespace ABS_WebApp.Services.Interfaces
     {
         public Task<Tuple<bool,string>> CreateUser(RegisterViewModel model);
 
-        public Task<string> LogInUser(LoginViewModel model);
+        public Task<string> LoginUser(LoginModel model);
 
         public Task<bool> FindUser(string email);
 

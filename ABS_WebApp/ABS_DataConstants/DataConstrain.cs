@@ -27,6 +27,8 @@
         public const string FLIGHT_API_PATH = "/api/flights";
         public const string FIND_FLIGHT_API_PATH = "/api/aviableflights";
         public const string ACCOUNT_API_PATH = "/api/accounts";
+        public const string USER_REGISTER = "register";
+        public const string USER_LOGIN = "login";
 
         //Cashing options
         public const int PRIVATE_CACHE_EXPIRATION_IN_SECONDS = 10;
@@ -34,5 +36,9 @@
 
         //Successfull operation
         public const string SUCCESSFULL_OPERATION = "successfully";
+
+        //Cookies
+        public const string COOKIE_SHEME_NAME = "Cookie";
+        public const string COOKIE_TOKEN_NAME = "auth_cookie";
     }
 }

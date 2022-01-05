@@ -20,7 +20,7 @@ namespace ABS_SystemManager.Interfaces
 
         public string CreateUser(string firstName, string lastName, string email, string password, int role);
 
-        public string LogInUser(string email, string password);
+        public string LoginUser(string email, string password);
 
         public IReadOnlyList<string> ListAirlines { get; }
 

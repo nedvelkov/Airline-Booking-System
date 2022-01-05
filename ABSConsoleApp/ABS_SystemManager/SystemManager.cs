@@ -271,7 +271,7 @@ namespace ABS_SystemManager
             return SUCCESSFUL_CREATED_USER;
         }
 
-        public string LogInUser(string email, string password)
+        public string LoginUser(string email, string password)
         {
             AbsUser user;
             try
@@ -286,7 +286,7 @@ namespace ABS_SystemManager
 
             if (user.Password == password)
             {
-                return string.Format(SUCCESSFUL_LOF_IN_USER, email);
+                return string.Format(SUCCESSFUL_LOGIN_USER, email);
             }
 
             return PASSWORD_DO_NOT_MATCH;

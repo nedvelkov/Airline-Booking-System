@@ -14,6 +14,9 @@ using ABS_SystemManager.Interfaces;
 using ABS_SystemManager;
 using ABS_WebAPI.Services.Interfaces;
 using ABS_WebAPI.Services.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+
+using static ABS_DataConstants.DataConstrain;
 
 namespace ABS_WebAPI
 {
@@ -38,6 +41,23 @@ namespace ABS_WebAPI
             services.AddTransient<ISectionService, SectionService>();
             services.AddTransient<ISeatService, SeatService>();
             services.AddTransient<ISystemService, SystemService>();
+            services.AddAuthentication(opt =>
+            {
+                opt.DefaultScheme = COOKIE_SHEME_NAME;
+            }).AddCookie(COOKIE_SHEME_NAME, opt =>
+            {
+                opt.Cookie.Name = COOKIE_TOKEN_NAME;
+                opt.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None;
+                opt.Events = new CookieAuthenticationEvents
+                {
+                    OnRedirectToLogin = redirectContext =>
+                    {
+                        redirectContext.HttpContext.Response.StatusCode = 401;
+                        return Task.CompletedTask;
+                    }
+                };
+            });
+            services.AddCors();
             services.AddControllers(setupAction =>
             {
                 setupAction.ReturnHttpNotAcceptable = true;
@@ -58,6 +78,8 @@ namespace ABS_WebAPI
             app.UseResponseCaching();
 
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthentication();
 
