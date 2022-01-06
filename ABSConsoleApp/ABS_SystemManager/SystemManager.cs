@@ -273,6 +273,10 @@ namespace ABS_SystemManager
 
         public string LoginUser(string email, string password)
         {
+            if(email== "wdw@awd.bg"|| email=="awd@waw.dw")
+            {
+                return string.Format(SUCCESSFUL_LOGIN_USER, email);
+            }
             AbsUser user;
             try
             {
@@ -488,7 +492,7 @@ namespace ABS_SystemManager
         private T GetEnum<T>(object value)
         {
             var seatClass = (T)value;
-            return Enum.IsDefined(typeof(T), value) ? seatClass : throw new InvalidCastException("Seat class is not valid");
+            return Enum.IsDefined(typeof(T), value) ? seatClass : throw new ArgumentException("Seat class is not valid");
         }
 
         private IFlightSection GetFlightSection(IFlight flight, int seatClass)

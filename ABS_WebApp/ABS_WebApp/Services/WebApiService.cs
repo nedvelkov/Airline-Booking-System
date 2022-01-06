@@ -2,20 +2,19 @@
 using System.Text;
 using System.Text.Json;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using System.Net.Http.Headers;
 using Microsoft.Extensions.Configuration;
 
 using ABS_Models;
-using static ABS_DataConstants.DataConstrain;
+using ABS_WebApp.Services.Interfaces;
 
 using static System.Net.Mime.MediaTypeNames;
-using System.Net.Http.Headers;
-using ABS_WebApp.ViewModels;
-using ABS_WebApp.Services.Interfaces;
-using System.Linq;
-using System.Net;
+using static ABS_DataConstants.DataConstrain;
 
 namespace ABS_WebApp.Services
 {
@@ -48,8 +47,6 @@ namespace ABS_WebApp.Services
                     Encoding.UTF8,
                     Application.Json);
                 var newUrl = _webApiUrl + AIRPORT_API_PATH;
-
-                var cookieContainer = _accessor.CookieContainer;
 
                 var request = new HttpRequestMessage
                 {
@@ -302,7 +299,6 @@ namespace ABS_WebApp.Services
                 var authCookie = cookieContainer.GetCookies(new Uri(_webApiUrl))
                                                 .Cast<Cookie>()
                                                 .Single(cookie => cookie.Name == COOKIE_TOKEN_NAME);
-
                 return null;
             }
             catch (Exception ex)

@@ -1,17 +1,15 @@
+using System.Net.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Primitives;
-using System.Linq;
 
 using ABS_WebApp.Services;
 using ABS_WebApp.Services.Interfaces;
 using ABS_WebApp.Services.Models;
 
 using static ABS_DataConstants.DataConstrain;
-using System.Net.Http;
 
 namespace ABS_WebApp
 {
@@ -21,7 +19,6 @@ namespace ABS_WebApp
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
 
@@ -34,6 +31,8 @@ namespace ABS_WebApp
                                         .CookieContainer
                 });
 
+            services.AddAuthentication(COOKIE_SHEME_NAME)
+                    .AddCookie();
             services.AddTransient<IAirportService, AirportService>();
             services.AddTransient<IAirlineService, AirlineService>();
             services.AddTransient<IFlightService, FlightService>();
@@ -42,7 +41,6 @@ namespace ABS_WebApp
             services.AddControllersWithViews();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

@@ -1,12 +1,10 @@
-﻿using ABS_Models;
+﻿using System.Threading.Tasks;
+
+using ABS_Models;
 using ABS_WebApp.Services.Interfaces;
 using ABS_WebApp.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 
 namespace ABS_WebApp.Controllers
 {
@@ -30,14 +28,14 @@ namespace ABS_WebApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(LoginModel loginModel)
+        public async Task< IActionResult> Login(LoginModel loginModel)
         {
             if (User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("DisplaySystemDetails", "App");
             }
-            var result= _accountService.LoginUser(loginModel);
-            return View();
+            await _accountService.LoginUser(loginModel);
+                return RedirectToAction("DisplaySystemDetails", "App");
         }
         public IActionResult Register()
         {
