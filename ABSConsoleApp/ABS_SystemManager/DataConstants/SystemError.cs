@@ -18,13 +18,5 @@
 
         //Date
         public const string INVALID_DATE_OF_DEPARTURE_FLIGHT = "Enter valid date for flight departure";
-
-        //Email
-        public const string INVALID_EMAIL = "Email address is not valid";
-        public const string EXISTING_EMAIL = "Email address is already is register";
-        public const string MISSING_EMAIL = "User with email {0} is no register";
-
-        //User
-        public const string PASSWORD_DO_NOT_MATCH = "Incorect password";
     }
 }

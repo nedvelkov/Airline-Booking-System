@@ -20,7 +20,6 @@ namespace ABS_SystemManager
         private Dictionary<string, IAirline> _airlines;
         private Dictionary<string, IAirport> _airports;
         private Dictionary<string, IFlight> _flights;
-        private Dictionary<string, AbsUser> _users;
 
         private DateTime _testDate;
 
@@ -29,7 +28,6 @@ namespace ABS_SystemManager
             _airlines = new Dictionary<string, IAirline>();
             _airports = new Dictionary<string, IAirport>();
             _flights = new Dictionary<string, IFlight>();
-            _users = new Dictionary<string, AbsUser>();
         }
 
         public string CreateAirport(string name)
@@ -241,60 +239,6 @@ namespace ABS_SystemManager
             return sb.ToString().Trim();
         }
 
-        public string CreateUser(string firstName, string lastName, string email, string password, int role)
-        {
-            Roles userRole;
-            try
-            {
-                ValidateString(firstName, EVALUATE_USERNAME, USERNAME_TOOLTIP);
-                ValidateString(lastName, EVALUATE_USERNAME, USERNAME_TOOLTIP);
-                ValidateString(email, EVALUATE_EMAIL, INVALID_EMAIL);
-                userRole = GetEnum<Roles>(role);
-
-                ContainsItem(_users, email, EXISTING_EMAIL);
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
-            }
-            var user = new AbsUser()
-            {
-                FirstName = firstName,
-                LastName = lastName,
-                Email = email,
-                Password = password,
-                Role = userRole
-            };
-
-            _users.Add(email, user);
-
-            return SUCCESSFUL_CREATED_USER;
-        }
-
-        public string LoginUser(string email, string password)
-        {
-            if(email== "wdw@awd.bg"|| email=="awd@waw.dw")
-            {
-                return string.Format(SUCCESSFUL_LOGIN_USER, email);
-            }
-            AbsUser user;
-            try
-            {
-                ValidateString(email, EVALUATE_EMAIL, INVALID_EMAIL);
-                user = GetItem(_users, email, string.Format(MISSING_EMAIL, email));
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
-            }
-
-            if (user.Password == password)
-            {
-                return string.Format(SUCCESSFUL_LOGIN_USER, email);
-            }
-
-            return PASSWORD_DO_NOT_MATCH;
-        }
 
         public IReadOnlyList<string> ListAirlines => _airlines.Select(x => x.Key).ToList();
 

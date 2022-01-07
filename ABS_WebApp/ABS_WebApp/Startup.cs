@@ -10,6 +10,8 @@ using ABS_WebApp.Services.Interfaces;
 using ABS_WebApp.Services.Models;
 
 using static ABS_DataConstants.DataConstrain;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Threading.Tasks;
 
 namespace ABS_WebApp
 {
@@ -21,23 +23,21 @@ namespace ABS_WebApp
 
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.AddSingleton<ICookieContainerAccessor, DefaultCookieContainerAccessor>();
-
-            services.AddHttpClient<WebApiService>()
-                .ConfigurePrimaryHttpMessageHandler(sp => new HttpClientHandler
-                {
-                    CookieContainer = sp.GetRequiredService<ICookieContainerAccessor>()
-                                        .CookieContainer
-                });
-
-            services.AddAuthentication(COOKIE_SHEME_NAME)
-                    .AddCookie();
+            services.AddHttpClient<WebApiService>();
+            services.AddAuthentication(opt =>
+            {
+                opt.DefaultScheme = COOKIE_SHEME_NAME;
+            }).AddCookie(COOKIE_SHEME_NAME, opt =>
+            {
+                opt.Cookie.Name = COOKIE_TOKEN_NAME;
+                opt.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None;
+                opt.LoginPath = "/account/login";
+            });
             services.AddTransient<IAirportService, AirportService>();
             services.AddTransient<IAirlineService, AirlineService>();
             services.AddTransient<IFlightService, FlightService>();
             services.AddTransient<ISystemService, SystemService>();
-            services.AddTransient<IAccountService, AccountService>();
+            services.AddSingleton<IAccountService, AccountService>();
             services.AddControllersWithViews();
         }
 
@@ -60,6 +60,9 @@ namespace ABS_WebApp
                .UseAuthorization()
                .UseEndpoints(endpoints =>
                 {
+                    endpoints.MapControllerRoute(
+                        name: "Admin",
+                        pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                     endpoints.MapControllerRoute(
                         name: "default",
                         pattern: "{controller=App}/{action=DisplaySystemDetails}/{id?}");

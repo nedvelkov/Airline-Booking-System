@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 
-namespace ABS_Models
+namespace ABS_WebApp.ViewModels
 {
-    public class LoginModel
+    public class LoginViewModel
     {
         [Required]
         [EmailAddress]

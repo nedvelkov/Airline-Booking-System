@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using ABS_Models;
 
+using ABS_WebApp.Users;
 using static ABS_DataConstants.DataConstrain;
 using static ABS_DataConstants.Error;
 
 namespace ABS_WebApp.ViewModels
 {
-    public class RegisterViewModel:RegisterModel
+    public class RegisterViewModel:UserModel
     {
         [Required]
         [RegularExpression(EVALUATE_PASSWORD, ErrorMessage = PASSWORD_TOOLTIP)]

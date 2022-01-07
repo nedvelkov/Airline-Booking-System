@@ -40,5 +40,9 @@
         //Cookies
         public const string COOKIE_SHEME_NAME = "Cookie";
         public const string COOKIE_TOKEN_NAME = "auth_cookie";
+
+        //Roles
+        public const string ADMIN_ROLE = "Admin";
+        public const string USER_ROLE = "User";
     }
 }

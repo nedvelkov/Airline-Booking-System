@@ -4,15 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 using ABS_WebApp.ViewModels;
 using ABS_WebApp.Services.Interfaces;
-using System.Diagnostics;
-using ABS_Models;
 using ABS_WebApp.ViewModels.DisplayObjectModels;
 
 namespace ABS_WebApp.Controllers
 {
+    [Authorize]
     public class AppController : Controller
     {
         private readonly IAirlineService _airlineService;
@@ -31,61 +31,6 @@ namespace ABS_WebApp.Controllers
             _systemService = systemService;
         }
 
-        [HttpGet]
-        public IActionResult CreateAirport() => View();
-
-        [HttpPost]
-        public async Task<IActionResult> CreateAirport(AirportModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                TempData["Result"] = await _airportService.CreateAirport(model);
-                ModelState.Clear();
-            }
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult CreateAirline() => View();
-
-        [HttpPost]
-        public async Task<IActionResult> CreateAirline(AirlineModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                TempData["Result"] = await _airlineService.CreateAirline(model);
-                ModelState.Clear();
-            }
-            return View();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> CreateFlight() => View(await GetFlightModel());
-
-        [HttpPost]
-        public async Task<IActionResult> CreateFlight(CreateFlightViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                TempData["Result"] = await _flightService.CreateFlight(model.Flight);
-                ModelState.Clear();
-            }
-            return View(await GetFlightModel());
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> CreateSection() => View(await GetCreateSectionViewModel());
-
-        [HttpPost]
-        public async Task<IActionResult> CreateSection(CreateSectionViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                TempData["Result"] = await _flightService.CreateFlightSection(model.FlightSection);
-                ModelState.Clear();
-            }
-            return View(await GetCreateSectionViewModel());
-        }
 
         [HttpGet]
         public async Task<IActionResult> FindAvailableFlights() => View(await GetFindAvaibleFlightsViewModel());
@@ -128,24 +73,6 @@ namespace ABS_WebApp.Controllers
             return View(model);
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-
-        private async Task<CreateFlightViewModel> GetFlightModel()
-        {
-            var model = new CreateFlightViewModel();
-            var dataAirlines = await _airlineService.Airlines();
-            model.Airlines = dataAirlines.ToList();
-            var dataAirports = await _airportService.Airports();
-            model.Airports = dataAirports.ToList();
-            model.Flight.DateOfFlight = DateTime.Now;
-            model.Flight.Id = string.Empty;
-            return model;
-        }
-
         private async Task<FindAvaibleFlightsViewModel> GetFindAvaibleFlightsViewModel()
         {
             var model = new FindAvaibleFlightsViewModel();
@@ -157,16 +84,6 @@ namespace ABS_WebApp.Controllers
         private async Task<BookSeatViewModel> GetBookSeatViewModel()
         {
             var model = new BookSeatViewModel();
-            var dataAirlines = await _airlineService.Airlines();
-            model.Airlines = dataAirlines.ToList();
-            var dataFlights = await _flightService.Flights();
-            model.Flights = dataFlights.ToList();
-            return model;
-        }
-
-        private async Task<CreateSectionViewModel> GetCreateSectionViewModel()
-        {
-            var model = new CreateSectionViewModel();
             var dataAirlines = await _airlineService.Airlines();
             model.Airlines = dataAirlines.ToList();
             var dataFlights = await _flightService.Flights();

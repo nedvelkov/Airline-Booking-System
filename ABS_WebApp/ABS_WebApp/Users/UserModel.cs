@@ -3,9 +3,9 @@
 using static ABS_DataConstants.DataConstrain;
 using static ABS_DataConstants.Error;
 
-namespace ABS_Models
+namespace ABS_WebApp.Users
 {
-    public class RegisterModel
+    public class UserModel
     {
         [Required]
         [RegularExpression(EVALUATE_USERNAME, ErrorMessage = USERNAME_TOOLTIP)]
@@ -27,7 +27,6 @@ namespace ABS_Models
         [Display(Name = "Password:")]
         public string Password { get; set; }
 
-        [Required]
-        public int Role { get; set; } = 2;
+        public string Role { get; set; } = USER_ROLE;
     }
 }

@@ -21,13 +21,11 @@ namespace ABS_WebApp.Services
     public class WebApiService
     {
         private readonly HttpClient _httpClient;
-        private readonly ICookieContainerAccessor _accessor;
         private readonly string _webApiUrl;
 
-        public WebApiService(HttpClient httpClient, IConfiguration configuration, ICookieContainerAccessor accessor)
+        public WebApiService(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
-            _accessor = accessor;
             _webApiUrl = configuration["WebApiUrl"];
             _httpClient.BaseAddress = new Uri(_webApiUrl);
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -251,63 +249,6 @@ namespace ABS_WebApp.Services
 
         #endregion
 
-        #region User
-
-        public async Task<Tuple<bool,string>> RegisterUser(RegisterModel registerModel)
-        {
-            try
-            {
-                var registertJson = new StringContent(
-                    JsonSerializer.Serialize(registerModel),
-                    Encoding.UTF8,
-                    Application.Json);
-                using var httpResponseMessage = await _httpClient.PostAsync(ACCOUNT_API_PATH+"/"+USER_REGISTER, registertJson);
-
-
-                if (!httpResponseMessage.IsSuccessStatusCode)
-                {
-                    var error= await GetErrorsFromHttpResponse(httpResponseMessage);
-                    return new Tuple<bool, string>(false, error);
-                }
-
-                return new Tuple<bool, string>(true, null);
-            }
-            catch (Exception ex)
-            {
-                return new Tuple<bool, string>(false, ex.Message);
-
-            }
-        }
-
-        public async Task<string> LoginUser(LoginModel loginModel)
-        {
-            try
-            {
-                var loginJson = new StringContent(
-                    JsonSerializer.Serialize(loginModel),
-                    Encoding.UTF8,
-                    Application.Json);
-                using var httpResponseMessage = await _httpClient.PostAsync(ACCOUNT_API_PATH + "/" + USER_LOGIN, loginJson);
-
-
-                if (!httpResponseMessage.IsSuccessStatusCode)
-                {
-                    var error = await GetErrorsFromHttpResponse(httpResponseMessage);
-                    return error;
-                }
-                var cookieContainer = _accessor.CookieContainer;
-                var authCookie = cookieContainer.GetCookies(new Uri(_webApiUrl))
-                                                .Cast<Cookie>()
-                                                .Single(cookie => cookie.Name == COOKIE_TOKEN_NAME);
-                return null;
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
-            }
-        }
-
-        #endregion
 
         private async Task<string> GetErrorsFromHttpResponse(HttpResponseMessage httpResponseMessage)
         {

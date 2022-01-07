@@ -5,6 +5,11 @@ using ABS_WebApp.Services.Interfaces;
 using ABS_WebApp.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
+
+using static ABS_WebApp.Users.UserConstants;
+using static ABS_DataConstants.DataConstrain;
+using System.Linq;
 
 namespace ABS_WebApp.Controllers
 {
@@ -28,14 +33,41 @@ namespace ABS_WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task< IActionResult> Login(LoginModel loginModel)
+        public async Task<IActionResult> Login(LoginViewModel loginModel)
         {
             if (User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("DisplaySystemDetails", "App");
             }
-            await _accountService.LoginUser(loginModel);
+            if (_accountService.LoginUser(loginModel))
+            {
+                var claimsUser = _accountService.GetClaims(loginModel.Email);
+
+                var claimsIdentity = new ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.Email,loginModel.Email),
+                    new Claim(ClaimTypes.Name,claimsUser.FullName),
+                    new Claim(ClaimTypes.Role,claimsUser.Role),
+                    new Claim(ClaimTypes.Expiration,System.DateTimeOffset.Now.AddMinutes(5).ToString())
+
+                }, COOKIE_SHEME_NAME);
+                var authProperties = new AuthenticationProperties
+                {
+                    ExpiresUtc = System.DateTimeOffset.Now.AddSeconds(30),
+                    IsPersistent = false
+                };
+
+                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                await Response.HttpContext.SignInAsync(COOKIE_SHEME_NAME, claimsPrincipal, authProperties);
+
+                HttpContext.Response.Cookies.Append(COOKIE_SHEME_NAME, claimsPrincipal.ToString(),
+                    new Microsoft.AspNetCore.Http.CookieOptions { Expires = authProperties.ExpiresUtc });
+
                 return RedirectToAction("DisplaySystemDetails", "App");
+            }
+            ModelState.AddModelError("", string.Format(MISSING_EMAIL, loginModel.Email));
+            return View();
         }
         public IActionResult Register()
         {
@@ -47,13 +79,12 @@ namespace ABS_WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel model)
+        public IActionResult Register(RegisterViewModel model)
         {
             string error = "";
             if (ModelState.IsValid)
             {
-                //TODO: register user
-               var result= await _accountService.CreateUser(model);
+                var result = _accountService.CreateUser(model);
                 if (result.Item1)
                 {
                     return RedirectToAction(nameof(Login));
@@ -103,11 +134,11 @@ namespace ABS_WebApp.Controllers
             return View(model);
         }
 
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
             if (User.Identity.IsAuthenticated)
             {
-                //TOD: sign out user
+                await HttpContext.SignOutAsync(COOKIE_SHEME_NAME);
             }
             return RedirectToAction(nameof(Register));
         }
