@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ABS_WebAPI.Services.Interfaces;
 using static ABS_DataConstants.DataConstrain;
+using Microsoft.AspNetCore.Http;
 
 namespace ABS_WebAPI.Controllers
 {
@@ -13,10 +14,7 @@ namespace ABS_WebAPI.Controllers
         public SystemController(ISystemService system) => _system = system;
 
         [HttpGet]
-        public string Get()
-        {
-            _system.SeedData();
-            return _system.Details();
-        }
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public string Get() => _system.Details();
     }
 }

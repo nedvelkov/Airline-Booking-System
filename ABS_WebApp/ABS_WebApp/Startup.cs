@@ -57,16 +57,19 @@ namespace ABS_WebApp
                .UseStaticFiles()
                .UseRouting()
                .UseAuthentication()
-               .UseAuthorization()
-               .UseEndpoints(endpoints =>
-                {
-                    endpoints.MapControllerRoute(
-                        name: "Admin",
-                        pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-                    endpoints.MapControllerRoute(
-                        name: "default",
-                        pattern: "{controller=App}/{action=DisplaySystemDetails}/{id?}");
-                });
+               .UseAuthorization();
+
+            app.ApplicationServices.GetService<IAccountService>().SeedAdmin();
+
+            app.UseEndpoints(endpoints =>
+             {
+                 endpoints.MapControllerRoute(
+                     name: "Admin",
+                     pattern: "{area:exists}/{controller=App}/{action=DisplaySystemDetails}/{id?}");
+                 endpoints.MapControllerRoute(
+                     name: "default",
+                     pattern: "{controller=App}/{action=DisplaySystemDetails}/{id?}");
+             });
         }
     }
 }

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 using ABS_WebApp.Services.Interfaces;
 using ABS_WebApp.Users;
 using ABS_WebApp.ViewModels;
+
 using static ABS_WebApp.Users.UserConstants;
 
 namespace ABS_WebApp.Services.Models
@@ -14,25 +16,16 @@ namespace ABS_WebApp.Services.Models
     public class AccountService : IAccountService
     {
         private Dictionary<string, UserModel> _users;
-        private readonly string _salt = "qwemvlakf33mka3";
-        public AccountService() => _users = new Dictionary<string, UserModel>();
+        private readonly IConfiguration _configuration;
+
+        public AccountService(IConfiguration configuration)
+        {
+            _users = new Dictionary<string, UserModel>();
+            _configuration = configuration;
+        }
 
         public Tuple<bool, string> CreateUser(RegisterViewModel model)
         {
-            if (!_users.ContainsKey("admin@abs.admin"))
-            {
-                var admin = new UserModel()
-                {
-                    Email = "admin@abs.admin",
-                    FirstName = ADMIN_ROLE,
-                    LastName = ADMIN_ROLE,
-                    Role=ADMIN_ROLE,
-                    Password = "P@s$w0rd"
-                };
-                var hashAdminPassword = HashPassword(admin.Password);
-                admin.Password = hashAdminPassword;
-                _users.Add("admin@abs.admin", admin);
-            }
             if (_users.ContainsKey(model.Email))
             {
                 return new Tuple<bool, string>(false, EXISTING_EMAIL);
@@ -64,21 +57,49 @@ namespace ABS_WebApp.Services.Models
             };
         }
 
-        public Task<bool> FindUser(string email) => throw new NotImplementedException();
-        public Task<bool> ResetPassword(RegisterViewModel model) => throw new NotImplementedException();
-        
+        public bool FindUser(string email) => _users.ContainsKey(email);
+        public bool ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!_users.ContainsKey(model.Email) == false)
+            {
+                return false;
+            }
+
+            var hashedPassword = HashPassword(model.Password);
+            _users[model.Email].Password = hashedPassword;
+            return true;
+        }
+
         private string HashPassword(string password)
         {
-            byte[] unhashedBytes = Encoding.Unicode.GetBytes(String.Concat(_salt, password));
+            byte[] unhashedBytes = Encoding.Unicode.GetBytes(String.Concat(_configuration["Encrypt:Salt"], password));
 
             SHA256Managed sha256 = new SHA256Managed();
             byte[] hashedBytes = sha256.ComputeHash(unhashedBytes);
             return Convert.ToBase64String(hashedBytes);
         }
 
-        private bool CompareHash(string attemptedPassword, string hashPassword) 
+        private bool CompareHash(string attemptedPassword, string hashPassword)
             => HashPassword(attemptedPassword) == hashPassword;
 
+        public void SeedAdmin()
+        {
+            var adminEmail = _configuration["AdminPanel:AdminEmail"];
+            if (!_users.ContainsKey(adminEmail))
+            {
+                var admin = new UserModel()
+                {
+                    Email = adminEmail,
+                    FirstName = _configuration["AdminPanel:AdminFirstName"],
+                    LastName = _configuration["AdminPanel:AdminLastName"],
+                    Role = ADMIN_ROLE,
+                    Password = _configuration["AdminPanel:AdminPassword"]
+                };
+                var hashAdminPassword = HashPassword(admin.Password);
+                admin.Password = hashAdminPassword;
+                _users.Add(adminEmail, admin);
+            }
+        }
 
     }
 }

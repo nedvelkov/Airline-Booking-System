@@ -3,6 +3,7 @@
 using ABS_Models;
 using ABS_WebAPI.Services.Interfaces;
 using static ABS_DataConstants.DataConstrain;
+using Microsoft.AspNetCore.Http;
 
 namespace ABS_WebAPI.Controllers
 {
@@ -15,6 +16,8 @@ namespace ABS_WebAPI.Controllers
         public SectionsController(ISectionService sectionService) => _sectionService = sectionService;
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public ActionResult<string> Post(FlightSectionModel section)
         {
             var result = _sectionService.CreateFlightSection(section.AirlineName, section.Id, section.Rows, section.Columns, section.SeatClass);

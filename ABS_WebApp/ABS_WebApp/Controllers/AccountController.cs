@@ -109,9 +109,13 @@ namespace ABS_WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                //TODO: check is email valid
-                TempData["email"] = model.Email;
-                return RedirectToAction(nameof(ResetPassword));
+                if (_accountService.FindUser(model.Email))
+                {
+                    TempData["email"] = model.Email;
+                    return RedirectToAction(nameof(ResetPassword));
+                }
+                ModelState.AddModelError("", string.Format(MISSING_EMAIL, model.Email));
+                return View(model);
             }
             return View(model);
         }
@@ -128,8 +132,11 @@ namespace ABS_WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                //TODO: reset password
-                return RedirectToAction(nameof(Login));
+                if (_accountService.ResetPassword(model))
+                {
+                    return RedirectToAction(nameof(Login));
+                }
+                return View(model);
             }
             return View(model);
         }

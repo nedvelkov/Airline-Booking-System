@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using ABS_Models;
 using ABS_WebAPI.Services.Interfaces;
 using static ABS_DataConstants.DataConstrain;
+using Microsoft.AspNetCore.Http;
 
 namespace ABS_WebAPI.Controllers
 {
@@ -18,9 +19,12 @@ namespace ABS_WebAPI.Controllers
 
         [HttpGet]
         [ResponseCache(Duration = SHARED_CACHE_EXPIRATION_IN_SECONDS)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public IEnumerable<string> Get() => _airlineService.GetAirlines();
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public ActionResult<string> Post(AirlineModel airline)
         {
             var result = _airlineService.CreateAirline(airline.Name);

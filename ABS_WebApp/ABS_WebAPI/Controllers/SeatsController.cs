@@ -3,6 +3,7 @@
 using ABS_Models;
 using ABS_WebAPI.Services.Interfaces;
 using static ABS_DataConstants.DataConstrain;
+using Microsoft.AspNetCore.Http;
 
 namespace ABS_WebAPI.Controllers
 {
@@ -15,6 +16,8 @@ namespace ABS_WebAPI.Controllers
         public SeatsController(ISeatService seatService) => _seatService = seatService;
 
         [HttpPut]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public ActionResult<string> Put(BookSeatModel seat)
         {
             var result = _seatService.BookSeat(seat.AirlineName, seat.Id, seat.SeatClass, seat.Row, seat.Column);

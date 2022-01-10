@@ -31,8 +31,7 @@
         public const string USER_LOGIN = "login";
 
         //Cashing options
-        public const int PRIVATE_CACHE_EXPIRATION_IN_SECONDS = 10;
-        public const int SHARED_CACHE_EXPIRATION_IN_SECONDS = 100;
+        public const int SHARED_CACHE_EXPIRATION_IN_SECONDS = 10;
 
         //Successfull operation
         public const string SUCCESSFULL_OPERATION = "successfully";

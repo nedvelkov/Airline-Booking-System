@@ -13,9 +13,11 @@ namespace ABS_WebApp.Services.Interfaces
 
         public UserClaims GetClaims(string email);
 
-        public Task<bool> FindUser(string email);
+        public bool FindUser(string email);
 
-        public Task<bool> ResetPassword(RegisterViewModel model);
+        public bool ResetPassword(ResetPasswordViewModel model);
+
+        public void SeedAdmin();
 
     }
 }
