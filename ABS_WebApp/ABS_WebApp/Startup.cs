@@ -1,4 +1,3 @@
-using System.Net.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -10,8 +9,6 @@ using ABS_WebApp.Services.Interfaces;
 using ABS_WebApp.Services.Models;
 
 using static ABS_DataConstants.DataConstrain;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using System.Threading.Tasks;
 
 namespace ABS_WebApp
 {

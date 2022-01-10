@@ -34,7 +34,6 @@ namespace ABS_WebAPI
             services.AddControllers(setupAction =>
             {
                 setupAction.ReturnHttpNotAcceptable = true;
-
             });
         }
 

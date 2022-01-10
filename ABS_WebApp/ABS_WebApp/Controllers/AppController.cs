@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
@@ -71,6 +72,11 @@ namespace ABS_WebApp.Controllers
 
             ParseData(data, model);
             return View(model);
+        }
+
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
         private async Task<FindAvaibleFlightsViewModel> GetFindAvaibleFlightsViewModel()

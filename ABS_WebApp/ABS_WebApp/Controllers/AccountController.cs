@@ -1,15 +1,13 @@
 ﻿using System.Threading.Tasks;
-
-using ABS_Models;
-using ABS_WebApp.Services.Interfaces;
-using ABS_WebApp.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 
+using ABS_WebApp.ViewModels;
+using ABS_WebApp.Services.Interfaces;
+
 using static ABS_WebApp.Users.UserConstants;
 using static ABS_DataConstants.DataConstrain;
-using System.Linq;
 
 namespace ABS_WebApp.Controllers
 {
@@ -53,7 +51,7 @@ namespace ABS_WebApp.Controllers
                 }, COOKIE_SHEME_NAME);
                 var authProperties = new AuthenticationProperties
                 {
-                    ExpiresUtc = System.DateTimeOffset.Now.AddSeconds(30),
+                    ExpiresUtc = System.DateTimeOffset.Now.AddMinutes(5),
                     IsPersistent = false
                 };
 
@@ -147,7 +145,7 @@ namespace ABS_WebApp.Controllers
             {
                 await HttpContext.SignOutAsync(COOKIE_SHEME_NAME);
             }
-            return RedirectToAction(nameof(Register));
+            return RedirectToAction(nameof(Login));
         }
     }
 }

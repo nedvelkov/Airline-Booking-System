@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 
 using ABS_WebApp.Services.Interfaces;
@@ -49,7 +48,7 @@ namespace ABS_WebApp.Services.Models
         public UserClaims GetClaims(string email)
         {
             var user = _users[email];
-            var fullName = user.FirstName + "_" + user.LastName;
+            var fullName = user.FirstName + " " + user.LastName;
             return new UserClaims()
             {
                 FullName = fullName,
