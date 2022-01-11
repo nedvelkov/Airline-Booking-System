@@ -24,7 +24,13 @@ namespace ABS_WebApp.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("DisplaySystemDetails", "App");
+
+                if (User.IsInRole(USER_ROLE))
+                {
+                    return RedirectToAction("DisplaySystemDetails", "App");
+                }
+                return RedirectToAction("DisplaySystemDetails", "Admin");
+
             }
 
             return View();
@@ -51,7 +57,7 @@ namespace ABS_WebApp.Controllers
                 }, COOKIE_SHEME_NAME);
                 var authProperties = new AuthenticationProperties
                 {
-                    ExpiresUtc = System.DateTimeOffset.Now.AddMinutes(5),
+                   // ExpiresUtc = System.DateTimeOffset.Now.AddDays(30),
                     IsPersistent = false
                 };
 
@@ -62,7 +68,11 @@ namespace ABS_WebApp.Controllers
                 HttpContext.Response.Cookies.Append(COOKIE_SHEME_NAME, claimsPrincipal.ToString(),
                     new Microsoft.AspNetCore.Http.CookieOptions { Expires = authProperties.ExpiresUtc });
 
-                return RedirectToAction("DisplaySystemDetails", "App");
+                if (claimsUser.Role==USER_ROLE)
+                {
+                    return RedirectToAction("DisplaySystemDetails", "App");
+                }
+                return RedirectToAction("DisplaySystemDetails", "Admin", new { area = "Admin" });
             }
             ModelState.AddModelError("", string.Format(MISSING_EMAIL, loginModel.Email));
             return View();

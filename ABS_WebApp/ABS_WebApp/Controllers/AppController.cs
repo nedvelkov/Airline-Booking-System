@@ -8,29 +8,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 
 using ABS_WebApp.ViewModels;
-using ABS_WebApp.Services.Interfaces;
+using ABS_WebApp.Services;
 using ABS_WebApp.ViewModels.DisplayObjectModels;
+
+using static ABS_DataConstants.DataConstrain;
 
 namespace ABS_WebApp.Controllers
 {
-    [Authorize]
+    [Authorize(Roles =USER_ROLE)]
     public class AppController : Controller
     {
-        private readonly IAirlineService _airlineService;
-        private readonly IAirportService _airportService;
-        private readonly IFlightService _flightService;
-        private readonly ISystemService _systemService;
+        private readonly WebApiService _webApiService;
 
-        public AppController(IAirlineService airlineService,
-                             IAirportService airportService,
-                             IFlightService flightService,
-                             ISystemService systemService)
-        {
-            _airlineService = airlineService;
-            _airportService = airportService;
-            _flightService = flightService;
-            _systemService = systemService;
-        }
+        public AppController(WebApiService webApiService) => _webApiService = webApiService;
 
 
         [HttpGet]
@@ -41,11 +31,11 @@ namespace ABS_WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var data = await _flightService.FindAvailableFlights(model.Flight);
+                var data = await _webApiService.GetAviableFlights(model.Flight);
 
                 ParseData(data, model);
             }
-            var dataAirports = await _airportService.Airports();
+            var dataAirports = await _webApiService.GetAirports();
             model.Airports = dataAirports.ToList();
             return View(model);
         }
@@ -58,7 +48,7 @@ namespace ABS_WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                TempData["Result"] = await _flightService.BookSeat(model.Seat);
+                TempData["Result"] = await _webApiService.BookSeat(model.Seat);
                 ModelState.Clear();
             }
             return View(await GetBookSeatViewModel());
@@ -67,7 +57,7 @@ namespace ABS_WebApp.Controllers
         [HttpGet]
         public async Task<IActionResult> DisplaySystemDetails()
         {
-            var data = await _systemService.Details();
+            var data = await _webApiService.GetSystemDetails();
             var model = new DisplaySystemDetailsViewModel();
 
             ParseData(data, model);
@@ -82,7 +72,7 @@ namespace ABS_WebApp.Controllers
         private async Task<FindAvaibleFlightsViewModel> GetFindAvaibleFlightsViewModel()
         {
             var model = new FindAvaibleFlightsViewModel();
-            var dataAirports = await _airportService.Airports();
+            var dataAirports = await _webApiService.GetAirports();
             model.Airports = dataAirports.ToList();
             return model;
         }
@@ -90,9 +80,9 @@ namespace ABS_WebApp.Controllers
         private async Task<BookSeatViewModel> GetBookSeatViewModel()
         {
             var model = new BookSeatViewModel();
-            var dataAirlines = await _airlineService.Airlines();
+            var dataAirlines = await _webApiService.GetAirlines();
             model.Airlines = dataAirlines.ToList();
-            var dataFlights = await _flightService.Flights();
+            var dataFlights = await _webApiService.GetFlights();
             model.Flights = dataFlights.ToList();
             return model;
         }

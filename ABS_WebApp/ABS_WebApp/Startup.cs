@@ -30,10 +30,6 @@ namespace ABS_WebApp
                 opt.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None;
                 opt.LoginPath = "/account/login";
             });
-            services.AddTransient<IAirportService, AirportService>();
-            services.AddTransient<IAirlineService, AirlineService>();
-            services.AddTransient<IFlightService, FlightService>();
-            services.AddTransient<ISystemService, SystemService>();
             services.AddSingleton<IAccountService, AccountService>();
             services.AddControllersWithViews();
         }

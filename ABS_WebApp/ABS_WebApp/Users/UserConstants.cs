@@ -13,9 +13,5 @@
 
         //User
         public const string PASSWORD_DO_NOT_MATCH = "Incorect password";
-
-        //Roles
-        public const string ADMIN_ROLE = "Admin";
-        public const string USER_ROLE = "User";
     }
 }

@@ -12,37 +12,37 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="App" asp-action="DisplaySystemDetails"><i class="fas fa-plane"></i> ABS</a>
+             <p class="navbar-brand"><i class="fas fa-plane"></i> ABS</p>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="App" asp-action="DisplaySystemDetails">ABS details</a>
-                            </li>
-                        }
                         @if (User.IsInRole(ADMIN_ROLE))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="Create" asp-action="Airport">Create airport</a>
+                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="Admin" asp-action="DisplaySystemDetails">ABS details</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="Create" asp-action="Airline">Create airline</a>
+                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="Admin" asp-action="CreateAirport">Create airport</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="Admin" asp-action="CreateAirline">Create airline</a>
 
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="Create" asp-action="Flight">Create flight</a>
+                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="Admin" asp-action="CreateFlight">Create flight</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="Create" asp-action="Section">Create flight section</a>
+                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="Admin" asp-action="CreateSection">Create flight section</a>
                             </li>
                         }
                         @if (User.IsInRole(USER_ROLE))
                         {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="App" asp-action="DisplaySystemDetails">ABS details</a>
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="App" asp-action="FindAvailableFlights">Find flights</a>
                             </li>
@@ -59,7 +59,7 @@
                                 <p class="nav-link text-dark">Hello @User.Identity.Name</p>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Logout">Log out</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Log out</a>
                             </li>
                         }
                         else
