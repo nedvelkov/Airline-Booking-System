@@ -1,0 +1,31 @@
+CREATE TABLE Airlines
+(
+	Id UNIQUEIDENTIFIER PRIMARY KEY default NEWID(),
+	Name VARCHAR (5) NOT NULL
+)
+
+CREATE TABLE Airports
+(
+	Id UNIQUEIDENTIFIER PRIMARY KEY default NEWID(),
+	Name CHAR (3) NOT NULL
+)
+
+CREATE TABLE Flight
+(
+	Id VARCHAR(500) PRIMARY KEY,
+	Name CHAR (3) NOT NULL,
+	AirlineId uniqueidentifier NOT NULL,
+	OriginId uniqueidentifier NOT NULL,
+	DestinationId uniqueidentifier NOT NULL,
+	Date Date,
+	FOREIGN KEY (AirlineId) REFERENCES Airlines(Id),
+	FOREIGN KEY (OriginId) REFERENCES Airports(Id),
+	FOREIGN KEY (DestinationId) REFERENCES Airports(Id),
+)
+
+CREATE TABLE FlightSections
+(
+	Id INT PRIMARY KEY,
+	SeatClass INT NOT NULL
+
+)
