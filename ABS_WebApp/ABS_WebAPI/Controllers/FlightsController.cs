@@ -24,18 +24,20 @@ namespace ABS_WebAPI.Controllers
         [HttpGet]
         [Route(FIND_FLIGHT_API_PATH)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public string GetAviableFlights(AviableFlightsModel flightsRequestModel)
-            => _flightService.FindAvailableFlights(flightsRequestModel.Origin, flightsRequestModel.Destination);
+        public string GetAviableFlights(string origin, string destination)
+        {
+            return _flightService.FindAvailableFlights(origin, destination);
+        }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult<string> Post(FlightModel flight)
+        public IActionResult Post(FlightModel flight)
         {
             var result = _flightService.CreateFlight(flight.AirlineName, flight.Origin, flight.Destination, flight.DateOfFlight.Year, flight.DateOfFlight.Month, flight.DateOfFlight.Day, flight.Id);
             if (result.Contains(SUCCESSFULL_OPERATION))
             {
-                return result;
+                return Ok(result);
             }
             return UnprocessableEntity(result);
         }

@@ -18,7 +18,7 @@ namespace ABS_WebApp
 
         public IConfiguration Configuration { get; }
 
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             services.AddHttpClient<WebApiService>();
             services.AddAuthentication(opt =>
@@ -28,6 +28,7 @@ namespace ABS_WebApp
             {
                 opt.Cookie.Name = COOKIE_TOKEN_NAME;
                 opt.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None;
+                opt.ExpireTimeSpan= System.TimeSpan.FromHours(int.Parse(configuration["ExpireCookieTime:PersistentAsHours"].ToString()));
                 opt.LoginPath = "/account/login";
             });
             services.AddSingleton<IAccountService, AccountService>();

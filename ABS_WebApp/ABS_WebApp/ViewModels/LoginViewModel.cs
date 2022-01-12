@@ -13,5 +13,8 @@ namespace ABS_WebApp.ViewModels
         [Required]
         [Display(Name = "Password:")]
         public string Password { get; set; }
+
+        [Display(Name = "Remember me")]
+        public bool RememberMe { get; set; }
     }
 }

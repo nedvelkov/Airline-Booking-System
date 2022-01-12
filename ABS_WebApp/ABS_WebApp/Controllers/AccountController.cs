@@ -8,16 +8,19 @@ using ABS_WebApp.Services.Interfaces;
 
 using static ABS_WebApp.Users.UserConstants;
 using static ABS_DataConstants.DataConstrain;
+using Microsoft.Extensions.Configuration;
 
 namespace ABS_WebApp.Controllers
 {
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
+        private readonly IConfiguration _configuration;
 
-        public AccountController(IAccountService accountService)
+        public AccountController(IAccountService accountService, IConfiguration configuration)
         {
             _accountService = accountService;
+            _configuration = configuration;
         }
 
         public IActionResult Login()
@@ -51,16 +54,18 @@ namespace ABS_WebApp.Controllers
                 {
                     new Claim(ClaimTypes.Email,loginModel.Email),
                     new Claim(ClaimTypes.Name,claimsUser.FullName),
-                    new Claim(ClaimTypes.Role,claimsUser.Role),
-                    new Claim(ClaimTypes.Expiration,System.DateTimeOffset.Now.AddMinutes(5).ToString())
+                    new Claim(ClaimTypes.Role,claimsUser.Role)
 
                 }, COOKIE_SHEME_NAME);
                 var authProperties = new AuthenticationProperties
                 {
-                   // ExpiresUtc = System.DateTimeOffset.Now.AddDays(30),
-                    IsPersistent = false
+                    IsPersistent = true
                 };
-
+                if (!loginModel.RememberMe)
+                {
+                    var minutes = int.Parse(_configuration["ExpireCookieTime:NotPersistentAsMinutes"].ToString());
+                    authProperties.ExpiresUtc = System.DateTimeOffset.Now.AddMinutes(minutes);
+                }
                 var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
                 await Response.HttpContext.SignInAsync(COOKIE_SHEME_NAME, claimsPrincipal, authProperties);

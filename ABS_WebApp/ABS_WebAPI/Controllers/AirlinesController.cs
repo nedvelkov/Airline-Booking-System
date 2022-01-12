@@ -25,12 +25,12 @@ namespace ABS_WebAPI.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-        public ActionResult<string> Post(AirlineModel airline)
+        public IActionResult Post(AirlineModel airline)
         {
             var result = _airlineService.CreateAirline(airline.Name);
             if (result.Contains(SUCCESSFULL_OPERATION))
             {
-                return result;
+                return Ok(result);
             }
             return UnprocessableEntity(result);
         }

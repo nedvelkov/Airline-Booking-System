@@ -2,16 +2,15 @@
 using System.Text;
 using System.Text.Json;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Net.Http.Headers;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Http;
 
 using ABS_Models;
-using ABS_WebApp.Services.Interfaces;
 
 using static System.Net.Mime.MediaTypeNames;
 using static ABS_DataConstants.DataConstrain;
@@ -44,18 +43,8 @@ namespace ABS_WebApp.Services
                     JsonSerializer.Serialize(airport),
                     Encoding.UTF8,
                     Application.Json);
-                var newUrl = _webApiUrl + AIRPORT_API_PATH;
 
-                var request = new HttpRequestMessage
-                {
-                    Method = HttpMethod.Post,
-                    RequestUri = new Uri(newUrl),
-                    Content = airportJson
-                };
-
-                using var httpResponseMessage = await _httpClient.SendAsync(request);
-
-                //using var httpResponseMessage = await _httpClient.PostAsync(AIRPORT_API_PATH, airportJson);
+                using var httpResponseMessage = await _httpClient.PostAsync(AIRPORT_API_PATH, airportJson);
 
                 if (!httpResponseMessage.IsSuccessStatusCode)
                 {
@@ -109,27 +98,19 @@ namespace ABS_WebApp.Services
 
         #region Flight
 
-        public async Task<IEnumerable<string>> GetFlights()
+        public async Task<IEnumerable<string>> GetFlights() 
             => await _httpClient.GetFromJsonAsync<IEnumerable<string>>(FLIGHT_API_PATH);
 
         public async Task<string> GetAviableFlights(AviableFlightsModel flight)
         {
             try
             {
-                var modelAsJson = new StringContent(
-                    JsonSerializer.Serialize(flight),
-                    Encoding.UTF8,
-                    Application.Json);
-                var newUrl = _webApiUrl + FIND_FLIGHT_API_PATH;
+                var fullPath = _webApiUrl + FIND_FLIGHT_API_PATH;
+                var uri = new UriBuilder(fullPath);
+                var query = $"origin={flight.Origin}&destination={flight.Destination}";
+                uri.Query = query;
 
-                var request = new HttpRequestMessage
-                {
-                    Method = HttpMethod.Get,
-                    RequestUri = new Uri(newUrl),
-                    Content = modelAsJson
-                };
-
-                using var httpResponseMessage = await _httpClient.SendAsync(request);
+                using var httpResponseMessage = await _httpClient.GetAsync(uri.Uri);
 
                 if (!httpResponseMessage.IsSuccessStatusCode)
                 {
@@ -184,7 +165,7 @@ namespace ABS_WebApp.Services
                 }
 
                 var content = await response.Content.ReadFromJsonAsync<string>();
-                
+
                 return content;
             }
             catch (Exception ex)
@@ -249,7 +230,6 @@ namespace ABS_WebApp.Services
 
         #endregion
 
-
         private async Task<string> GetErrorsFromHttpResponse(HttpResponseMessage httpResponseMessage)
         {
             ErrorHttpModel reposnse;
@@ -259,7 +239,7 @@ namespace ABS_WebApp.Services
             }
             catch (Exception)
             {
-                var result= await httpResponseMessage.Content.ReadAsStringAsync();
+                var result = await httpResponseMessage.Content.ReadAsStringAsync();
                 return result;
             }
             var sb = new StringBuilder();

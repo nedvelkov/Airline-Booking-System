@@ -27,6 +27,10 @@
                     <span asp-validation-for=@Model.Password class="text-danger font-weight-bold"></span>
                 </div>
                 <div class="row mb-2">
+                    <input class="form-check-inline mt-1" asp-for=@Model.RememberMe />
+                    <label asp-for=@Model.RememberMe class="form-check-label"></label>
+                </div>
+                <div class="row mb-2">
                     <button type="submit">Login</button>
                 </div>
                 <div class="row">

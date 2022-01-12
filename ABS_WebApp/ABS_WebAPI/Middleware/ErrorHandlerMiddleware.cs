@@ -31,6 +31,9 @@ namespace ABS_WebAPI.Middleware
                     case ArgumentException e:
                         response.StatusCode = (int)HttpStatusCode.UnprocessableEntity;
                         break;
+                    case TimeoutException e:
+                        response.StatusCode = (int)HttpStatusCode.RequestTimeout;
+                        break;
                     default:
                         response.StatusCode = (int)HttpStatusCode.InternalServerError;
                         break;
