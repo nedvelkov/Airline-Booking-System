@@ -1,49 +1,53 @@
 CREATE DATABASE ABS_database
+GO
+
 USE ABS_database
+GO
 
-
-CREATE TABLE Airlines
+CREATE TABLE Airline
 (
-	Id UNIQUEIDENTIFIER PRIMARY KEY default NEWID(),
+	Id INT PRIMARY KEY NOT NULL IDENTITY(1,1),
 	[Name] VARCHAR (5) NOT NULL,
-	CONSTRAINT CHK_Airline_Name CHECK(LEN([Name]) >=1 AND LEN([Name]) <=5)
+	CONSTRAINT CHK_Airline_Name CHECK(dbo.ufn_CheckNameAirline([Name])=1),
+	CONSTRAINT CHK_Unique_AirlineName UNIQUE([Name])
 )
 
-CREATE TABLE Airports
+CREATE TABLE Airport
 (
-	Id UNIQUEIDENTIFIER PRIMARY KEY default NEWID(),
+	Id INT PRIMARY KEY NOT NULL IDENTITY(1,1),
 	[Name] CHAR (3) NOT NULL,
-	CONSTRAINT CHK_Airport_Name CHECK(LEN([Name])=3)
+	CONSTRAINT CHK_Airport_Name CHECK(dbo.ufn_CheckNameAirport([Name])=1),
+	CONSTRAINT CHK_Unique_AirportName UNIQUE([Name])
 )
 
-CREATE TABLE Flights
+CREATE TABLE Flight
 (
-	Id VARCHAR(50) PRIMARY KEY,
-	Name CHAR (3) NOT NULL,
-	AirlineId uniqueidentifier NOT NULL,
-	OriginId uniqueidentifier NOT NULL,
-	DestinationId uniqueidentifier NOT NULL,
-	Date Date,
-	CONSTRAINT FK_Airline_Name FOREIGN KEY (AirlineId) REFERENCES Airlines(Id),
-	CONSTRAINT FK_Airport_Origin FOREIGN KEY (OriginId) REFERENCES Airports(Id),
-	CONSTRAINT FK_Airport_Destination FOREIGN KEY (DestinationId) REFERENCES Airports(Id)
+	Id VARCHAR(40) PRIMARY KEY,
+	AirlineId INT NOT NULL,
+	OriginId INT NOT NULL,
+	DestinationId INT NOT NULL,
+	Date Date NOT NULL,
+	CONSTRAINT FK_Airline_Name FOREIGN KEY (AirlineId) REFERENCES Airline(Id),
+	CONSTRAINT FK_Airport_Origin FOREIGN KEY (OriginId) REFERENCES Airport(Id),
+	CONSTRAINT FK_Airport_Destination FOREIGN KEY (DestinationId) REFERENCES Airport(Id),
+	CONSTRAINT CHK_Flight_Id CHECK(Id NOT LIKE '%[^A-Z0-9]%')
 )
 
-CREATE TABLE FlightSections
+CREATE TABLE FlightSection
 (
-	Id UNIQUEIDENTIFIER PRIMARY KEY default NEWID(),
-	SeatClass INT NOT NULL,
-	FlightId VARCHAR(50),
-	CONSTRAINT FK_Flight_Id FOREIGN KEY (FlightId) REFERENCES Flights(Id)
+	Id INT PRIMARY KEY NOT NULL IDENTITY(1,1),
+	SeatClass SMALLINT NOT NULL,
+	FlightId VARCHAR(40),
+	CONSTRAINT FK_Flight_Id FOREIGN KEY (FlightId) REFERENCES Flight(Id)
 )
 
-CREATE TABLE Seats
+CREATE TABLE Seat
 (
 	[ROW] INT NOT NULL,
 	[COLUMN] CHAR(1) NOT NULL,
-	FlightSectionId uniqueidentifier,
+	FlightSectionId INT NOT NULL,
 	CONSTRAINT PK_Seat PRIMARY KEY ([ROW], [COLUMN]),
 	CONSTRAINT CHK_ROW_NUMBER CHECK([ROW]>=1 AND [ROW]<=100),
 	CONSTRAINT CHK_COLUMN_CHAR CHECK([COLUMN]>='A' AND [COLUMN]<='J'),
-	CONSTRAINT FK_FlightSection_Id FOREIGN KEY (FlightSectionId) REFERENCES FlightSections(Id)
+	CONSTRAINT FK_FlightSection_Id FOREIGN KEY (FlightSectionId) REFERENCES FlightSection(Id)
 )

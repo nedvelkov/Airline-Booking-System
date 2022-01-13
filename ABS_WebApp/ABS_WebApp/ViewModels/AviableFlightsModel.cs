@@ -3,7 +3,7 @@
 using static ABS_DataConstants.DataConstrain;
 using static ABS_DataConstants.Error;
 
-namespace ABS_Models
+namespace ABS_WebApp.ViewModels
 {
     public class AviableFlightsModel
     {
