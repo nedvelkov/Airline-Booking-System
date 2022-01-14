@@ -2,7 +2,7 @@ CREATE OR ALTER FUNCTION ufn_CheckNameAirport(@Name CHAR(3))
 RETURNS BIT
 AS
 BEGIN
-	IF(LEN(@Name)=3 AND @NAME NOT LIKE '%[^A-Z]%')
+	IF(LEN(@Name)=3 AND @NAME NOT LIKE '%[^A-Z]%' AND [dbo].[ufn_AllUpperLetters](@Name)=1)
 	BEGIN
 		RETURN 1
 	END
@@ -121,7 +121,7 @@ BEGIN
 	WHILE @INDEX<=3
 	BEGIN
 		DECLARE @CharAsInt INT
-		SET @CharAsInt=ASCII(SUBSTRING(@Name,@INDEX,1)
+		SET @CharAsInt=(SELECT ASCII(SUBSTRING(@Name,@INDEX,1)))
 		IF(@CharAsInt<65 OR @CharAsInt>90) 	
 			RETURN 0
 		SET @INDEX+=1
