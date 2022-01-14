@@ -8,7 +8,7 @@ CREATE TABLE Airline
 (
 	Id INT PRIMARY KEY NOT NULL IDENTITY(1,1),
 	[Name] VARCHAR (5) NOT NULL,
-	CONSTRAINT CHK_Airline_Name CHECK(dbo.ufn_CheckNameAirline([Name])=1),
+	CONSTRAINT CHK_Airline_Name CHECK([dbo].[ufn_CheckNameAirline]([Name])=1),
 	CONSTRAINT CHK_Unique_AirlineName UNIQUE([Name])
 )
 
@@ -30,7 +30,7 @@ CREATE TABLE Flight
 	CONSTRAINT FK_Airline_Name FOREIGN KEY (AirlineId) REFERENCES Airline(Id),
 	CONSTRAINT FK_Airport_Origin FOREIGN KEY (OriginId) REFERENCES Airport(Id),
 	CONSTRAINT FK_Airport_Destination FOREIGN KEY (DestinationId) REFERENCES Airport(Id),
-	CONSTRAINT CHK_Flight_Id CHECK(Id NOT LIKE '%[^A-Z0-9]%')
+	CONSTRAINT CHK_Flight_Id CHECK(dbo.ufn_CheckFlightId([Id])=1)
 )
 
 CREATE TABLE FlightSection
