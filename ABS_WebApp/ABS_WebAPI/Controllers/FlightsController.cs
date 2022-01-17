@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-
+using System.Threading.Tasks;
 using ABS_Models;
 using ABS_WebAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -32,9 +32,9 @@ namespace ABS_WebAPI.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-        public IActionResult Post(FlightModel flight)
+        public async Task<IActionResult> Post(FlightModel flight)
         {
-            var result = _flightService.CreateFlight(flight.AirlineName, flight.Origin, flight.Destination, flight.DateOfFlight.Year, flight.DateOfFlight.Month, flight.DateOfFlight.Day, flight.Id);
+            var result =await _flightService.CreateFlight(flight.AirlineName, flight.Origin, flight.Destination, flight.DateOfFlight.Year, flight.DateOfFlight.Month, flight.DateOfFlight.Day, flight.Id);
             if (result.Contains(SUCCESSFULL_OPERATION))
             {
                 return Ok(result);

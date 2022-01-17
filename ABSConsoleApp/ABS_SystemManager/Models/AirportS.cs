@@ -7,11 +7,11 @@ using static ABS_SystemManager.DataConstants.SystemDataConstrain;
 namespace ABS_SystemManager.Models
 {
 
-    internal class Airport : IAirport
+    internal class AirportS : IAirport
     {
         private List<string> _departuresFlights;
         private List<string> _arriavalFlights;
-        public Airport()
+        public AirportS()
         {
             _departuresFlights = new List<string>();
             _arriavalFlights = new List<string>();
@@ -35,7 +35,7 @@ namespace ABS_SystemManager.Models
             }
             else
             {
-                Airport airport = (Airport)obj;
+                AirportS airport = (AirportS)obj;
                 return Name == airport.Name;
             }
         }

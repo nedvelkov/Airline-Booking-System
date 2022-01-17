@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-
+using System.Threading.Tasks;
 using ABS_SystemManager.Interfaces;
 using ABS_WebAPI.Services.Interfaces;
 
@@ -11,7 +11,7 @@ namespace ABS_WebAPI.Services.Models
 
         public AirlineService(ISystemManager manager) => _manager = manager;
 
-        public string CreateAirline(string name) => _manager.CreateAirline(name);
+        public async Task<string> CreateAirline(string name) => await _manager.CreateAirline(name);
 
         public IEnumerable<string> GetAirlines() => _manager.ListAirlines;
     }

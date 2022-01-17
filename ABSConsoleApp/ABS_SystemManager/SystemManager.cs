@@ -5,6 +5,11 @@ using System.Globalization;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
+using ABS_SystemManager.DbModels;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+
+
 using ABS_SystemManager.Models;
 using ABS_SystemManager.Interfaces;
 using static ABS_DataConstants.DataConstrain;
@@ -12,6 +17,7 @@ using static ABS_SystemManager.DataConstants.Success;
 using static ABS_SystemManager.DataConstants.SystemDataConstrain;
 using static ABS_SystemManager.DataConstants.SystemError;
 using static ABS_DataConstants.Error;
+using System.Threading.Tasks;
 
 namespace ABS_SystemManager
 {
@@ -20,6 +26,8 @@ namespace ABS_SystemManager
         private Dictionary<string, IAirline> _airlines;
         private Dictionary<string, IAirport> _airports;
         private Dictionary<string, IFlight> _flights;
+        private readonly ABS_databaseContext _databaseContext;
+
 
         private DateTime _testDate;
 
@@ -28,94 +36,81 @@ namespace ABS_SystemManager
             _airlines = new Dictionary<string, IAirline>();
             _airports = new Dictionary<string, IAirport>();
             _flights = new Dictionary<string, IFlight>();
+            _databaseContext = new ABS_databaseContext();
         }
 
-        public string CreateAirport(string name)
+        public async Task<string> CreateAirport(string name)
         {
             try
             {
                 ValidateString(name, EVALUATE_AIRPORT_NAME, AIRPORT_TOOLTIP);
-                ContainsItem(_airports, name, String.Format(DUBLICATE_ITEM, "Airport", "name"));
+
+               await _databaseContext.Database.ExecuteSqlRawAsync($"usp_CreateAirport {name}");
+               // var result = _databaseContext.Airport.FromSqlRaw($"usp_GetAirports").ToList();
             }
             catch (Exception a)
             {
 
                 return a.Message;
             }
-
-            _airports.Add(name, new Airport() { Name = name });
 
             return String.Format(SUCCESSFUL_CREATED_AIRPORT, name);
         }
 
-        public string CreateAirline(string name)
+        public async Task<string> CreateAirline(string name)
         {
             try
             {
                 ValidateString(name, EVALUATE_AIRLINE_NAME, AIRLINE_TOOLTIP);
-                ContainsItem(_airlines, name, String.Format(DUBLICATE_ITEM, "Airline", "name"));
+                await _databaseContext.Database.ExecuteSqlRawAsync($"usp_CreateAirline {name}");
             }
             catch (Exception a)
             {
 
                 return a.Message;
             }
-
-            _airlines.Add(name, new Airline() { Name = name });
 
             return String.Format(SUCCESSFUL_CREATED_AIRLINE, name);
         }
 
-        public string CreateFlight(string airlineName, string origin, string destination, int year, int month, int day, string id)
+        public async Task<string> CreateFlight(string airlineName, string origin, string destination, int year, int month, int day, string id)
         {
-            IAirline airline;
-            IAirport originAirport;
-            IAirport destinationAirport;
-            DateTime date;
 
             try
             {
-                airline = GetItem(_airlines, airlineName, String.Format(MISSING_ITEM, "Airline", "name", airlineName));
-                (originAirport, destinationAirport) = ValidateFlightDestination(origin, destination);
-                date = ValidateDate(year, month, day);
-
-                ValidateFlightDate(date, INVALID_DATE_OF_DEPARTURE_FLIGHT);
+                ValidateFlightDate(new DateTime(year, month, day), INVALID_DATE_OF_DEPARTURE_FLIGHT);
                 ValidateString(id, EVALUATE_FLIGHT_ID, FLIGHT_TOOLTIP);
-                ContainsItem(_flights, id, String.Format(DUBLICATE_ITEM, "Flight", "id"));
+
+                await _databaseContext.Database.ExecuteSqlRawAsync($"usp_CreateFlight {airlineName},{origin},{destination},{year},{month},{day},{id}");
             }
             catch (Exception a)
             {
                 return a.Message;
             }
-
-            var flight = GetFlight(airline, originAirport, destinationAirport, date, id);
-
-            _flights.Add(id, flight);
 
             return String.Format(SUCCESSFUL_CREATED_FLIGHT, origin, destination, airlineName);
         }
 
-        public string CreateSection(string airlineName, string flightId, int rows, int columns, int seatClass)
+        public async Task<string> CreateSection(string airlineName, string flightId, int rows, int columns, int seatClass)
         {
-            IFlight flight;
-            IFlightSection flightSection;
-
             try
             {
-                flight = AirlaneGotFlight(flightId, airlineName);
 
-                flightSection = CreateFlightSection(rows, columns, seatClass);
+                ValidateCountOfSeats(rows, "Rows", MIN_SEAT_ROWS, MAX_SEAT_ROWS);
+                ValidateCountOfSeats(columns, "Columns", MIN_SEAT_COLUMNS, MAX_SEAT_COLUMNS);
+                GetEnum<SeatClass>(seatClass);
 
-                ContainsItem(flight.FlightSections, (SeatClass)seatClass, String.Format(DUBLICATE_ITEM, "Flight section", "name"));
+                ValidateString(airlineName, EVALUATE_AIRLINE_NAME, AIRLINE_TOOLTIP);
+                ValidateString(flightId, EVALUATE_FLIGHT_ID, FLIGHT_TOOLTIP);
+
+                await _databaseContext.Database.ExecuteSqlRawAsync($"usp_CreateFlightSection {airlineName},{flightId},{rows},{columns},{seatClass}");
             }
             catch (Exception a)
             {
                 return a.Message;
             }
 
-            flight.AddFlightSection(flightSection);
-
-            return String.Format(SUCCESSFUL_CREATED_FLIGHT_SECTION, (SeatClass)seatClass, flight.Origin.Name, flight.Destination.Name, airlineName);
+            return String.Format(SUCCESSFUL_CREATED_FLIGHT_SECTION, (SeatClass)seatClass, flightId, airlineName);
         }
 
         public string FindAvailableFlights(string origin, string destination)
@@ -239,7 +234,6 @@ namespace ABS_SystemManager
             return sb.ToString().Trim();
         }
 
-
         public IReadOnlyList<string> ListAirlines => _airlines.Select(x => x.Key).ToList();
 
         public IReadOnlyDictionary<string, string> AirlinesDictionary => _airlines.ToDictionary(x => x.Key, x => x.Value.ToString());
@@ -247,17 +241,6 @@ namespace ABS_SystemManager
         public IReadOnlyList<string> ListAirports => _airports.Select(x => x.Key).ToList();
 
         public IReadOnlyList<string> ListFlights => _flights.Select(x => x.Key).ToList();
-
-        private DateTime ValidateDate(int year, int month, int day)
-        {
-            DateTime date;
-            var validDate = DateTime.TryParse($"{month}/{day}/{year}", CultureInfo.InvariantCulture, DateTimeStyles.None, out date);
-            if (!validDate)
-            {
-                throw new ArgumentException(INVALID_DATE);
-            }
-            return date;
-        }
 
         /// <summary>
         /// Validate <paramref name="text"/> based on regex <paramref name="expression"/>.
@@ -271,38 +254,6 @@ namespace ABS_SystemManager
         {
             var regex = new Regex(expression);
             if (string.IsNullOrEmpty(text) || !regex.IsMatch(text))
-            {
-                throw new ArgumentException(message);
-            }
-        }
-
-        /// <summary>
-        /// Determines whether the <paramref name="dictionary"/> contains item <typeparamref name="TValue"/> the specified <paramref name="key"/>.
-        /// Throw error with <paramref name="message"/> if is true.
-        /// </summary>
-        /// <typeparam name="TValue"></typeparam>
-        /// <param name="dictionary"></param>
-        /// <param name="key"></param>
-        /// <param name="message"></param>
-        private void ContainsItem<TKey, TValue>(Dictionary<TKey, TValue> dictionary, TKey key, string message)
-        {
-            if (dictionary.ContainsKey(key))
-            {
-                throw new ArgumentException(message);
-            }
-        }
-
-        /// <summary>
-        /// Determines whether the <paramref name="dictionary"/> contains item <typeparamref name="TValue"/> the specified <paramref name="key"/>.
-        /// Throw error with <paramref name="message"/> if is true.
-        /// </summary>
-        /// <typeparam name="TValue"></typeparam>
-        /// <param name="dictionary"></param>
-        /// <param name="key"></param>
-        /// <param name="message"></param>
-        private void ContainsItem<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> dictionary, TKey key, string message)
-        {
-            if (dictionary.ContainsKey(key))
             {
                 throw new ArgumentException(message);
             }
@@ -393,21 +344,6 @@ namespace ABS_SystemManager
             }
         }
 
-        private IFlightSection CreateFlightSection(int rows, int colms, int seatClass)
-        {
-
-            var seatClassEnum = GetEnum<SeatClass>(seatClass);
-            var flightSection = new FlightSection() { SeatClass = seatClassEnum };
-
-            ValidateCountOfSeats(rows, "Rows", MIN_SEAT_ROWS, MAX_SEAT_ROWS);
-            ValidateCountOfSeats(colms, "Columns", MIN_SEAT_COLUMNS, MAX_SEAT_COLUMNS);
-            var seats = SeatCollection(rows, colms);
-
-            flightSection.AddSeats(seats);
-
-            return flightSection;
-        }
-
         private void ChekIfSeatIsBooked(int row, int column, IFlightSection flightSection)
         {
             var seat = flightSection.Seats[row, column];
@@ -453,42 +389,5 @@ namespace ABS_SystemManager
             }
         }
 
-        private ISeat[,] SeatCollection(int rows, int columns)
-        {
-            var seats = new ISeat[rows, columns];
-            for (int row = 0; row < rows; row++)
-            {
-                for (int column = 0; column < columns; column++)
-                {
-                    var columnCharAsInt = column + INITIAL_VALUE_FOR_SEAT_COLUMN_CHAR;
-                    var seat = new Seat()
-                    {
-                        Row = row + 1,
-                        Column = (char)columnCharAsInt
-                    };
-                    seats[row, column] = seat;
-                }
-            }
-
-            return seats;
-        }
-
-        private IFlight GetFlight(IAirline airline, IAirport originAirport, IAirport destinationAirport, DateTime date, string id)
-        {
-            var flight = new Flight()
-            {
-                Airline = airline,
-                Origin = originAirport,
-                Destination = destinationAirport,
-                Date = date,
-                Id = id,
-            };
-
-            airline.AddFlight(flight);
-            originAirport.AddDeparureFlight(flight.Id);
-            destinationAirport.AddArrivalFlight(flight.Id);
-
-            return flight;
-        }
     }
 }

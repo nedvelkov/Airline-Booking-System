@@ -8,7 +8,7 @@ using static ABS_SystemManager.DataConstants.SystemDataConstrain;
 namespace ABS_SystemManager.Models
 {
 
-    internal class FlightSection : IFlightSection
+    internal class FlightSectionS : IFlightSection
     {
 
         private ISeat[,] _seats;

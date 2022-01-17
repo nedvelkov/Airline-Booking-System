@@ -5,7 +5,7 @@ using static ABS_SystemManager.DataConstants.SystemDataConstrain;
 
 namespace ABS_SystemManager.Models
 {
-    internal class Seat : ISeat
+    internal class SeatS : ISeat
     {
         private bool _booked;
 

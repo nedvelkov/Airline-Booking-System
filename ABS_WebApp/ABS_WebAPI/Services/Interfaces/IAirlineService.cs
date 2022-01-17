@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ABS_WebAPI.Services.Interfaces
 {
     public interface IAirlineService
     {
-        public string CreateAirline(string name);
+        public Task<string> CreateAirline(string name);
 
         public IEnumerable<string> GetAirlines();
     }

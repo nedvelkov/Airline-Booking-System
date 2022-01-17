@@ -9,11 +9,11 @@ using static ABS_SystemManager.DataConstants.SystemDataConstrain;
 namespace ABS_SystemManager.Models
 {
 
-    internal class Flight : IFlight
+    internal class FlightS : IFlight
     {
         private Dictionary<SeatClass, IFlightSection> _flightSections;
 
-        public Flight() => _flightSections = new Dictionary<SeatClass, IFlightSection>();
+        public FlightS() => _flightSections = new Dictionary<SeatClass, IFlightSection>();
 
         public string Id { get; set; }
 
