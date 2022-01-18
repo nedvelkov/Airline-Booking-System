@@ -15,7 +15,7 @@ namespace ABS_SystemManager.Interfaces
 
         public string FindAvailableFlights(string origin, string destination);
 
-        public string BookSeat(string airlineName, string flightId, int seatClass, int row, char column);
+        public Task<string> BookSeat(string airlineName, string flightId, int seatClass, int row, char column);
 
         public string DisplaySystemDetails();
 

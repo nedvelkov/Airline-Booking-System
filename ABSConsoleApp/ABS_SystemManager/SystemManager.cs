@@ -24,19 +24,14 @@ namespace ABS_SystemManager
     public class SystemManager : ISystemManager
     {
         private Dictionary<string, IAirline> _airlines;
-        private Dictionary<string, IAirport> _airports;
-        private Dictionary<string, IFlight> _flights;
         private readonly ABS_databaseContext _databaseContext;
-
 
         private DateTime _testDate;
 
-        public SystemManager()
+        public SystemManager(ABS_databaseContext context)
         {
             _airlines = new Dictionary<string, IAirline>();
-            _airports = new Dictionary<string, IAirport>();
-            _flights = new Dictionary<string, IFlight>();
-            _databaseContext = new ABS_databaseContext();
+            _databaseContext = context;
         }
 
         public async Task<string> CreateAirport(string name)
@@ -45,8 +40,7 @@ namespace ABS_SystemManager
             {
                 ValidateString(name, EVALUATE_AIRPORT_NAME, AIRPORT_TOOLTIP);
 
-               await _databaseContext.Database.ExecuteSqlRawAsync($"usp_CreateAirport {name}");
-               // var result = _databaseContext.Airport.FromSqlRaw($"usp_GetAirports").ToList();
+                await _databaseContext.Database.ExecuteSqlRawAsync($"usp_CreateAirport {name}");
             }
             catch (Exception a)
             {
@@ -54,7 +48,7 @@ namespace ABS_SystemManager
                 return a.Message;
             }
 
-            return String.Format(SUCCESSFUL_CREATED_AIRPORT, name);
+            return string.Format(SUCCESSFUL_CREATED_AIRPORT, name);
         }
 
         public async Task<string> CreateAirline(string name)
@@ -70,7 +64,7 @@ namespace ABS_SystemManager
                 return a.Message;
             }
 
-            return String.Format(SUCCESSFUL_CREATED_AIRLINE, name);
+            return string.Format(SUCCESSFUL_CREATED_AIRLINE, name);
         }
 
         public async Task<string> CreateFlight(string airlineName, string origin, string destination, int year, int month, int day, string id)
@@ -88,7 +82,7 @@ namespace ABS_SystemManager
                 return a.Message;
             }
 
-            return String.Format(SUCCESSFUL_CREATED_FLIGHT, origin, destination, airlineName);
+            return string.Format(SUCCESSFUL_CREATED_FLIGHT, origin, destination, airlineName);
         }
 
         public async Task<string> CreateSection(string airlineName, string flightId, int rows, int columns, int seatClass)
@@ -98,7 +92,7 @@ namespace ABS_SystemManager
 
                 ValidateCountOfSeats(rows, "Rows", MIN_SEAT_ROWS, MAX_SEAT_ROWS);
                 ValidateCountOfSeats(columns, "Columns", MIN_SEAT_COLUMNS, MAX_SEAT_COLUMNS);
-                GetEnum<SeatClass>(seatClass);
+                ValidateEnum<SeatClass>(seatClass);
 
                 ValidateString(airlineName, EVALUATE_AIRLINE_NAME, AIRLINE_TOOLTIP);
                 ValidateString(flightId, EVALUATE_FLIGHT_ID, FLIGHT_TOOLTIP);
@@ -110,122 +104,60 @@ namespace ABS_SystemManager
                 return a.Message;
             }
 
-            return String.Format(SUCCESSFUL_CREATED_FLIGHT_SECTION, (SeatClass)seatClass, flightId, airlineName);
+            return string.Format(SUCCESSFUL_CREATED_FLIGHT_SECTION, (SeatClass)seatClass, flightId, airlineName);
         }
 
         public string FindAvailableFlights(string origin, string destination)
         {
-            IAirport originAirport;
-            IAirport destinationAirport;
+            List<AvailableFlights> flights;
             try
             {
-                (originAirport, destinationAirport) = ValidateFlightDestination(origin, destination);
+                 ValidateFlightDestination(origin, destination);
+                flights= _databaseContext.GetAvailableFlights.FromSqlRaw($"usp_FindAvailableFlights {origin},{destination}").ToList();
             }
             catch (Exception a)
             {
                 return a.Message;
             }
 
-            var sb = new StringBuilder();
-
-            var flightIds = originAirport.DeparturesFlights().Intersect(destinationAirport.ArrivalFlights()).ToList();
-
-            var flights = _flights.Where(x => flightIds.Contains(x.Key)
-                                            && DateTime.Compare(x.Value.Date, DateTime.Now.Date) > 0)
-                                            .Select(x => x.Value)
-                                            .ToList();
-            flights.ForEach(f => sb.AppendLine(f.ToString()));
-
-            return flights.Count > 0 ? sb.ToString() : String.Format(NO_AVIABLE_FLIGHTS, origin, destination);
+            return flights.Count > 0 
+                                 ? string.Concat(Environment.NewLine,flights) 
+                                 : string.Format(NO_AVIABLE_FLIGHTS, origin, destination);
 
         }
 
-        #region Methods for test
-
-        /// <summary>
-        /// This method is only for test purpose.
-        /// </summary>
-        /// <param name="sectionDate"></param>
-        /// <returns></returns>
-        public void SetTestDate(DateTime sectionDate)
+        public async Task<string> BookSeat(string airlineName, string flightId, int seatClass, int row, char column)
         {
-            _testDate = sectionDate.Date;
-        }
-
-        /// <summary>
-        /// This method is for test purpose.It works with _testDate
-        /// </summary>
-        /// <param name="origin"></param>
-        /// <param name="destination"></param>
-        /// <returns></returns>
-        public string FindAvailableFlightsTest(string origin, string destination)
-        {
-            IAirport originAirport;
-            IAirport destinationAirport;
-
             try
             {
-                (originAirport, destinationAirport) = ValidateFlightDestination(origin, destination);
+                ValidateString(flightId, EVALUATE_FLIGHT_ID, FLIGHT_TOOLTIP);
+                ValidateString(airlineName, EVALUATE_AIRLINE_NAME, AIRLINE_TOOLTIP);
+
+                var lastSeatNumber = _databaseContext.GetSeatNumbers.FromSqlRaw($"sp_GetRowsAndColumsOfFlightSection {flightId},{seatClass}").FirstOrDefault();
+                CheckIfSeatIsValid(row, column, lastSeatNumber);
+
+                await _databaseContext.Database.ExecuteSqlRawAsync($"usp_BookSeat {airlineName},{flightId},{seatClass},{row},{column}");
             }
             catch (Exception a)
             {
                 return a.Message;
             }
 
-            var sb = new StringBuilder();
-
-            var flightIds = originAirport.DeparturesFlights().Intersect(destinationAirport.ArrivalFlights()).ToList();
-
-            var flights = _flights.Where(x => flightIds.Contains(x.Key)
-                                            && DateTime.Compare(x.Value.Date, _testDate.Date) > 0)
-                                            .Select(x => x.Value)
-                                            .ToList();
-            flights.ForEach(f => sb.AppendLine(f.ToString()));
-
-            return flights.Count > 0 ? sb.ToString() : String.Format(NO_AVIABLE_FLIGHTS, origin, destination);
-        }
-        #endregion
-
-        public string BookSeat(string airlineName, string flightId, int seatClass, int row, char column)
-        {
-            IFlight flight;
-            IFlightSection flightSection;
-
-            int arrayRow;
-            int arrayColumn;
-
-            try
-            {
-                flight = AirlaneGotFlight(flightId, airlineName);
-
-                flightSection = GetFlightSection(flight, seatClass);
-                arrayRow = row - 1;
-                arrayColumn = (int)column - INITIAL_VALUE_FOR_SEAT_COLUMN_CHAR;
-
-                CheckIfSeatIsValid(arrayRow, arrayColumn, flightSection);
-
-                ChekIfSeatIsBooked(arrayRow, arrayColumn, flightSection);
-            }
-            catch (Exception a)
-            {
-                return a.Message;
-            }
-
-            flightSection.BookSeat(arrayRow, arrayColumn);
-
-            return String.Format(SUCCESSFUL_BOOKED_SEAT, String.Format(SEAT_NUMBER_TO_STRING, row, column), (SeatClass)seatClass, flight.Origin.Name, flight.Destination.Name, airlineName);
+            return string.Format(SUCCESSFUL_BOOKED_SEAT, string.Format(SEAT_NUMBER_TO_STRING, row, column), (SeatClass)seatClass, flightId, airlineName);
 
         }
 
         public string DisplaySystemDetails()
         {
             var sb = new StringBuilder();
-            sb.AppendLine(String.Format(DISPLAY_AIRPORTS_TITLE, _airports.Count));
-            if (_airports.Count > 0)
-            {
-                _airports.Select(x => x.Value).ToList().ForEach(x => sb.AppendLine(x.ToString()));
-            }
-            sb.AppendLine(String.Format(DISPLAY_AIRLINES_TITLE, _airlines.Count));
+            sb.AppendLine(DISPLAY_AIRPORTS_TITLE);
+
+            _databaseContext.GetNames.FromSqlRaw("usp_GetAirlineNames")
+                                        .Select(x => string.Format(AIRPORT_TO_STRING_TITLE, x.Name))
+                                        .ToList()
+                                        .ForEach(x => sb.AppendLine(x.ToString()));
+            
+            sb.AppendLine(string.Format(DISPLAY_AIRLINES_TITLE, _airlines.Count));
             if (_airlines.Count > 0)
             {
                 _airlines.Select(x => x.Value).ToList().ForEach(x => sb.AppendLine(x.ToString()));
@@ -234,13 +166,11 @@ namespace ABS_SystemManager
             return sb.ToString().Trim();
         }
 
-        public IReadOnlyList<string> ListAirlines => _airlines.Select(x => x.Key).ToList();
+        public IReadOnlyList<string> ListAirlines => _databaseContext.GetNames.FromSqlRaw("usp_GetAirlineNames").Select(x => x.Name).ToList();
 
-        public IReadOnlyDictionary<string, string> AirlinesDictionary => _airlines.ToDictionary(x => x.Key, x => x.Value.ToString());
+        public IReadOnlyList<string> ListAirports => _databaseContext.GetNames.FromSqlRaw("usp_GetAirportNames").Select(x => x.Name).ToList();
 
-        public IReadOnlyList<string> ListAirports => _airports.Select(x => x.Key).ToList();
-
-        public IReadOnlyList<string> ListFlights => _flights.Select(x => x.Key).ToList();
+        public IReadOnlyList<string> ListFlights => _databaseContext.GetIds.FromSqlRaw("usp_GetFlightIds").Select(x => x.Id).ToList();
 
         /// <summary>
         /// Validate <paramref name="text"/> based on regex <paramref name="expression"/>.
@@ -260,74 +190,19 @@ namespace ABS_SystemManager
         }
 
         /// <summary>
-        /// Return item of type <typeparamref name="TValue"/> with key <paramref name="key"/>. 
-        /// If <paramref name="dictionary"/> don't contains item with such <paramref name="key"/>, thrown erro with <paramref name="message"/>.
-        /// </summary>
-        /// <typeparam name="TValue"></typeparam>
-        /// <param name="dictionary"></param>
-        /// <param name="key"></param>
-        /// <param name="message"></param>
-        /// <returns></returns>
-        private TValue GetItem<TKey, TValue>(Dictionary<TKey, TValue> dictionary, TKey key, string message)
-        {
-            if (!dictionary.ContainsKey(key))
-            {
-                throw new ArgumentException(message);
-            }
-            return dictionary[key];
-        }
-
-        /// <summary>
-        /// Return item of type <typeparamref name="TValue"/> with key <paramref name="key"/>. 
-        /// If <paramref name="dictionary"/> don't contains item with such <paramref name="key"/>, thrown erro with <paramref name="message"/>.
-        /// </summary>
-        /// <typeparam name="TValue"></typeparam>
-        /// <param name="dictionary"></param>
-        /// <param name="key"></param>
-        /// <param name="message"></param>
-        /// <returns></returns>
-        private TValue GetItem<TKey, TValue>(IReadOnlyDictionary<TKey, TValue> dictionary, TKey key, string message)
-        {
-            if (!dictionary.ContainsKey(key))
-            {
-                throw new ArgumentException(message);
-            }
-            return dictionary[key];
-        }
-
-        /// <summary>
         /// Validate if <paramref name="origin"/> point of flight is different from <paramref name="destination"/>.
-        /// Return IAirport objects for <paramref name="origin"/> and <paramref name="destination"/>.
         /// </summary>
         /// <param name="origin"></param>
         /// <param name="destination"></param>
         /// <param name="message"></param>
-        private Tuple<IAirport, IAirport> ValidateFlightDestination(string origin, string destination)
+        private void ValidateFlightDestination(string origin, string destination)
         {
+            ValidateString(origin, EVALUATE_AIRPORT_NAME, AIRPORT_TOOLTIP);
+            ValidateString(destination, EVALUATE_AIRPORT_NAME, AIRPORT_TOOLTIP);
             if (origin == destination)
             {
                 throw new ArgumentException(WRONG_DESTINATION);
             }
-            var originAirport = GetItem(_airports, origin, String.Format(MISSING_ITEM, "Airport", "name", origin));
-            var destinationAirport = GetItem(_airports, destination, String.Format(MISSING_ITEM, "Airport", "name", destination));
-            return new Tuple<IAirport, IAirport>(originAirport, destinationAirport);
-        }
-
-        /// <summary>
-        /// Validate if this given <paramref name="airline"/> have <paramref name="flight"/>.
-        /// Thrown error if condition is not true.
-        /// </summary>
-        /// <param name="flight"></param>
-        /// <param name="airline"></param>
-        private IFlight AirlaneGotFlight(string flightId, string airline)
-        {
-            var flight = GetItem(_flights, flightId, String.Format(MISSING_ITEM, "Flight", "id", flightId));
-            if (flight.Airline.Name != airline)
-            {
-                throw new ArgumentException(String.Format(MISSING_FLIGHT_FROM_AIRLINE, airline, flight.Id));
-            }
-            ValidateFlightDate(flight.Date, DEPARTED_FLIGHT);
-            return flight;
         }
 
         /// <summary>
@@ -344,48 +219,35 @@ namespace ABS_SystemManager
             }
         }
 
-        private void ChekIfSeatIsBooked(int row, int column, IFlightSection flightSection)
+        private void CheckIfSeatIsValid(int row, char column, SeatNumber seatNumber)
         {
-            var seat = flightSection.Seats[row, column];
-            if (seat.Booked)
+            if (seatNumber == null)
             {
-                throw new ArgumentException(BOOEKD_SEAT);
+                throw new ArgumentException(INVALID_SEAT_CLASS);
+
             }
-        }
-
-        private void CheckIfSeatIsValid(int row, int column, IFlightSection flightSection)
-        {
-            var rows = flightSection.Seats.GetLength(0);
-            var columns = flightSection.Seats.GetLength(1);
-
-            if (row < 0 || row >= rows)
+            if (row < 0 || row >= seatNumber.Row)
             {
                 throw new ArgumentException(INVALID_SEAT_ROW);
             }
 
-            if (column < 0 || column >= columns)
+            if (column < seatNumber.Column[0] || column > seatNumber.Column[0])
             {
                 throw new ArgumentException(INVALID_SEAT_COLUMN);
             }
         }
 
-        private T GetEnum<T>(object value)
+        private T ValidateEnum<T>(object value)
         {
             var seatClass = (T)value;
             return Enum.IsDefined(typeof(T), value) ? seatClass : throw new ArgumentException("Seat class is not valid");
-        }
-
-        private IFlightSection GetFlightSection(IFlight flight, int seatClass)
-        {
-            var seatClassEnum = GetEnum<SeatClass>(seatClass);
-            return GetItem(flight.FlightSections, seatClassEnum, String.Format(MISSING_ITEM, "Section", "name", seatClassEnum.ToString()));
         }
 
         private void ValidateCountOfSeats(int value, string @type, int min, int max)
         {
             if (value < min || value > max)
             {
-                throw new ArgumentException(String.Format(INVALID_SEAT_COUNT, type, min, max));
+                throw new ArgumentException(string.Format(INVALID_SEAT_COUNT, type, min, max));
             }
         }
 

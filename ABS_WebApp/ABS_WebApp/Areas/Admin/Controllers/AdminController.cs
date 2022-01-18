@@ -28,7 +28,7 @@ namespace ABS_WebApp.Areas.Admin.Controllers
         public IActionResult CreateAirport() => View();
 
         [HttpPost]
-        public async Task<IActionResult> Airport(AirportModel model)
+        public async Task<IActionResult> CreateAirport(AirportModel model)
         {
             if (ModelState.IsValid)
             {

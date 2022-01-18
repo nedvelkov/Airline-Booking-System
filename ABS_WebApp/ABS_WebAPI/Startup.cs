@@ -9,6 +9,7 @@ using ABS_SystemManager.Interfaces;
 using ABS_WebAPI.Services.Interfaces;
 using ABS_WebAPI.Services.Models;
 using ABS_WebAPI.Middleware;
+using ABS_SystemManager.DbModels;
 
 namespace ABS_WebAPI
 {
@@ -23,8 +24,9 @@ namespace ABS_WebAPI
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<ABS_databaseContext>();
             services.AddResponseCaching();
-            services.AddSingleton<ISystemManager, SystemManager>();
+            services.AddTransient<ISystemManager, SystemManager>();
             services.AddTransient<IAirportService, AirportService>();
             services.AddTransient<IAirlineService, AirlineService>();
             services.AddTransient<IFlightService, FlightService>();
@@ -54,7 +56,7 @@ namespace ABS_WebAPI
 
             app.UseMiddleware<ErrorHandlerMiddleware>();
 
-            app.ApplicationServices.GetService<ISystemService>().SeedData();
+           // app.ApplicationServices.GetService<ISystemService>().SeedData();
 
             app.UseEndpoints(endpoints =>
             {

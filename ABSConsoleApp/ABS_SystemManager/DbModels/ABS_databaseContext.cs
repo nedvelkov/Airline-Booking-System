@@ -1,4 +1,5 @@
 ﻿using System;
+using ABS_SystemManager.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -20,10 +21,22 @@ namespace ABS_SystemManager.DbModels
         }
 
         public virtual DbSet<Airline> Airline { get; set; }
+
         public virtual DbSet<Airport> Airport { get; set; }
+
         public virtual DbSet<Flight> Flight { get; set; }
+
         public virtual DbSet<FlightSection> FlightSection { get; set; }
+
         public virtual DbSet<Seat> Seat { get; set; }
+
+        public virtual DbSet<NameColumn> GetNames { get; set; }
+
+        public virtual DbSet<IdColumn> GetIds { get; set; }
+
+        public virtual DbSet<AvailableFlights> GetAvailableFlights { get; set; }
+        public virtual DbSet<SeatNumber> GetSeatNumbers { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -117,6 +130,14 @@ namespace ABS_SystemManager.DbModels
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_FlightSection_Id");
             });
+
+            modelBuilder.Entity<NameColumn>(entity => entity.HasNoKey());
+
+            modelBuilder.Entity<IdColumn>(entity => entity.HasNoKey());
+
+            modelBuilder.Entity<AvailableFlights>(entity => entity.HasNoKey());
+
+            modelBuilder.Entity<SeatNumber>(entity => entity.HasNoKey());
 
             OnModelCreatingPartial(modelBuilder);
         }

@@ -6,7 +6,12 @@ BEGIN TRANSACTION
 	IF(@ValidName=0)
 	BEGIN
 		ROLLBACK
-		RETURN 'Invalid name';
+		;THROW 50008,'Invalid name',1;
+	END
+	IF(dbo.ufn_GetAirportId(@Name)!=-1)
+	BEGIN
+		ROLLBACK
+		;THROW 50009,'Airport with this name already exist',1;
 	END
 	INSERT Airport(Name) VALUES(@Name);
 	COMMIT
@@ -18,7 +23,12 @@ BEGIN TRANSACTION
 	IF(dbo.ufn_CheckNameAirline(@Name)=0)
 	BEGIN
 		ROLLBACK
-		RETURN 'Invalid name';
+		;THROW 50010,'Invalid name',1;
+	END
+	IF(dbo.ufn_GetAirlineId(@Name)!=-1)
+	BEGIN
+		ROLLBACK
+		;THROW 50011,'Airline with this name already exist',1;
 	END
 	INSERT Airline(Name) VALUES(@Name);
 	COMMIT
@@ -33,8 +43,7 @@ AS
 		SET @Date=@DateOfFlight
 		RETURN
 	END
-	ELSE
-		THROW 50002,'Invalid flight date',1
+		;THROW 50002,'Invalid flight date',1
 GO
 
 CREATE OR ALTER PROC usp_CreateFlight(@AirlineName VARCHAR(5),@Origin CHAR(3),@Destination CHAR(3),@Year INT,@Month INT,@Day INT,@Id CHAR(40))
@@ -44,14 +53,14 @@ BEGIN TRANSACTION
 	IF([dbo].[ufn_OriginDifferenFromDestination](@Origin,@Destination)=0)
 	BEGIN
 		ROLLBACK
-		RETURN 'Destination must be different from origin point';
+		;THROW 50003,'Destination must be different from origin point',1;
 	END
 
 	--Validate flight id
 	IF([dbo].[ufn_CheckFlightId](@Id)=0)
 	BEGIN
 		ROLLBACK
-		RETURN 'Invalid flight id';
+		;THROW 50004,'Invalid flight id',1;
 	END
 
 	--GET Airline id
@@ -60,7 +69,7 @@ BEGIN TRANSACTION
 	IF(@AirlineId=-1)
 	BEGIN
 		ROLLBACK
-		RETURN 'Airline with this name do not exist';
+		;THROW 50005,'Airline with this name do not exist',1;
 	END
 
 	--GET Origin id
@@ -69,7 +78,7 @@ BEGIN TRANSACTION
 	IF(@OriginId=-1)
 	BEGIN
 		ROLLBACK
-		RETURN 'Airport with this origin name do not exist';
+		;THROW 50006,'Airport with this origin name do not exist',1;
 	END
 
 	--GET Destination id
@@ -78,18 +87,13 @@ BEGIN TRANSACTION
 	IF(@DestinationId=-1)
 	BEGIN
 		ROLLBACK
-		RETURN 'Airport with this destination name do not exist';
+		;THROW 50007,'Airport with this destination name do not exist',1;
 	END
 
 	--GET Flight date
 	DECLARE @FlightDate DATE
-	BEGIN TRY  
-		EXEC usp_CreateFlightDate @Year,@Month,@Day,@Date=@FlightDate OUTPUT
-	END TRY  
-	BEGIN CATCH
-		ROLLBACK
-		RETURN ERROR_MESSAGE()
-	END CATCH; 
+	EXEC usp_CreateFlightDate @Year,@Month,@Day,@Date=@FlightDate OUTPUT
+
 
 	INSERT INTO Flight VALUES(@Id,@AirlineId,@OriginId,@DestinationId,@FlightDate)
 	COMMIT
@@ -103,28 +107,28 @@ BEGIN TRANSACTION
 	IF(dbo.ufn_ValidSeatClass(@SeatClass)=0)
 	BEGIN
 		ROLLBACK
-		RETURN 'Invalid seat class';
+		;THROW 50012,'Invalid seat class',1;
 	END
 
 		--Validate rows count
 	IF(dbo.ufn_ValidRowNumBer(@Rows)=0)
 	BEGIN
 		ROLLBACK
-		RETURN 'Invalid rows count';
+		;THROW 50012,'Invalid rows count',1;
 	END
 
 			--Validate columns count 
 	IF(dbo.ufn_ValidColumnsCount(@Columns)=0)
 	BEGIN
 		ROLLBACK
-		RETURN 'Invalid columns count';
+		;THROW 50013,'Invalid columns count',1;
 	END
 
 	--Validate flight
 	IF(dbo.ufn_IsFlightExist(@FlightId)=0)
 	BEGIN
 		ROLLBACK
-		RETURN 'Flight with this id do not exist';
+		;THROW 50014,'Flight with this id do not exist',1;
 	END
 
 	--GET Airline id
@@ -133,21 +137,21 @@ BEGIN TRANSACTION
 	IF(@AirlineId=-1)
 	BEGIN
 		ROLLBACK
-		RETURN 'Airline with this name do not exist';
+		;THROW 50015,'Airline with this name do not exist',1;
 	END
 
 	--Validate flight is part of airline
 	IF(dbo.ufn_IsFlightBelongToaAirline(@FlightId,@AirlineName)=0)
 	BEGIN
 		ROLLBACK
-		RETURN 'Flight is not part of this airline';
+		;THROW 50016,'Flight is not part of this airline',1;
 	END
 
 	--Validate if flight section already exist on this flight
 	IF(dbo.ufn_IsFlightSectionExist(@FlightId,@SeatClass)=1)
 	BEGIN
 		ROLLBACK
-		RETURN 'Flight section already exist';
+		;THROW 50017,'Flight section already exist',1;
 	END
 
 	INSERT INTO FlightSection VALUES (@SeatClass,@FlightId);
@@ -158,7 +162,7 @@ BEGIN TRANSACTION
 	IF(@FlightSectionId=-1)
 	BEGIN
 		ROLLBACK
-		RETURN 'Flght section with this class do not exist on this flight';
+		;THROW 50018,'Flght section with this class do not exist on this flight',1;
 	END
 	
 	DECLARE @CurrentRow SMALLINT
@@ -176,5 +180,23 @@ BEGIN TRANSACTION
 		END
 		SET @CurrentRow+=1
 	END
+	COMMIT
+GO
+
+CREATE OR ALTER PROC usp_GetAirports
+AS
+
+	BEGIN TRANSACTION
+		SET NOCOUNT ON;
+		SELECT [Name] FROM Airport
+	COMMIT
+GO
+
+CREATE OR ALTER PROC usp_GetAirlines
+AS
+
+	BEGIN TRANSACTION
+		SET NOCOUNT ON;
+		SELECT [Name] FROM [dbo].[Airline]
 	COMMIT
 GO
