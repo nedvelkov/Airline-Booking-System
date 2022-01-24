@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ABS_SystemManager.DbModels;
+using ABS_SystemManager.ViewModels;
 
 // Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
 // If you have enabled NRTs for your project, then un-comment the following line:
@@ -33,7 +34,13 @@ namespace ABS_SystemManager
         public virtual DbSet<IdColumn> GetIds { get; set; }
 
         public virtual DbSet<AvailableFlights> GetAvailableFlights { get; set; }
+
         public virtual DbSet<SeatNumber> GetSeatNumbers { get; set; }
+        public virtual DbSet<AirlineViewModel> GetAirlineViews { get; set; }
+        public virtual DbSet<FlightViewModel> GetFlightViews { get; set; }
+        public virtual DbSet<FlightSectionViewModel> GetFlightSectionViewModels { get; set; }
+        public virtual DbSet<SeatViewModel> GetSeatViewModels { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -126,6 +133,11 @@ namespace ABS_SystemManager
             modelBuilder.Entity<AvailableFlights>(entity => entity.HasNoKey());
 
             modelBuilder.Entity<SeatNumber>(entity => entity.HasNoKey());
+
+            modelBuilder.Entity<AirlineViewModel>(entity => entity.HasNoKey());
+            modelBuilder.Entity<FlightViewModel>(entity => entity.HasNoKey());
+            modelBuilder.Entity<FlightSectionViewModel>(entity => entity.HasNoKey());
+            modelBuilder.Entity<SeatViewModel>(entity => entity.HasNoKey());
 
             OnModelCreatingPartial(modelBuilder);
         }

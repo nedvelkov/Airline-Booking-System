@@ -10,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
 
-using ABS_SystemManager.Models;
 using ABS_SystemManager.Interfaces;
 using static ABS_DataConstants.DataConstrain;
 using static ABS_SystemManager.DataConstants.Success;
@@ -19,6 +18,7 @@ using static ABS_SystemManager.DataConstants.SystemError;
 using static ABS_DataConstants.Error;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
+using ABS_SystemManager.ViewModels;
 
 namespace ABS_SystemManager
 {
@@ -177,16 +177,19 @@ namespace ABS_SystemManager
             var sb = new StringBuilder();
             sb.AppendLine(DISPLAY_AIRPORTS_TITLE);
 
-            _databaseContext.GetNames.FromSqlRaw("usp_GetAirlineNames")
+            _databaseContext.GetNames.FromSqlRaw("usp_GetAirportNames")
                                         .Select(x => string.Format(AIRPORT_TO_STRING_TITLE, x.Name))
                                         .ToList()
                                         .ForEach(x => sb.AppendLine(x.ToString()));
             
-            sb.AppendLine(string.Format(DISPLAY_AIRLINES_TITLE, _airlines.Count));
-            if (_airlines.Count > 0)
-            {
-                _airlines.Select(x => x.Value).ToList().ForEach(x => sb.AppendLine(x.ToString()));
-            }
+            sb.AppendLine(DISPLAY_AIRLINES_TITLE);
+            var airlines = _databaseContext.GetAirlineViews.FromSqlRaw($"usp_GetArilinesView").ToList();
+            //var t = _databaseContext.Airline.Include(x => x.Flight).ThenInclude(x => x.FlightSection).ToList();
+            ;
+            //if (airlines.Count > 0)
+            //{
+            //    airlines.ForEach(x => sb.AppendLine(x.ToString()));
+            //}
 
             return sb.ToString().Trim();
         }

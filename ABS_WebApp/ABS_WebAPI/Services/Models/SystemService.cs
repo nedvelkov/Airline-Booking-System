@@ -1,6 +1,7 @@
 ﻿using ABS_WebApp.Seeder;
 using ABS_WebAPI.Services.Interfaces;
 using ABS_SystemManager.Interfaces;
+using System.Threading.Tasks;
 
 namespace ABS_WebAPI.Services.Models
 {
@@ -10,10 +11,10 @@ namespace ABS_WebAPI.Services.Models
 
         public SystemService(ISystemManager manager) => _manager = manager;
         public string Details() => _manager.DisplaySystemDetails();
-        public void SeedData()
+        public async Task<bool> SeedData()
         {
             var seeder = new DataSeeder();
-            seeder.Seed(_manager);
+            return await seeder.Seed(_manager);
         }
     }
 }

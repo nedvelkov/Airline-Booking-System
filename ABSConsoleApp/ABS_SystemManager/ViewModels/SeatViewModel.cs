@@ -1,20 +1,15 @@
 ﻿using System;
 
-using ABS_SystemManager.Interfaces;
 using static ABS_SystemManager.DataConstants.SystemDataConstrain;
 
-namespace ABS_SystemManager.Models
+namespace ABS_SystemManager.ViewModels
 {
-    internal class SeatS : ISeat
+    public class SeatViewModel
     {
-        private bool _booked;
-
         public int Row { get; set; }
         public char Column { get; set; }
 
-        public bool Booked => _booked;
-
-        public void BookSeat() => _booked = true;
+        public bool Booked { get; set; }
 
         public override string ToString()
         {

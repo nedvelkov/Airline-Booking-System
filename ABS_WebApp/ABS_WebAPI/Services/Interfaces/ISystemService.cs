@@ -1,9 +1,11 @@
-﻿namespace ABS_WebAPI.Services.Interfaces
+﻿using System.Threading.Tasks;
+
+namespace ABS_WebAPI.Services.Interfaces
 {
     public interface ISystemService
     {
         public string Details();
 
-        public void SeedData();
+        public Task<bool> SeedData();
     }
 }
