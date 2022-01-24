@@ -18,6 +18,7 @@ using static ABS_SystemManager.DataConstants.SystemDataConstrain;
 using static ABS_SystemManager.DataConstants.SystemError;
 using static ABS_DataConstants.Error;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 
 namespace ABS_SystemManager
 {
@@ -49,6 +50,30 @@ namespace ABS_SystemManager
             }
 
             return string.Format(SUCCESSFUL_CREATED_AIRPORT, name);
+        }
+
+        public async Task<bool> HasAirport(string name)
+        {
+            try
+            {
+                ValidateString(name, EVALUATE_AIRPORT_NAME, AIRPORT_TOOLTIP);
+                ;
+                var parameterReturn = new SqlParameter
+                {
+                    ParameterName = "@HasAirport",
+                    SqlDbType = System.Data.SqlDbType.Bit,
+                    Direction = System.Data.ParameterDirection.Output,
+                };
+               var result= await _databaseContext.Database.ExecuteSqlRawAsync($"usp_HasAirport {name},@HasAirport OUTPUT",parameterReturn);
+                
+                return (bool)parameterReturn.Value;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+
         }
 
         public async Task<string> CreateAirline(string name)

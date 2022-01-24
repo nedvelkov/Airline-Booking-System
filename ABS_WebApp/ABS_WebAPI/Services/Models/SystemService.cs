@@ -10,6 +10,10 @@ namespace ABS_WebAPI.Services.Models
 
         public SystemService(ISystemManager manager) => _manager = manager;
         public string Details() => _manager.DisplaySystemDetails();
-        public void SeedData() => DataSeeder.Seed(_manager);
+        public void SeedData()
+        {
+            var seeder = new DataSeeder();
+            seeder.Seed(_manager);
+        }
     }
 }

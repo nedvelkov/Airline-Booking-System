@@ -245,7 +245,7 @@ BEGIN
 	SET @FlightCount=(SELECT COUNT(*) 
 									FROM Flight 
 									WHERE AirlineId LIKE @AirlineId)
-	IF(@FlightCount=1)
+	IF(@FlightCount>=1)
 	BEGIN
 		RETURN 1
 	END
@@ -254,3 +254,16 @@ BEGIN
 
 END
 GO
+
+
+CREATE OR ALTER FUNCTION ufn_GetSeatId(@FlightSectionId INT,@Row SMALLINT,@Column CHAR(1))
+RETURNS BIGINT
+AS
+BEGIN
+	RETURN (SELECT TOP(1) Id FROM Seat
+							  WHERE (FlightSectionId=@FlightSectionId
+							  AND ROW=@Row AND [COLUMN] LIKE @Column))
+END
+GO
+
+

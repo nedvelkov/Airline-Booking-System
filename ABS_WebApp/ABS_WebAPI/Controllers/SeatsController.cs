@@ -4,6 +4,7 @@ using ABS_Models;
 using ABS_WebAPI.Services.Interfaces;
 using static ABS_DataConstants.DataConstrain;
 using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
 
 namespace ABS_WebAPI.Controllers
 {
@@ -18,9 +19,9 @@ namespace ABS_WebAPI.Controllers
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-        public IActionResult Put(BookSeatModel seat)
+        public async Task<IActionResult> Put(BookSeatModel seat)
         {
-            var result = _seatService.BookSeat(seat.AirlineName, seat.Id, seat.SeatClass, seat.Row, seat.Column);
+            var result = await _seatService.BookSeat(seat.AirlineName, seat.Id, seat.SeatClass, seat.Row, seat.Column);
             if (result.Contains(SUCCESSFULL_OPERATION))
             {
                 return Ok(result);

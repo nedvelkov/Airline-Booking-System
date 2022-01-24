@@ -9,10 +9,6 @@ namespace ABS_SystemManager.Interfaces
 
         public DateTime Date { get; }
 
-        public IAirport Origin { get; }
-
-        public IAirport Destination { get; }
-
         public IAirline Airline { get; }
 
         public IReadOnlyDictionary<SeatClass, IFlightSection> FlightSections { get; }

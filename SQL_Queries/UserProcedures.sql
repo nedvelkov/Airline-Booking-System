@@ -175,7 +175,7 @@ BEGIN TRANSACTION
 		BEGIN
 			DECLARE @ColumChar CHAR(1)
 			SET @ColumChar=CHAR(@CurrentColumnNum+64)
-			INSERT INTO Seat VALUES(@CurrentRow,@ColumChar,@FlightSectionId)
+			INSERT INTO Seat VALUES(@CurrentRow,@ColumChar,@FlightSectionId,0)
 			SET @CurrentColumnNum+=1
 		END
 		SET @CurrentRow+=1
@@ -183,7 +183,7 @@ BEGIN TRANSACTION
 	COMMIT
 GO
 
-CREATE OR ALTER PROC usp_GetAirports
+CREATE OR ALTER PROC usp_GetAirportNames
 AS
 
 	BEGIN TRANSACTION
@@ -192,11 +192,160 @@ AS
 	COMMIT
 GO
 
-CREATE OR ALTER PROC usp_GetAirlines
+CREATE OR ALTER PROC usp_GetAirlineNames
 AS
 
 	BEGIN TRANSACTION
 		SET NOCOUNT ON;
 		SELECT [Name] FROM [dbo].[Airline]
+	COMMIT
+GO
+
+CREATE OR ALTER PROC usp_GetFlightIds
+AS
+	BEGIN TRANSACTION
+		SET NOCOUNT ON;
+		SELECT [Name] FROM [dbo].[Airline]
+	COMMIT
+GO
+
+CREATE OR ALTER PROC usp_FindAvailableFlights(@Origin CHAR(3),@Destination CHAR(3))
+AS
+	BEGIN TRANSACTION
+		SET NOCOUNT ON;
+
+	--Validate origin and destination point
+	IF([dbo].[ufn_OriginDifferenFromDestination](@Origin,@Destination)=0)
+	BEGIN
+		ROLLBACK
+		;THROW 50003,'Destination must be different from origin point',1;
+	END
+
+	--GET Origin id
+		DECLARE @OriginId INT
+		SET @OriginId=[dbo].ufn_GetAirportId(@Origin)
+	IF(@OriginId=-1)
+	BEGIN
+		ROLLBACK
+		;THROW 50006,'Airport with this origin name do not exist',1;
+	END
+
+	--GET Destination id
+		DECLARE @DestinationId INT
+		SET @DestinationId=[dbo].ufn_GetAirportId(@Destination)
+	IF(@DestinationId=-1)
+	BEGIN
+		ROLLBACK
+		;THROW 50007,'Airport with this destination name do not exist',1;
+	END
+
+	SELECT Flight.Id,Airline.Name AS AirlineName,Flight.Date,AirOrig.Name as Origin,AirDest.Name as Destination
+	FROM Flight
+			 JOIN Airline ON Flight.AirlineId=Airline.Id
+			 JOIN Airport AirOrig ON Flight.OriginId=AirOrig.Id
+			 JOIN Airport AirDest ON Flight.DestinationId=AirDest.Id
+			 WHERE OriginId=@OriginId AND DestinationId=@DestinationId
+
+	COMMIT
+GO
+
+CREATE OR ALTER PROC usp_BookSeat(@AirlineName VARCHAR(5),@FlightId VARCHAR(40),@SeatClass SMALLINT,@Row SMALLINT,@Column CHAR(1))
+AS
+	BEGIN TRANSACTION
+
+	--Validate seat class
+	IF(dbo.ufn_ValidSeatClass(@SeatClass)=0)
+	BEGIN
+		ROLLBACK
+		;THROW 50012,'Invalid seat class',1;
+	END
+
+		--Validate rows count
+	IF(dbo.ufn_ValidRowNumBer(@Row)=0)
+	BEGIN
+		ROLLBACK
+		;THROW 50031,'Invalid row number',1;
+	END
+
+			--Validate columns count 
+	DECLARE @ColumnAsInt INT
+	SET @ColumnAsInt=(SELECT ASCII(@Column))
+	IF(dbo.ufn_ValidColumnsCount(@ColumnAsInt)=0)
+	BEGIN
+		ROLLBACK
+		;THROW 50032,'Invalid column letter',1;
+	END
+
+	--Validate flight
+	IF(dbo.ufn_IsFlightExist(@FlightId)=0)
+	BEGIN
+		ROLLBACK
+		;THROW 50014,'Flight with this id do not exist',1;
+	END
+
+	--GET Airline id
+		DECLARE @AirlineId INT
+		SET @AirlineId=[dbo].[ufn_GetAirlineId](@AirlineName)
+	IF(@AirlineId=-1)
+	BEGIN
+		ROLLBACK
+		;THROW 50015,'Airline with this name do not exist',1;
+	END
+
+	--Validate flight is part of airline
+	IF(dbo.ufn_IsFlightBelongToaAirline(@FlightId,@AirlineName)=0)
+	BEGIN
+		ROLLBACK
+		;THROW 50016,'Flight is not part of this airline',1;
+	END
+
+	--Validate if flight section already exist on this flight
+	IF(dbo.ufn_IsFlightSectionExist(@FlightId,@SeatClass)=0)
+	BEGIN
+		ROLLBACK
+		;THROW 50033,'Flight section do not exist',1;
+	END
+
+		--GET Seat id
+		--GET Flight section id
+	DECLARE @FlightSectionId INT
+	SET @FlightSectionId=dbo.ufn_GetFlightSectionId(@FlightId,@SeatClass)
+		DECLARE @SeatId BIGINT
+		SET @SeatId=([dbo].[ufn_GetSeatId](@FlightSectionId,@Row,@Column))
+		--SELECT @SeatId
+	IF(@SeatId IS NULL)
+	BEGIN
+		ROLLBACK
+		;THROW 50035,'Seat with this numer do not exist',1;
+	END
+	
+	IF((SELECT [Booked] FROM Seat WHERE Id=@SeatId)=1)
+	BEGIN
+		ROLLBACK
+		;THROW 50036,'Seat is already booked',1;
+	END
+
+	UPDATE Seat
+	SET Booked = 1
+	WHERE Id = @SeatId;
+
+	COMMIT
+GO
+
+CREATE OR ALTER PROC usp_GetRowsAndColumsOfFlightSection(@FlightId VARCHAR(40),@SeatClass SMALLINT)
+AS
+	BEGIN TRANSACTION
+		SET NOCOUNT ON;
+		DECLARE @FlightSectionId INT
+		SET @FlightSectionId=(SELECT dbo.ufn_GetFlightSectionId(@FlightId,@SeatClass))
+		SELECT TOP(1) [ROW],[COLUMN] FROM Seat WHERE FlightSectionId=@FlightSectionId ORDER BY Id DESC
+	COMMIT
+GO
+
+CREATE OR ALTER PROC usp_HasAirport(@AirportName CHAR(3))
+AS
+	BEGIN TRANSACTION
+		SET NOCOUNT ON;
+		RETURN (SELECT COUNT(*) FROM Airport WHERE [Name] LIKE @AirportName);
 	COMMIT
 GO

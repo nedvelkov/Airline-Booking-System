@@ -1,13 +1,11 @@
-﻿using System;
-using ABS_SystemManager.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
+using ABS_SystemManager.DbModels;
 
 // Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
 // If you have enabled NRTs for your project, then un-comment the following line:
 // #nullable disable
 
-namespace ABS_SystemManager.DbModels
+namespace ABS_SystemManager
 {
     public partial class ABS_databaseContext : DbContext
     {
@@ -36,16 +34,6 @@ namespace ABS_SystemManager.DbModels
 
         public virtual DbSet<AvailableFlights> GetAvailableFlights { get; set; }
         public virtual DbSet<SeatNumber> GetSeatNumbers { get; set; }
-
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=.;Database=ABS_database;Trusted_Connection=True;");
-            }
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
