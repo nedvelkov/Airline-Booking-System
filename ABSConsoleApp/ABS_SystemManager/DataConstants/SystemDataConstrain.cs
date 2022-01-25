@@ -23,7 +23,7 @@
         /// String for first line of toSting method.
         /// 0 - flight id, 1 - origin, 2 - destination, 3 - date.
         /// </summary>
-        public const string FLIGHT_TO_STRING_TITLE = "-FL Flight #{0} from {1} to {2}.Departure at {3}";
+        public const string FLIGHT_TO_STRING_TITLE = "-FL Flight #{0} from {1} to {2}";
         public const string FLIGHT_TO_STRING_TITLE_DATABASE = "-FL Flight #{0} from {1} to {2} on airline {3}.Departure at {4}";
         public const string FLIGHT_SECTIONS_TITLE = "=FL The flight has {0} section.";
 

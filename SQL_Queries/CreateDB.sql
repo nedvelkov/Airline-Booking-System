@@ -27,6 +27,7 @@ CREATE TABLE Flight
 	OriginId INT NOT NULL,
 	DestinationId INT NOT NULL,
 	Date Date NOT NULL,
+	IsDeparted BIT NOT NULL,
 	CONSTRAINT FK_Airline_Name FOREIGN KEY (AirlineId) REFERENCES Airline(Id),
 	CONSTRAINT FK_Airport_Origin FOREIGN KEY (OriginId) REFERENCES Airport(Id),
 	CONSTRAINT FK_Airport_Destination FOREIGN KEY (DestinationId) REFERENCES Airport(Id),
@@ -46,9 +47,10 @@ CREATE TABLE FlightSection
 CREATE TABLE Seat
 (
 	Id BIGINT PRIMARY KEY NOT NULL IDENTITY(1,1),
-	[ROW] SMALLINT NOT NULL,
-	[COLUMN] CHAR(1) NOT NULL,
+	[Row] SMALLINT NOT NULL,
+	[Column] CHAR(1) NOT NULL,
 	FlightSectionId INT NOT NULL,
+	Booked BIT NOT NULL,
 	CONSTRAINT CHK_ROW_NUMBER CHECK(dbo.ufn_ValidRowNumber([Row])=1),
 	CONSTRAINT CHK_COLUMN_CHAR CHECK(dbo.ufn_ValidColumnChar([Column])=1),
 	CONSTRAINT FK_FlightSection_Id FOREIGN KEY (FlightSectionId) REFERENCES FlightSection(Id)

@@ -14,7 +14,6 @@ namespace ABS_SystemManager.ViewModels
         public string AirlineName { get; set; }
         public ICollection<FlightViewModel> Flights { get; set; }
 
-
         public override string ToString()
         {
             var sb = new StringBuilder();

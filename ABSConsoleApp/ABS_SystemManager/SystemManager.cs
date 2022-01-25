@@ -19,6 +19,7 @@ using static ABS_DataConstants.Error;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using ABS_SystemManager.ViewModels;
+using System.Data;
 
 namespace ABS_SystemManager
 {
@@ -64,8 +65,8 @@ namespace ABS_SystemManager
                     SqlDbType = System.Data.SqlDbType.Bit,
                     Direction = System.Data.ParameterDirection.Output,
                 };
-               var result= await _databaseContext.Database.ExecuteSqlRawAsync($"usp_HasAirport {name},@HasAirport OUTPUT",parameterReturn);
-                
+                var result = await _databaseContext.Database.ExecuteSqlRawAsync($"usp_HasAirport {name},@HasAirport OUTPUT", parameterReturn);
+
                 return (bool)parameterReturn.Value;
             }
             catch (Exception)
@@ -137,17 +138,18 @@ namespace ABS_SystemManager
             List<AvailableFlights> flights;
             try
             {
-                 ValidateFlightDestination(origin, destination);
-                flights= _databaseContext.GetAvailableFlights.FromSqlRaw($"usp_FindAvailableFlights {origin},{destination}").ToList();
+                ValidateFlightDestination(origin, destination);
+                flights = _databaseContext.GetAvailableFlights.FromSqlRaw($"usp_FindAvailableFlights {origin},{destination}").ToList();
             }
             catch (Exception a)
             {
                 return a.Message;
             }
 
-            return flights.Count > 0 
-                                 ? string.Concat(Environment.NewLine,flights) 
+            var result= flights.Count > 0
+                                 ? string.Concat(Environment.NewLine, flights)
                                  : string.Format(NO_AVIABLE_FLIGHTS, origin, destination);
+            return result;
 
         }
 
@@ -178,18 +180,18 @@ namespace ABS_SystemManager
             sb.AppendLine(DISPLAY_AIRPORTS_TITLE);
 
             _databaseContext.GetNames.FromSqlRaw("usp_GetAirportNames")
-                                        .Select(x => string.Format(AIRPORT_TO_STRING_TITLE, x.Name))
-                                        .ToList()
-                                        .ForEach(x => sb.AppendLine(x.ToString()));
-            
+                                     .Select(x => string.Format(AIRPORT_TO_STRING_TITLE, x.Name))
+                                     .ToList()
+                                     .ForEach(x => sb.AppendLine(x.ToString()));
+
             sb.AppendLine(DISPLAY_AIRLINES_TITLE);
-            var airlines = _databaseContext.GetAirlineViews.FromSqlRaw($"usp_GetArilinesView").ToList();
-            //var t = _databaseContext.Airline.Include(x => x.Flight).ThenInclude(x => x.FlightSection).ToList();
-            ;
-            //if (airlines.Count > 0)
-            //{
-            //    airlines.ForEach(x => sb.AppendLine(x.ToString()));
-            //}
+
+            var rowData = _databaseContext.ViewTest.FromSqlRaw($"usp_GetArilinesView").ToList();
+            var airlines = ParseAirlineView(rowData);
+            if (airlines.Count > 0)
+            {
+                airlines.ForEach(x => sb.AppendLine(x.ToString()));
+            }
 
             return sb.ToString().Trim();
         }
@@ -278,6 +280,82 @@ namespace ABS_SystemManager
                 throw new ArgumentException(string.Format(INVALID_SEAT_COUNT, type, min, max));
             }
         }
+
+        private List<AirlineViewModel> ParseAirlineView(List<AirlineViewTest> airlineViews)
+        {
+            var airlines = new Dictionary<string, AirlineViewModel>();
+            foreach (var row in airlineViews)
+            {
+                var airlineName = row.AirlineName;
+                var flightId = row.FlightId;
+                var seatClass = row.SeatClass;
+                if (airlines.ContainsKey(airlineName))
+                {
+                    var currentAirline = airlines[airlineName];
+                    var lastFlight = currentAirline.Flights.LastOrDefault() == null ? AddNewFlight(currentAirline, flightId, row.Origin, row.Destination) : currentAirline.Flights.Last();
+                    if (lastFlight.FlightId != flightId)
+                    {
+                        lastFlight = AddNewFlight(airlines[airlineName], flightId, row.Origin, row.Destination);
+
+                    }
+                    if (AddNewFligtSection(lastFlight, seatClass) == false)
+                    {
+                        continue;
+                    }
+                    AddSeatToFlightSection(lastFlight.FlightSections.Last(), (int)row.Row, row.Column[0], (bool)row.Booked);
+                }
+                else
+                {
+                    var airline = new AirlineViewModel() { AirlineName = airlineName };
+                    airlines.Add(airlineName, airline);
+                    var newFlight = AddNewFlight(airline, flightId, row.Origin, row.Destination);
+                    if (AddNewFligtSection(newFlight, seatClass) == false)
+                    {
+                        continue;
+                    }
+                    AddSeatToFlightSection(newFlight.FlightSections.Last(), (int)row.Row, row.Column[0], (bool)row.Booked);
+                }
+
+            }
+            return airlines.Select(x => x.Value).ToList();
+        }
+
+
+        private void AddSeatToFlightSection(FlightSectionViewModel flightSection, int row, char column, bool booked)
+        {
+            var seat = new SeatViewModel
+            {
+                Row = row,
+                Column = column,
+                Booked = booked
+            };
+            flightSection.Seats.Add(seat);
+        }
+
+        private bool AddNewFligtSection(FlightViewModel flight, short? seatClass)
+        {
+            if (seatClass == null)
+            {
+                return false;
+            }
+            var lastSection = flight.FlightSections.LastOrDefault();
+            var currentRowSeatClass = ValidateEnum<SeatClass>((int)seatClass);
+            if (lastSection != null && currentRowSeatClass == lastSection.SeatClass)
+            {
+                return true;
+            }
+            var newFlightSection = new FlightSectionViewModel { SeatClass = currentRowSeatClass };
+            flight.FlightSections.Add(newFlightSection);
+            return true;
+        }
+
+        private FlightViewModel AddNewFlight(AirlineViewModel airline, string flightId, string origin, string destination)
+        {
+            var flight = new FlightViewModel { FlightId = flightId, Origin = origin, Destination = destination };
+            airline.Flights.Add(flight);
+            return flight;
+        }
+
 
     }
 }

@@ -8,7 +8,6 @@ namespace ABS_WebApp.Seeder
 
         public async Task<bool> Seed(ISystemManager manager)
         {
-            var test = manager.DisplaySystemDetails();
             var flag = await manager.HasAirport("SFA");
             if (flag)
             {

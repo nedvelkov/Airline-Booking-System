@@ -32,7 +32,7 @@ namespace ABS_WebApp.Controllers
             if (ModelState.IsValid)
             {
                 var data = await _webApiService.GetAviableFlights(model.Flight);
-
+                ;
                 ParseData(data, model);
             }
             var dataAirports = await _webApiService.GetAirports();

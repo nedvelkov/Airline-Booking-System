@@ -40,6 +40,7 @@ namespace ABS_SystemManager
         public virtual DbSet<FlightViewModel> GetFlightViews { get; set; }
         public virtual DbSet<FlightSectionViewModel> GetFlightSectionViewModels { get; set; }
         public virtual DbSet<SeatViewModel> GetSeatViewModels { get; set; }
+        public virtual DbSet<AirlineViewTest> ViewTest { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -138,6 +139,7 @@ namespace ABS_SystemManager
             modelBuilder.Entity<FlightViewModel>(entity => entity.HasNoKey());
             modelBuilder.Entity<FlightSectionViewModel>(entity => entity.HasNoKey());
             modelBuilder.Entity<SeatViewModel>(entity => entity.HasNoKey());
+            modelBuilder.Entity<AirlineViewTest>(entity => entity.HasNoKey());
 
             OnModelCreatingPartial(modelBuilder);
         }
