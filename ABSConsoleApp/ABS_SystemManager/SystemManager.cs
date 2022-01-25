@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
-using System.Globalization;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 using ABS_SystemManager.DbModels;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
 
 
 using ABS_SystemManager.Interfaces;
@@ -20,6 +18,7 @@ using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using ABS_SystemManager.ViewModels;
 using System.Data;
+using ABS_SystemManager.UserDefineModels;
 
 namespace ABS_SystemManager
 {
@@ -146,8 +145,8 @@ namespace ABS_SystemManager
                 return a.Message;
             }
 
-            var result= flights.Count > 0
-                                 ? string.Concat(Environment.NewLine, flights)
+            var result = flights.Count > 0
+                                 ? string.Join(Environment.NewLine, flights)
                                  : string.Format(NO_AVIABLE_FLIGHTS, origin, destination);
             return result;
 
@@ -160,7 +159,7 @@ namespace ABS_SystemManager
                 ValidateString(flightId, EVALUATE_FLIGHT_ID, FLIGHT_TOOLTIP);
                 ValidateString(airlineName, EVALUATE_AIRLINE_NAME, AIRLINE_TOOLTIP);
 
-                var lastSeatNumber = _databaseContext.GetSeatNumbers.FromSqlRaw($"sp_GetRowsAndColumsOfFlightSection {flightId},{seatClass}").FirstOrDefault();
+                var lastSeatNumber = _databaseContext.GetSeatNumbers.FromSqlRaw($"usp_GetRowsAndColumsOfFlightSection {flightId},{seatClass}").ToList().FirstOrDefault();
                 CheckIfSeatIsValid(row, column, lastSeatNumber);
 
                 await _databaseContext.Database.ExecuteSqlRawAsync($"usp_BookSeat {airlineName},{flightId},{seatClass},{row},{column}");
@@ -186,7 +185,7 @@ namespace ABS_SystemManager
 
             sb.AppendLine(DISPLAY_AIRLINES_TITLE);
 
-            var rowData = _databaseContext.ViewTest.FromSqlRaw($"usp_GetArilinesView").ToList();
+            var rowData = _databaseContext.GetAirlineTableView.FromSqlRaw($"usp_GetArilinesView").ToList();
             var airlines = ParseAirlineView(rowData);
             if (airlines.Count > 0)
             {
@@ -198,9 +197,9 @@ namespace ABS_SystemManager
 
         public IReadOnlyList<string> ListAirlines => _databaseContext.GetNames.FromSqlRaw("usp_GetAirlineNames").Select(x => x.Name).ToList();
 
-        public IReadOnlyList<string> ListAirports => _databaseContext.GetNames.FromSqlRaw("usp_GetAirportNames").Select(x => x.Name).ToList();
+        public IReadOnlyList<string> ListAirports => _databaseContext.GetNames.FromSqlRaw("usp_GetAirportNames").Select(x => x.Name).ToList().Select(x=>x.Trim()).ToList();
 
-        public IReadOnlyList<string> ListFlights => _databaseContext.GetIds.FromSqlRaw("usp_GetFlightIds").Select(x => x.Id).ToList();
+        public IReadOnlyList<string> ListFlights => _databaseContext.GetIds.FromSqlRaw("usp_GetFlightIds").Select(x => x.Id).ToList().Select(x => x.Trim()).ToList();
 
         /// <summary>
         /// Validate <paramref name="text"/> based on regex <paramref name="expression"/>.
@@ -261,7 +260,7 @@ namespace ABS_SystemManager
                 throw new ArgumentException(INVALID_SEAT_ROW);
             }
 
-            if (column < seatNumber.Column[0] || column > seatNumber.Column[0])
+            if (column < FIRST_SEAT_COLUMN_AS_CHAR || column > seatNumber.Column[0])
             {
                 throw new ArgumentException(INVALID_SEAT_COLUMN);
             }
@@ -281,7 +280,7 @@ namespace ABS_SystemManager
             }
         }
 
-        private List<AirlineViewModel> ParseAirlineView(List<AirlineViewTest> airlineViews)
+        private List<AirlineViewModel> ParseAirlineView(List<AirlineTableView> airlineViews)
         {
             var airlines = new Dictionary<string, AirlineViewModel>();
             foreach (var row in airlineViews)

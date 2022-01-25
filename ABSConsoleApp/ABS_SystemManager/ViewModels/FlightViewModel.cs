@@ -8,7 +8,7 @@ using static ABS_SystemManager.DataConstants.SystemDataConstrain;
 namespace ABS_SystemManager.ViewModels
 {
 
-    public class FlightViewModel
+    internal class FlightViewModel
     {
 
         public FlightViewModel() => FlightSections = new HashSet<FlightSectionViewModel>();

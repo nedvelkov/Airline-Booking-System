@@ -1,4 +1,4 @@
-﻿namespace ABS_SystemManager.DbModels
+﻿namespace ABS_SystemManager.UserDefineModels
 {
     public class IdColumn
     {

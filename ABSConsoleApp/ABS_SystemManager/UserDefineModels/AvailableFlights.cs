@@ -2,7 +2,7 @@
 
 using static ABS_SystemManager.DataConstants.SystemDataConstrain;
 
-namespace ABS_SystemManager.DbModels
+namespace ABS_SystemManager.UserDefineModels
 {
     public class AvailableFlights
     {

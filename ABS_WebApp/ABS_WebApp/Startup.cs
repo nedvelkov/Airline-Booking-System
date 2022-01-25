@@ -28,7 +28,7 @@ namespace ABS_WebApp
             {
                 opt.Cookie.Name = COOKIE_TOKEN_NAME;
                 opt.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None;
-                opt.ExpireTimeSpan= System.TimeSpan.FromHours(int.Parse(Configuration["ExpireCookieTime:PersistentAsHours"].ToString()));
+                opt.ExpireTimeSpan = System.TimeSpan.FromHours(int.Parse(Configuration["ExpireCookieTime:PersistentAsHours"].ToString()));
                 opt.LoginPath = "/account/login";
             });
             services.AddSingleton<IAccountService, AccountService>();
@@ -57,12 +57,16 @@ namespace ABS_WebApp
 
             app.UseEndpoints(endpoints =>
              {
+
+                 endpoints.MapAreaControllerRoute(
+                    name: "Admin",
+                 areaName: "Admin",
+                 pattern: "Admin/{controller=Account}/{action=Login}/{id?}");
+
                  endpoints.MapControllerRoute(
-                     name: "Admin",
-                     pattern: "{area:exists}/{controller=App}/{action=DisplaySystemDetails}/{id?}");
-                 endpoints.MapControllerRoute(
-                     name: "default",
-                     pattern: "{controller=App}/{action=DisplaySystemDetails}/{id?}");
+                    name: "default",
+                    pattern: "{controller=Account}/{action=Login}/{id?}");
+
              });
         }
     }

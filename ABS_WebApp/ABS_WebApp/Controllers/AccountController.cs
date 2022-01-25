@@ -59,7 +59,7 @@ namespace ABS_WebApp.Controllers
                 }, COOKIE_SHEME_NAME);
                 var authProperties = new AuthenticationProperties
                 {
-                    IsPersistent = true
+                    IsPersistent = false
                 };
                 if (!loginModel.RememberMe)
                 {
@@ -160,7 +160,7 @@ namespace ABS_WebApp.Controllers
             {
                 await HttpContext.SignOutAsync(COOKIE_SHEME_NAME);
             }
-            return RedirectToAction(nameof(Login));
+            return RedirectToAction(nameof(Login), "Account");
         }
     }
 }

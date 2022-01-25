@@ -1,9 +1,6 @@
-﻿using System;
-
-
-namespace ABS_SystemManager.ViewModels
+﻿namespace ABS_SystemManager.UserDefineModels
 {
-    public class AirlineViewTest
+    public class AirlineTableView
     {
         public string AirlineName { get; set; }
         public string FlightId { get; set; }

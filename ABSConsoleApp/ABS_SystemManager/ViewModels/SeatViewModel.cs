@@ -4,7 +4,7 @@ using static ABS_SystemManager.DataConstants.SystemDataConstrain;
 
 namespace ABS_SystemManager.ViewModels
 {
-    public class SeatViewModel
+    internal class SeatViewModel
     {
         public int Row { get; set; }
         public char Column { get; set; }

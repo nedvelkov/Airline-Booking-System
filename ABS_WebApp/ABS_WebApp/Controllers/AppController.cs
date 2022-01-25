@@ -83,7 +83,7 @@ namespace ABS_WebApp.Controllers
             var dataAirlines = await _webApiService.GetAirlines();
             model.Airlines = dataAirlines.ToList();
             var dataFlights = await _webApiService.GetFlights();
-            model.Flights = dataFlights.ToList();
+            model.Flights = dataFlights.Select(x=>x.Trim()).ToList();
             return model;
         }
 
