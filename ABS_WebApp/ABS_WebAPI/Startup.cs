@@ -26,7 +26,7 @@ namespace ABS_WebAPI
         {
             services.AddDbContext<ABS_databaseContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection"), x => x.MigrationsAssembly("ABS_WebAPI")));
+                    Configuration.GetConnectionString("DefaultConnection")));
             services.AddResponseCaching();
             services.AddTransient<ISystemManager, SystemManager>();
             services.AddTransient<IAirportService, AirportService>();
