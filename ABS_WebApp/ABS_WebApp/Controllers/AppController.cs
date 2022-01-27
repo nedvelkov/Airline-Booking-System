@@ -63,7 +63,7 @@ namespace ABS_WebApp.Controllers
             ParseData(data, model);
             return View(model);
         }
-
+        [AllowAnonymous]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

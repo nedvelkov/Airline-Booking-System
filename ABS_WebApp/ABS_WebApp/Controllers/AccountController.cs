@@ -68,12 +68,20 @@ namespace ABS_WebApp.Controllers
                 }
                 var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-                await Response.HttpContext.SignInAsync(COOKIE_SHEME_NAME, claimsPrincipal, authProperties);
+                try
+                {
 
-                HttpContext.Response.Cookies.Append(COOKIE_SHEME_NAME, claimsPrincipal.ToString(),
-                    new Microsoft.AspNetCore.Http.CookieOptions { Expires = authProperties.ExpiresUtc });
+                    await Response.HttpContext.SignInAsync(COOKIE_SHEME_NAME, claimsPrincipal, authProperties);
 
-                if (claimsUser.Role==USER_ROLE)
+                    HttpContext.Response.Cookies.Append(COOKIE_SHEME_NAME, claimsPrincipal.ToString(),
+                        new Microsoft.AspNetCore.Http.CookieOptions { Expires = authProperties.ExpiresUtc });
+                }
+                catch (System.Exception)
+                {
+                    return RedirectToAction("Error", "App");
+                }
+
+                if (claimsUser.Role == USER_ROLE)
                 {
                     return RedirectToAction("DisplaySystemDetails", "App");
                 }

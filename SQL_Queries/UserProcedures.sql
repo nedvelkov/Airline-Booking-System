@@ -205,7 +205,7 @@ CREATE OR ALTER PROC usp_GetFlightIds
 AS
 	BEGIN TRANSACTION
 		SET NOCOUNT ON;
-		SELECT [Name] FROM [dbo].[Airline]
+		SELECT Id FROM [dbo].Flight
 	COMMIT
 GO
 

@@ -5,13 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.22">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\ABSConsoleApp\ABS_SystemManager\ABS_SystemManager.csproj" />
     <ProjectReference Include="..\ABS_DataConstants\ABS_DataConstants.csproj" />
     <ProjectReference Include="..\ABS_Models\ABS_Models.csproj" />
