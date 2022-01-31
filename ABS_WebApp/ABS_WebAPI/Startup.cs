@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 using ABS_SystemManager;
+using ABS_SystemManager.Data;
 using ABS_SystemManager.Interfaces;
 using ABS_WebAPI.Services.Interfaces;
 using ABS_WebAPI.Services.Models;
@@ -27,6 +28,7 @@ namespace ABS_WebAPI
             services.AddDbContext<ABS_databaseContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<IAbsRepository, AbsRepository>();
             services.AddResponseCaching();
             services.AddTransient<ISystemManager, SystemManager>();
             services.AddTransient<IAirportService, AirportService>();

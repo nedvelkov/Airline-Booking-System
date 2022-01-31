@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ABS_SystemManager.DbModels
+namespace ABS_SystemManager.Data.DbModels
 {
     public partial class Flight
     {

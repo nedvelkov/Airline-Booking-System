@@ -10,7 +10,7 @@ namespace ABS_WebAPI.Services.Models
         private readonly ISystemManager _manager;
 
         public SystemService(ISystemManager manager) => _manager = manager;
-        public string Details() => _manager.DisplaySystemDetails();
+        public async Task<string> Details() => await _manager.DisplaySystemDetails();
         public async Task<bool> SeedData()
         {
             var seeder = new DataSeeder();

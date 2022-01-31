@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ABS_SystemManager.DbModels;
-using ABS_SystemManager.UserDefineModels;
+using ABS_SystemManager.Data.DbModels;
+using ABS_SystemManager.Data.UserDefineModels;
 
-namespace ABS_SystemManager
+namespace ABS_SystemManager.Data
 {
     public partial class ABS_databaseContext : DbContext
     {

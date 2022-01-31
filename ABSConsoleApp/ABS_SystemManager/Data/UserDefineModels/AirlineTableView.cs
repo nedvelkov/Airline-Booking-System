@@ -1,4 +1,4 @@
-﻿namespace ABS_SystemManager.UserDefineModels
+﻿namespace ABS_SystemManager.Data.UserDefineModels
 {
     public class AirlineTableView
     {

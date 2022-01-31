@@ -5,10 +5,10 @@ using System.Text;
 
 using static ABS_SystemManager.DataConstants.SystemDataConstrain;
 
-namespace ABS_SystemManager.ViewModels
+namespace ABS_SystemManager.Data.ViewModels
 {
 
-    internal class AirlineViewModel
+    public class AirlineViewModel
     {
         public AirlineViewModel() => Flights = new HashSet<FlightViewModel>();
         public string AirlineName { get; set; }

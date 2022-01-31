@@ -18,7 +18,7 @@ namespace ABS_WebAPI.Services.Models
         public async Task<string> CreateFlight(string airlineName, string origin, string destination, int year, int month, int day, string id)
             => await _manager.CreateFlight(airlineName, origin, destination, year, month, day, id);
 
-        public string FindAvailableFlights(string origin, string destination)
-            => _manager.FindAvailableFlights(origin, destination);
+        public async Task<string> FindAvailableFlights(string origin, string destination)
+            => await _manager.FindAvailableFlights(origin, destination);
     }
 }

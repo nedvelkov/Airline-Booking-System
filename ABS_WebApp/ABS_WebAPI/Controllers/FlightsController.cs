@@ -24,9 +24,9 @@ namespace ABS_WebAPI.Controllers
         [HttpGet]
         [Route(FIND_FLIGHT_API_PATH)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public string GetAviableFlights(string origin, string destination)
+        public async Task<string> GetAviableFlights(string origin, string destination)
         {
-            return _flightService.FindAvailableFlights(origin, destination);
+            return await _flightService.FindAvailableFlights(origin, destination);
         }
 
         [HttpPost]

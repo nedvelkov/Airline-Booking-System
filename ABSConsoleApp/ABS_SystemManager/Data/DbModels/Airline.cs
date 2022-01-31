@@ -4,7 +4,7 @@
 // If you have enabled NRTs for your project, then un-comment the following line:
 // #nullable disable
 
-namespace ABS_SystemManager.DbModels
+namespace ABS_SystemManager.Data.DbModels
 {
     public partial class Airline
     {

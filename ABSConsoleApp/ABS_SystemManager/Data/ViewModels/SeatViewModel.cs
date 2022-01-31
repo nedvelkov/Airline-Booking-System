@@ -2,9 +2,9 @@
 
 using static ABS_SystemManager.DataConstants.SystemDataConstrain;
 
-namespace ABS_SystemManager.ViewModels
+namespace ABS_SystemManager.Data.ViewModels
 {
-    internal class SeatViewModel
+    public class SeatViewModel
     {
         public int Row { get; set; }
         public char Column { get; set; }

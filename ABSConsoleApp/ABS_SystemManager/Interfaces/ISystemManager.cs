@@ -15,11 +15,11 @@ namespace ABS_SystemManager.Interfaces
 
         public Task<string> CreateSection(string airlineName, string flightId, int rows, int columns, int seatClass);
 
-        public string FindAvailableFlights(string origin, string destination);
+        public Task<string> FindAvailableFlights(string origin, string destination);
 
         public Task<string> BookSeat(string airlineName, string flightId, int seatClass, int row, char column);
 
-        public string DisplaySystemDetails();
+        public Task<string> DisplaySystemDetails();
 
         public IReadOnlyList<string> ListAirlines { get; }
 

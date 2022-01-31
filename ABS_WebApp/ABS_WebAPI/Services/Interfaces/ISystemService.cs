@@ -4,7 +4,7 @@ namespace ABS_WebAPI.Services.Interfaces
 {
     public interface ISystemService
     {
-        public string Details();
+        public Task<string> Details();
 
         public Task<bool> SeedData();
     }

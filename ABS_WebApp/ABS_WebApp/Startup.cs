@@ -48,10 +48,11 @@ namespace ABS_WebApp
             }
 
             app.UseHttpsRedirection()
-               .UseStaticFiles()
-               .UseRouting()
-               .UseAuthentication()
-               .UseAuthorization();
+               .UseStaticFiles();
+            app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.ApplicationServices.GetService<IAccountService>().SeedAdmin();
 

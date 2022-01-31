@@ -1,4 +1,4 @@
-﻿namespace ABS_SystemManager.DbModels
+﻿namespace ABS_SystemManager.Data.DbModels
 {
     public partial class Seat
     {
