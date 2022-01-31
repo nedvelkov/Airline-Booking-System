@@ -205,6 +205,7 @@ CREATE OR ALTER PROC usp_GetFlightIds
 AS
 	BEGIN TRANSACTION
 		SET NOCOUNT ON;
+		EXEC usp_CheckIfFlightIsDeparted
 		SELECT Id FROM [dbo].Flight
 	COMMIT
 GO
@@ -238,6 +239,8 @@ AS
 		ROLLBACK
 		;THROW 50007,'Airport with this destination name do not exist',1;
 	END
+
+	EXEC usp_CheckIfFlightIsDeparted
 
 	SELECT Flight.Id,Airline.Name AS AirlineName,Flight.Date,AirOrig.Name as Origin,AirDest.Name as Destination
 	FROM Flight
@@ -352,30 +355,30 @@ GO
 CREATE OR ALTER PROC usp_GetArilinesView
 AS
 	BEGIN TRANSACTION
-	SELECT a.Name as AirlineName,t0.FlightId,t0.Origin,t0.Destination,t0.SeatClass,t0.[ROW],t0.[COLUMN],t0.Booked
-			FROM Airline as [a]
-						LEFT JOIN (SELECT f.id as FlightId,
-								   AirOrig.Name AS Origin,
-								   AirDest.Name AS Destination,
-								   f.AirlineId,
-								   t1.SeatClass,
-								   t1.[ROW],
-								   t1.[COLUMN],
-								   t1.Booked
-								   FROM Flight AS f 
-								   JOIN Airport AirOrig ON f.OriginId=AirOrig.Id
-								   JOIN Airport AirDest ON f.DestinationId=AirDest.Id
-								   LEFT JOIN ( SELECT fl.FlightId,
-											   fl.SeatClass,
-											   t2.[ROW],
-											   t2.[COLUMN],
-											   t2.Booked
-											   FROM FlightSection AS fl
-											   LEFT JOIN (SELECT ROW,[COLUMN],Booked,FlightSectionId FROM Seat
-											   ) AS t2 on fl.Id=t2.FlightSectionId
-								   ) as  t1 on f.Id=t1.FlightId
-								   WHERE f.IsDeparted =0) 
-	   as t0 on a.Id=t0.AirlineId
-						
+
+	EXEC usp_CheckIfFlightIsDeparted
+
+	SELECT Airline.Name AS AirlineName,
+	   Flight.id as FlightId,
+	   AirOrig.Name AS Origin,
+	   AirDest.Name AS Destination,
+	   FlightSection.SeatClass,
+	   Seat.[Row],Seat.[COLUMN],Seat.Booked
+	FROM Airline 
+			JOIN Flight on Flight.AirlineId=Airline.Id
+			JOIN Airport AirOrig ON Flight.OriginId=AirOrig.Id
+			JOIN Airport AirDest ON Flight.DestinationId=AirDest.Id
+			JOIN FlightSection on FlightSection.FlightId=Flight.Id
+			JOIN Seat on Seat.FlightSectionId =FlightSection.Id
+			WHERE Flight.IsDeparted =0					
+	COMMIT
+GO
+
+CREATE OR ALTER PROC usp_CheckIfFlightIsDeparted
+AS
+	BEGIN TRANSACTION
+		UPDATE Flight
+		SET IsDeparted=1
+		WHERE [Date]<=GETDATE()
 	COMMIT
 GO

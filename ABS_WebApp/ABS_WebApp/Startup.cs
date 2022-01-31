@@ -27,7 +27,7 @@ namespace ABS_WebApp
             }).AddCookie(COOKIE_SHEME_NAME, opt =>
             {
                 opt.Cookie.Name = COOKIE_TOKEN_NAME;
-                opt.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None;
+                opt.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict;
                 opt.ExpireTimeSpan = System.TimeSpan.FromHours(int.Parse(Configuration["ExpireCookieTime:PersistentAsHours"].ToString()));
                 opt.LoginPath = "/account/login";
             });
