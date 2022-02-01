@@ -25,9 +25,13 @@ namespace ABS_SystemManager.Data
 
         public virtual DbSet<Seat> Seat { get; set; }
 
-        public virtual DbSet<NameColumn> GetNames { get; set; }
+        public virtual DbSet<AirportName> GetAirportNames { get; set; }
+
+        public virtual DbSet<AirlineName> GetAirlineNames { get; set; }
 
         public virtual DbSet<IdColumn> GetIds { get; set; }
+
+        public virtual DbSet<AirportExist> AirportExists { get; set; }
 
         public virtual DbSet<AvailableFlights> GetAvailableFlights { get; set; }
 
@@ -119,11 +123,21 @@ namespace ABS_SystemManager.Data
                     .HasConstraintName("FK_FlightSection_Id");
             });
 
-            modelBuilder.Entity<NameColumn>(entity => entity.HasNoKey());
+            modelBuilder.Entity<AirportName>(entity => {
+                entity.HasNoKey();
+                entity.ToView("GetAirportNames");
+                });
+
+            modelBuilder.Entity<AirlineName>(entity => {
+                entity.HasNoKey();
+                entity.ToView("GetAirlineNames");
+            });
 
             modelBuilder.Entity<IdColumn>(entity => entity.HasNoKey());
 
             modelBuilder.Entity<AvailableFlights>(entity => entity.HasNoKey());
+
+            modelBuilder.Entity<AirportExist>(entity => entity.HasNoKey());
 
             modelBuilder.Entity<SeatNumber>(entity => entity.HasNoKey());
 

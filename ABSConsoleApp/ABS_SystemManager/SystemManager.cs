@@ -6,13 +6,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-
 
 using ABS_SystemManager.Interfaces;
-using ABS_SystemManager.Data;
-using ABS_SystemManager.Data.ViewModels;
 using ABS_SystemManager.Data.UserDefineModels;
 
 using static ABS_DataConstants.DataConstrain;

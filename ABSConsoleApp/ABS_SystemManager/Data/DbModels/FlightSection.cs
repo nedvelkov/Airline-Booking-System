@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-
-// Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
-// If you have enabled NRTs for your project, then un-comment the following line:
-// #nullable disable
+﻿using System.Collections.Generic;
 
 namespace ABS_SystemManager.Data.DbModels
 {
     public partial class FlightSection
     {
-        public FlightSection()
-        {
-            Seat = new HashSet<Seat>();
-        }
+        public FlightSection() => Seat = new HashSet<Seat>();
 
         public int Id { get; set; }
         public short SeatClass { get; set; }

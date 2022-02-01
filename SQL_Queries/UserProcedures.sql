@@ -183,24 +183,6 @@ BEGIN TRANSACTION
 	COMMIT
 GO
 
-CREATE OR ALTER PROC usp_GetAirportNames
-AS
-
-	BEGIN TRANSACTION
-		SET NOCOUNT ON;
-		SELECT [Name] FROM Airport
-	COMMIT
-GO
-
-CREATE OR ALTER PROC usp_GetAirlineNames
-AS
-
-	BEGIN TRANSACTION
-		SET NOCOUNT ON;
-		SELECT [Name] FROM [dbo].[Airline]
-	COMMIT
-GO
-
 CREATE OR ALTER PROC usp_GetFlightIds
 AS
 	BEGIN TRANSACTION
@@ -354,8 +336,6 @@ GO
 
 CREATE OR ALTER PROC usp_GetArilinesView
 AS
-	BEGIN TRANSACTION
-
 	EXEC usp_CheckIfFlightIsDeparted
 
 	SELECT Airline.Name AS AirlineName,
@@ -371,7 +351,6 @@ AS
 			JOIN FlightSection on FlightSection.FlightId=Flight.Id
 			JOIN Seat on Seat.FlightSectionId =FlightSection.Id
 			WHERE Flight.IsDeparted =0					
-	COMMIT
 GO
 
 CREATE OR ALTER PROC usp_CheckIfFlightIsDeparted

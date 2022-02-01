@@ -70,12 +70,11 @@ namespace ABS_SystemManager.Data
             return list.FirstOrDefault();
         }
 
-        public List<string> ListAirlines => _context.GetNames
-                                                    .FromSqlRaw("usp_GetAirlineNames")
-                                                    .Select(x => x.Name).ToList();
+        public List<string> ListAirlines => _context.GetAirlineNames
+                                                    .Select(x => x.Name).ToList()
+                                                    .Select(x => x.Trim()).ToList();
 
-        public List<string> ListAirports => _context.GetNames
-                                                    .FromSqlRaw("usp_GetAirportNames")
+        public List<string> ListAirports => _context.GetAirportNames
                                                     .Select(x => x.Name).ToList()
                                                     .Select(x => x.Trim()).ToList();
 

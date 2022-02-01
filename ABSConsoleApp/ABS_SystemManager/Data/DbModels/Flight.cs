@@ -5,10 +5,7 @@ namespace ABS_SystemManager.Data.DbModels
 {
     public partial class Flight
     {
-        public Flight()
-        {
-            FlightSection = new HashSet<FlightSection>();
-        }
+        public Flight() => FlightSection = new HashSet<FlightSection>();
 
         public string Id { get; set; }
         public int AirlineId { get; set; }
