@@ -20,7 +20,7 @@ namespace ABS_SystemManager.Data
         public AbsRepository(ABS_databaseContext context) => _context = context;
 
         public async Task<bool> CreateAirport(string name)
-            => await _context.Database.ExecuteSqlRawAsync($"usp_CreateAirport {name}") == 1;
+            => await _context.Database.ExecuteSqlInterpolatedAsync($"usp_CreateAirport {name}") == 1;
 
         public async Task<bool> HasAirport(string name)
         {
@@ -37,24 +37,24 @@ namespace ABS_SystemManager.Data
         }
 
         public async Task<bool> CreateAirline(string name)
-            => await _context.Database.ExecuteSqlRawAsync($"usp_CreateAirline {name}") == 1;
+            => await _context.Database.ExecuteSqlInterpolatedAsync($"usp_CreateAirline {name}") == 1;
 
         public async Task<bool> CreateFlight(string airlineName, string origin, string destination, int year, int month, int day, string id)
             => await _context.Database
-                             .ExecuteSqlRawAsync($"usp_CreateFlight {airlineName},{origin},{destination},{year},{month},{day},{id}") == 1;
+                             .ExecuteSqlInterpolatedAsync($"usp_CreateFlight {airlineName},{origin},{destination},{year},{month},{day},{id}") == 1;
 
         public async Task<bool> CreateSection(string airlineName, string flightId, int rows, int columns, int seatClass)
             => await _context.Database
-                             .ExecuteSqlRawAsync($"usp_CreateFlightSection {airlineName},{flightId},{rows},{columns},{seatClass}") == 1;
+                             .ExecuteSqlInterpolatedAsync($"usp_CreateFlightSection {airlineName},{flightId},{rows},{columns},{seatClass}") == 1;
 
         public async Task<List<AvailableFlights>> FindAvailableFlights(string origin, string destination)
             => await _context.GetAvailableFlights
-                       .FromSqlRaw($"usp_FindAvailableFlights {origin},{destination}")
+                       .FromSqlInterpolated($"usp_FindAvailableFlights {origin},{destination}")
                        .ToListAsync();
 
         public async Task<bool> BookSeat(string airlineName, string flightId, int seatClass, int row, char column)
             => await _context.Database
-                             .ExecuteSqlRawAsync($"usp_BookSeat {airlineName},{flightId},{seatClass},{row},{column}") == 1;
+                             .ExecuteSqlInterpolatedAsync($"usp_BookSeat {airlineName},{flightId},{seatClass},{row},{column}") == 1;
 
         public async Task<List<AirlineViewModel>> GetAirlineViews()
         {
@@ -65,7 +65,7 @@ namespace ABS_SystemManager.Data
         public async Task<SeatNumber> GetLastSeatNumber(string flightId, int seatClass)
         {
             var list = await _context.GetSeatNumbers
-                                       .FromSqlRaw($"usp_GetRowsAndColumsOfFlightSection {flightId},{seatClass}")
+                                       .FromSqlInterpolated($"usp_GetRowsAndColumsOfFlightSection {flightId},{seatClass}")
                                        .ToListAsync();
             return list.FirstOrDefault();
         }
