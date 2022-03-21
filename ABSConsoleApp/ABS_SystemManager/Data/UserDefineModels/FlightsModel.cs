@@ -4,7 +4,7 @@ using static ABS_SystemManager.DataConstants.SystemDataConstrain;
 
 namespace ABS_SystemManager.Data.UserDefineModels
 {
-    public class AvailableFlights
+    public class FlightsModel
     {
         public string Id { get; set; }
 

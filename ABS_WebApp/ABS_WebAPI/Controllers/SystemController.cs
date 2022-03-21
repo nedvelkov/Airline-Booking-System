@@ -3,6 +3,7 @@ using ABS_WebAPI.Services.Interfaces;
 using static ABS_DataConstants.DataConstrain;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
+using ABS_Models;
 
 namespace ABS_WebAPI.Controllers
 {
@@ -16,6 +17,7 @@ namespace ABS_WebAPI.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<string> Get() => await _system.Details();
+        [Produces("application/json")]
+        public async Task<SystemDetailsModel> Get() => await _system.Details();
     }
 }

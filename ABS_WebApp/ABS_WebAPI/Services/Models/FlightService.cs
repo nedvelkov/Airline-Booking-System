@@ -1,4 +1,5 @@
-﻿using ABS_SystemManager.Interfaces;
+﻿using ABS_SystemManager.Data.UserDefineModels;
+using ABS_SystemManager.Interfaces;
 using ABS_WebAPI.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -20,5 +21,7 @@ namespace ABS_WebAPI.Services.Models
 
         public async Task<string> FindAvailableFlights(string origin, string destination)
             => await _manager.FindAvailableFlights(origin, destination);
+
+        public async Task<List<FlightsModel>> GetFlightsByAirlineName(string airlineName) => await _manager.GetFlightsByAirlineName(airlineName);
     }
 }

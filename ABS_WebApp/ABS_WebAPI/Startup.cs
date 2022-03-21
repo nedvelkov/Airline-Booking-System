@@ -41,6 +41,7 @@ namespace ABS_WebAPI
             {
                 setupAction.ReturnHttpNotAcceptable = true;
             });
+            services.AddCors(); 
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -55,6 +56,14 @@ namespace ABS_WebAPI
             app.UseResponseCaching();
 
             app.UseRouting();
+
+            app.UseCors(builder =>
+            {
+                builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+            });
 
             app.UseAuthorization();
 

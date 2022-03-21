@@ -9,12 +9,14 @@ using System.Text.RegularExpressions;
 
 using ABS_SystemManager.Interfaces;
 using ABS_SystemManager.Data.UserDefineModels;
+using ABS_Models;
 
 using static ABS_DataConstants.DataConstrain;
 using static ABS_SystemManager.DataConstants.Success;
 using static ABS_SystemManager.DataConstants.SystemDataConstrain;
 using static ABS_SystemManager.DataConstants.SystemError;
 using static ABS_DataConstants.Error;
+
 
 namespace ABS_SystemManager
 {
@@ -116,7 +118,7 @@ namespace ABS_SystemManager
 
         public async Task<string> FindAvailableFlights(string origin, string destination)
         {
-            List<AvailableFlights> flights;
+            List<FlightsModel> flights;
             try
             {
                 ValidateFlightDestination(origin, destination);
@@ -174,6 +176,17 @@ namespace ABS_SystemManager
             }
 
             return sb.ToString().Trim();
+        }
+        //TODO :Clean unused methos
+        public async Task<SystemDetailsModel> DisplaySystemDetailsAsModel()
+        {
+
+           var airports= _repository.ListAirports
+                        .ToList();
+
+            var airlines = await _repository.GetAirlineWithFlightsViews();
+
+            return new SystemDetailsModel { AirportList = airports, AirlineList = airlines };
         }
 
         public IReadOnlyList<string> ListAirlines => _repository.ListAirlines;
@@ -261,5 +274,6 @@ namespace ABS_SystemManager
             }
         }
 
+        public async Task<List<FlightsModel>> GetFlightsByAirlineName(string airlineName) =>  await _repository.GetFlightsByAirlineName(airlineName);
     }
 }

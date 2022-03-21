@@ -26,6 +26,7 @@
         public const string SECTION_API_PATH = "/api/sections";
         public const string FLIGHT_API_PATH = "/api/flights";
         public const string FIND_FLIGHT_API_PATH = "/api/aviableflights";
+        public const string FIND_FLIGHT_BY_NAME_API_PATH = "/api/flightsbyname";
         public const string ACCOUNT_API_PATH = "/api/accounts";
         public const string USER_REGISTER = "register";
         public const string USER_LOGIN = "login";

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ABS_Models;
+using ABS_SystemManager.Data.UserDefineModels;
 using ABS_WebAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,14 @@ namespace ABS_WebAPI.Controllers
         public async Task<string> GetAviableFlights(string origin, string destination)
         {
             return await _flightService.FindAvailableFlights(origin, destination);
+        }
+
+        [HttpGet]
+        [Route(FIND_FLIGHT_BY_NAME_API_PATH)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<List<FlightsModel>> GetFlightsByAirlineName(string airlineName)
+        {
+            return await _flightService.GetFlightsByAirlineName(airlineName);
         }
 
         [HttpPost]

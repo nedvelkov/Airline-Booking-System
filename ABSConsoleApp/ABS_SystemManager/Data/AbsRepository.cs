@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using ABS_SystemManager.Interfaces;
 using ABS_SystemManager.Data.ViewModels;
 using ABS_SystemManager.Data.UserDefineModels;
+using ABS_Models;
 
 namespace ABS_SystemManager.Data
 {
@@ -47,9 +48,13 @@ namespace ABS_SystemManager.Data
             => await _context.Database
                              .ExecuteSqlInterpolatedAsync($"usp_CreateFlightSection {airlineName},{flightId},{rows},{columns},{seatClass}") == 1;
 
-        public async Task<List<AvailableFlights>> FindAvailableFlights(string origin, string destination)
+        public async Task<List<FlightsModel>> FindAvailableFlights(string origin, string destination)
             => await _context.GetAvailableFlights
                        .FromSqlInterpolated($"usp_FindAvailableFlights {origin},{destination}")
+                       .ToListAsync();
+        public async Task<List<FlightsModel>> GetFlightsByAirlineName(string airlineName)
+            => await _context.GetFlightsByAirlineName
+                       .FromSqlInterpolated($"usp_GetFlightsForAirline {airlineName}")
                        .ToListAsync();
 
         public async Task<bool> BookSeat(string airlineName, string flightId, int seatClass, int row, char column)
@@ -61,6 +66,7 @@ namespace ABS_SystemManager.Data
             var rowData = await _context.GetAirlineTableView.FromSqlRaw($"usp_GetArilinesView").ToListAsync();
             return ParseAirlineView(rowData);
         }
+
 
         public async Task<SeatNumber> GetLastSeatNumber(string flightId, int seatClass)
         {
@@ -162,5 +168,7 @@ namespace ABS_SystemManager.Data
             var seatClass = (T)value;
             return Enum.IsDefined(typeof(T), value) ? seatClass : throw new ArgumentException("Seat class is not valid");
         }
+
+        public Task<List<AirlineSystemDisplay>> GetAirlineWithFlightsViews() => _context.GetAirlineWithFlightsCount.ToListAsync();
     }
 }

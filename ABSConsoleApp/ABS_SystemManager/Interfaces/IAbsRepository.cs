@@ -2,6 +2,7 @@
 using ABS_SystemManager.Data.ViewModels;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ABS_Models;
 
 namespace ABS_SystemManager.Interfaces
 {
@@ -16,8 +17,10 @@ namespace ABS_SystemManager.Interfaces
         Task<bool> CreateAirport(string name);
         Task<bool> CreateFlight(string airlineName, string origin, string destination, int year, int month, int day, string id);
         Task<bool> CreateSection(string airlineName, string flightId, int rows, int columns, int seatClass);
-        Task<List<AvailableFlights>> FindAvailableFlights(string origin, string destination);
+        Task<List<FlightsModel>> FindAvailableFlights(string origin, string destination);
+        Task<List<FlightsModel>> GetFlightsByAirlineName(string airlineName);
         Task<List<AirlineViewModel>> GetAirlineViews();
+        Task<List<AirlineSystemDisplay>> GetAirlineWithFlightsViews();
         Task<SeatNumber> GetLastSeatNumber(string flightId, int seatClass);
         Task<bool> HasAirport(string name);
     }

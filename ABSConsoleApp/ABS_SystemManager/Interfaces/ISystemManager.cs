@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using ABS_Models;
+using ABS_SystemManager.Data.UserDefineModels;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ABS_SystemManager.Interfaces
@@ -17,9 +19,13 @@ namespace ABS_SystemManager.Interfaces
 
         public Task<string> FindAvailableFlights(string origin, string destination);
 
+        public Task<List<FlightsModel>> GetFlightsByAirlineName(string airlineName);
+
         public Task<string> BookSeat(string airlineName, string flightId, int seatClass, int row, char column);
 
         public Task<string> DisplaySystemDetails();
+
+        public Task<SystemDetailsModel> DisplaySystemDetailsAsModel();
 
         public IReadOnlyList<string> ListAirlines { get; }
 

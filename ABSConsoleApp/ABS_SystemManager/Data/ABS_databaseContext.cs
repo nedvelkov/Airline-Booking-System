@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ABS_SystemManager.Data.DbModels;
 using ABS_SystemManager.Data.UserDefineModels;
+using ABS_Models;
+
 
 namespace ABS_SystemManager.Data
 {
@@ -29,11 +31,15 @@ namespace ABS_SystemManager.Data
 
         public virtual DbSet<AirlineName> GetAirlineNames { get; set; }
 
+        public virtual DbSet<AirlineSystemDisplay> GetAirlineWithFlightsCount { get; set; }
+
         public virtual DbSet<IdColumn> GetIds { get; set; }
 
         public virtual DbSet<AirportExist> AirportExists { get; set; }
 
-        public virtual DbSet<AvailableFlights> GetAvailableFlights { get; set; }
+        public virtual DbSet<FlightsModel> GetAvailableFlights { get; set; }
+
+        public virtual DbSet<FlightsModel> GetFlightsByAirlineName { get; set; }
 
         public virtual DbSet<SeatNumber> GetSeatNumbers { get; set; }
 
@@ -133,9 +139,14 @@ namespace ABS_SystemManager.Data
                 entity.ToView("GetAirlineNames");
             });
 
+            modelBuilder.Entity<AirlineSystemDisplay>(entity => {
+                entity.HasNoKey();
+                entity.ToView("GetAirlinesWithFlightsCount");
+            });
+
             modelBuilder.Entity<IdColumn>(entity => entity.HasNoKey());
 
-            modelBuilder.Entity<AvailableFlights>(entity => entity.HasNoKey());
+            modelBuilder.Entity<FlightsModel>(entity => entity.HasNoKey());
 
             modelBuilder.Entity<AirportExist>(entity => entity.HasNoKey());
 
