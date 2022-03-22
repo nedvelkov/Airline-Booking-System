@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
+using ABS_Models;
 using ABS_SystemManager.Data.DbModels;
 using ABS_SystemManager.Data.UserDefineModels;
-using ABS_Models;
 
 
 namespace ABS_SystemManager.Data
@@ -44,6 +45,8 @@ namespace ABS_SystemManager.Data
         public virtual DbSet<SeatNumber> GetSeatNumbers { get; set; }
 
         public virtual DbSet<AirlineTableView> GetAirlineTableView { get; set; }
+
+        public virtual DbSet<FlightSectionTableView> GetFlightSectionForFlight { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -153,6 +156,8 @@ namespace ABS_SystemManager.Data
             modelBuilder.Entity<SeatNumber>(entity => entity.HasNoKey());
 
             modelBuilder.Entity<AirlineTableView>(entity => entity.HasNoKey());
+
+            modelBuilder.Entity<FlightSectionTableView>(entity => entity.HasNoKey());
 
             OnModelCreatingPartial(modelBuilder);
         }

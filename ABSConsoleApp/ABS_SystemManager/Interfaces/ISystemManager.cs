@@ -21,6 +21,8 @@ namespace ABS_SystemManager.Interfaces
 
         public Task<List<FlightsModel>> GetFlightsByAirlineName(string airlineName);
 
+        public Task<List<FlightSectionView>> GetFlightSectionsForFlight(string flightId);
+
         public Task<string> BookSeat(string airlineName, string flightId, int seatClass, int row, char column);
 
         public Task<string> DisplaySystemDetails();

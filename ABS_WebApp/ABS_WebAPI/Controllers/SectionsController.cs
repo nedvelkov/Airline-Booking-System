@@ -18,11 +18,23 @@ namespace ABS_WebAPI.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-
         public async Task< IActionResult> Post(FlightSectionModel section)
         {
             var result = await _sectionService.CreateFlightSection(section.AirlineName, section.Id, section.Rows, section.Columns, section.SeatClass);
             if (result.Contains(SUCCESSFULL_OPERATION))
+            {
+                return Ok(result);
+            }
+            return UnprocessableEntity(result);
+        }
+
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetFlightSeectionForFlight(string flightId)
+        {
+            var result = await _sectionService.GetFlightSectionsForFlight(flightId);
+            if (result.Count>0)
             {
                 return Ok(result);
             }

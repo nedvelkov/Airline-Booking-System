@@ -170,5 +170,13 @@ namespace ABS_SystemManager.Data
         }
 
         public Task<List<AirlineSystemDisplay>> GetAirlineWithFlightsViews() => _context.GetAirlineWithFlightsCount.ToListAsync();
+
+        public Task<List<FlightSectionTableView>> GetFlightSectionsForFlight(string flightId)
+        {
+
+            return _context.GetFlightSectionForFlight
+                        .FromSqlRaw($"usp_GetFlightSesctionsForFlight {flightId}")
+                        .ToListAsync();
+        }
     }
 }

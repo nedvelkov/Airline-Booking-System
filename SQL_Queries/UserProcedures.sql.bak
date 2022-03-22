@@ -361,15 +361,3 @@ AS
 		WHERE [Date]<=GETDATE()
 	COMMIT
 GO
-
-CREATE OR ALTER PROC usp_GetFlightsForAirline(@Airline VARCHAR(5))
-AS
-	EXEC usp_CheckIfFlightIsDeparted
-
-	SELECT Flight.Id,Airline.Name AS AirlineName,Flight.Date,AirOrig.Name as Origin,AirDest.Name as Destination
-	FROM Flight
-				JOIN Airline ON Flight.AirlineId=Airline.Id
-				JOIN Airport AirOrig ON Flight.OriginId=AirOrig.Id
-				JOIN Airport AirDest ON Flight.DestinationId=AirDest.Id
-				WHERE  Airline.Name LIKE (@Airline) AND IsDeparted=0				
-GO

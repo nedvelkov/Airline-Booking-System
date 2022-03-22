@@ -84,7 +84,7 @@ namespace ABS_SystemManager
                 ValidateFlightDate(new DateTime(year, month, day), INVALID_DATE_OF_DEPARTURE_FLIGHT);
                 ValidateString(id, EVALUATE_FLIGHT_ID, FLIGHT_TOOLTIP);
 
-                await _repository.CreateFlight(airlineName,origin,destination,year,month,day,id);
+                await _repository.CreateFlight(airlineName, origin, destination, year, month, day, id);
             }
             catch (Exception a)
             {
@@ -106,7 +106,7 @@ namespace ABS_SystemManager
                 ValidateString(airlineName, EVALUATE_AIRLINE_NAME, AIRLINE_TOOLTIP);
                 ValidateString(flightId, EVALUATE_FLIGHT_ID, FLIGHT_TOOLTIP);
 
-                await _repository.CreateSection(airlineName,flightId,rows,columns,seatClass);
+                await _repository.CreateSection(airlineName, flightId, rows, columns, seatClass);
             }
             catch (Exception a)
             {
@@ -146,7 +146,7 @@ namespace ABS_SystemManager
                 var lastSeatNumber = await _repository.GetLastSeatNumber(flightId, seatClass);
                 CheckIfSeatIsValid(row, column, lastSeatNumber);
 
-                await _repository.BookSeat(airlineName,flightId,seatClass,row,column);
+                await _repository.BookSeat(airlineName, flightId, seatClass, row, column);
             }
             catch (Exception a)
             {
@@ -169,7 +169,7 @@ namespace ABS_SystemManager
 
             sb.AppendLine(DISPLAY_AIRLINES_TITLE);
 
-            var airlines =await _repository.GetAirlineViews();
+            var airlines = await _repository.GetAirlineViews();
             if (airlines.Count > 0)
             {
                 airlines.ForEach(x => sb.AppendLine(x.ToString()));
@@ -181,8 +181,8 @@ namespace ABS_SystemManager
         public async Task<SystemDetailsModel> DisplaySystemDetailsAsModel()
         {
 
-           var airports= _repository.ListAirports
-                        .ToList();
+            var airports = _repository.ListAirports
+                         .ToList();
 
             var airlines = await _repository.GetAirlineWithFlightsViews();
 
@@ -274,6 +274,20 @@ namespace ABS_SystemManager
             }
         }
 
-        public async Task<List<FlightsModel>> GetFlightsByAirlineName(string airlineName) =>  await _repository.GetFlightsByAirlineName(airlineName);
+        public Task<List<FlightsModel>> GetFlightsByAirlineName(string airlineName) => _repository.GetFlightsByAirlineName(airlineName);
+        public async Task<List<FlightSectionView>> GetFlightSectionsForFlight(string flightId)
+        {
+            var list = await _repository.GetFlightSectionsForFlight(flightId);
+           return list.Select(x =>
+             {
+               return  new FlightSectionView() { FlightSectionId = x.FlightSectionId, Seats = x.Seats, SeatClass = GetEnumAsString(x.SeatClass) };
+             }).ToList();
+        }
+
+        private string GetEnumAsString (int value)
+        {
+            var enumValue = (SeatClass)value;
+            return enumValue.ToString();
+        }
     }
 }
