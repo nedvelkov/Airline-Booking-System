@@ -17,7 +17,7 @@ namespace ABS_SystemManager.Interfaces
 
         public Task<string> CreateSection(string airlineName, string flightId, int rows, int columns, int seatClass);
 
-        public Task<string> FindAvailableFlights(string origin, string destination);
+        public Task<List<FlightsModel>> FindAvailableFlights(string origin, string destination);
 
         public Task<List<FlightsModel>> GetFlightsByAirlineName(string airlineName);
 

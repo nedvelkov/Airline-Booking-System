@@ -6,6 +6,7 @@ using ABS_WebAPI.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using static ABS_DataConstants.DataConstrain;
+using static ABS_SystemManager.DataConstants.SystemError;
 
 namespace ABS_WebAPI.Controllers
 {
@@ -25,9 +26,21 @@ namespace ABS_WebAPI.Controllers
         [HttpGet]
         [Route(FIND_FLIGHT_API_PATH)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<string> GetAviableFlights(string origin, string destination)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<List<FlightsModel>>> GetAviableFlights(string origin, string destination)
         {
-            return await _flightService.FindAvailableFlights(origin, destination);
+            var result = await _flightService.FindAvailableFlights(origin, destination);
+            if (result == null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+            else if (result.Count == 0)
+            {
+                return NoContent();
+            }
+
+            return result;
         }
 
         [HttpGet]
@@ -43,7 +56,7 @@ namespace ABS_WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public async Task<IActionResult> Post(FlightModel flight)
         {
-            var result =await _flightService.CreateFlight(flight.AirlineName, flight.Origin, flight.Destination, flight.DateOfFlight.Year, flight.DateOfFlight.Month, flight.DateOfFlight.Day, flight.Id);
+            var result = await _flightService.CreateFlight(flight.AirlineName, flight.Origin, flight.Destination, flight.DateOfFlight.Year, flight.DateOfFlight.Month, flight.DateOfFlight.Day, flight.Id);
             if (result.Contains(SUCCESSFULL_OPERATION))
             {
                 return Ok(result);

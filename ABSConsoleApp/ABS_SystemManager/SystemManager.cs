@@ -116,7 +116,7 @@ namespace ABS_SystemManager
             return string.Format(SUCCESSFUL_CREATED_FLIGHT_SECTION, (SeatClass)seatClass, flightId, airlineName);
         }
 
-        public async Task<string> FindAvailableFlights(string origin, string destination)
+        public async Task<List<FlightsModel>> FindAvailableFlights(string origin, string destination)
         {
             List<FlightsModel> flights;
             try
@@ -126,13 +126,10 @@ namespace ABS_SystemManager
             }
             catch (Exception a)
             {
-                return a.Message;
+                return null;
             }
-
-            var result = flights.Count > 0
-                                 ? string.Join(Environment.NewLine, flights)
-                                 : string.Format(NO_AVIABLE_FLIGHTS, origin, destination);
-            return result;
+                                 
+            return flights;
 
         }
 
