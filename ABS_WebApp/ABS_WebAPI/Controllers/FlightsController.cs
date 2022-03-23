@@ -27,9 +27,14 @@ namespace ABS_WebAPI.Controllers
         [Route(FIND_FLIGHT_API_PATH)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<List<FlightsModel>>> GetAviableFlights(string origin, string destination)
         {
+            if(string.IsNullOrEmpty(origin) || string.IsNullOrEmpty(destination))
+            {
+                return UnprocessableEntity();
+            }
             var result = await _flightService.FindAvailableFlights(origin, destination);
             if (result == null)
             {

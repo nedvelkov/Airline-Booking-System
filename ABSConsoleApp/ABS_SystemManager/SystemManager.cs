@@ -246,7 +246,7 @@ namespace ABS_SystemManager
                 throw new ArgumentException(INVALID_SEAT_CLASS);
 
             }
-            if (row < 0 || row >= seatNumber.Row)
+            if (row < 0 || row > seatNumber.Row)
             {
                 throw new ArgumentException(INVALID_SEAT_ROW);
             }

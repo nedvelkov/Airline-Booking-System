@@ -70,8 +70,7 @@ namespace ABS_WebAPI
             app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.ApplicationServices.CreateScope().ServiceProvider.GetService<ISystemService>().SeedData();
-           //  app.ApplicationServices.GetService<ISystemService>().SeedData();
-
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
