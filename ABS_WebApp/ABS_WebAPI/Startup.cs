@@ -11,6 +11,7 @@ using ABS_WebAPI.Services.Interfaces;
 using ABS_WebAPI.Services.Models;
 using ABS_WebAPI.Middleware;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace ABS_WebAPI
 {
@@ -41,7 +42,16 @@ namespace ABS_WebAPI
             {
                 setupAction.ReturnHttpNotAcceptable = true;
             });
-            services.AddCors(); 
+            services.AddCors();
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = "https://abs-domain.us.auth0.com/";
+                options.Audience = "http://localhost:1618/api";
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -65,6 +75,7 @@ namespace ABS_WebAPI
                 .AllowAnyHeader();
             });
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseMiddleware<ErrorHandlerMiddleware>();
