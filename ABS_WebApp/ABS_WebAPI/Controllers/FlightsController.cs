@@ -25,7 +25,10 @@ namespace ABS_WebAPI.Controllers
         [ResponseCache(Duration = SHARED_CACHE_EXPIRATION_IN_SECONDS)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [Authorize(Roles = USER_ROLE)]
-        public IEnumerable<string> Get() => _flightService.GetFlights();
+        public IEnumerable<string> Get()
+        {
+            return _flightService.GetFlights();
+        }
 
         [HttpGet]
         [Route(FIND_FLIGHT_API_PATH)]

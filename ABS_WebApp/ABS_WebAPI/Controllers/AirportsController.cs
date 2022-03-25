@@ -6,6 +6,7 @@ using ABS_WebAPI.Services.Interfaces;
 using static ABS_DataConstants.DataConstrain;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ABS_WebAPI.Controllers
 {
@@ -20,11 +21,13 @@ namespace ABS_WebAPI.Controllers
         [HttpGet]
         [ResponseCache(Duration = SHARED_CACHE_EXPIRATION_IN_SECONDS)]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [Authorize(Roles = USER_ROLE)]
         public IEnumerable<string> Get() => _airportService.GetAiports();
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        [Authorize(Roles = ADMIN_ROLE)]
         public async Task<IActionResult> Post(AirportModel airport)
         {
             var result=await _airportService.CreateAirport(airport.Name);
