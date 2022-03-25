@@ -42,7 +42,8 @@
         public const string COOKIE_TOKEN_NAME = "auth_cookie";
 
         //Roles
-        public const string ADMIN_ROLE = "Admin";
-        public const string USER_ROLE = "User";
+        public const string ADMIN_ROLE = "admin";
+        public const string USER_ROLE = "user";
+        public const string USER_ADMIN_ROLE = "user,admin";
     }
 }

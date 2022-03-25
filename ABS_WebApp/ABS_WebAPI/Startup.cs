@@ -12,6 +12,7 @@ using ABS_WebAPI.Services.Models;
 using ABS_WebAPI.Middleware;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ABS_WebAPI
 {
@@ -50,8 +51,9 @@ namespace ABS_WebAPI
             }).AddJwtBearer(options =>
             {
                 options.Authority = "https://abs-domain.us.auth0.com/";
-                options.Audience = "http://localhost:1618/api";
+                options.Audience = "https://abs-domain.us.auth0.com/api/v2/";
             });
+            services.AddAuthorization();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

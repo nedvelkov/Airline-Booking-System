@@ -1,12 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
 using ABS_Models;
 using ABS_SystemManager.Data.UserDefineModels;
 using ABS_WebAPI.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+
 using static ABS_DataConstants.DataConstrain;
-using static ABS_SystemManager.DataConstants.SystemError;
 
 namespace ABS_WebAPI.Controllers
 {
@@ -21,6 +24,7 @@ namespace ABS_WebAPI.Controllers
         [HttpGet]
         [ResponseCache(Duration = SHARED_CACHE_EXPIRATION_IN_SECONDS)]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [Authorize(Roles = USER_ROLE)]
         public IEnumerable<string> Get() => _flightService.GetFlights();
 
         [HttpGet]
@@ -29,6 +33,7 @@ namespace ABS_WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = USER_ROLE)]
         public async Task<ActionResult<List<FlightsModel>>> GetAviableFlights(string origin, string destination)
         {
             if(string.IsNullOrEmpty(origin) || string.IsNullOrEmpty(destination))
@@ -51,6 +56,7 @@ namespace ABS_WebAPI.Controllers
         [HttpGet]
         [Route(FIND_FLIGHT_BY_NAME_API_PATH)]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [Authorize(Roles = USER_ADMIN_ROLE)]
         public async Task<List<FlightsModel>> GetFlightsByAirlineName(string airlineName)
         {
             return await _flightService.GetFlightsByAirlineName(airlineName);
@@ -59,6 +65,7 @@ namespace ABS_WebAPI.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+        [Authorize(Roles = ADMIN_ROLE)]
         public async Task<IActionResult> Post(FlightModel flight)
         {
             var result = await _flightService.CreateFlight(flight.AirlineName, flight.Origin, flight.Destination, flight.DateOfFlight.Year, flight.DateOfFlight.Month, flight.DateOfFlight.Day, flight.Id);
